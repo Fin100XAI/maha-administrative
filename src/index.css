@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #0f172a;
+  background: #f8fafc;
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-white/80 backdrop-blur-lg border border-white/70 shadow-card;
+  }
+  .card {
+    @apply relative bg-white rounded-2xl border border-ink-100 shadow-card;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 1rem;
+    padding: 1px;
+    background: linear-gradient(180deg, rgba(216, 27, 96, 0.10), rgba(74, 20, 140, 0.0) 40%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  .card-hover {
+    @apply transition-all duration-200 hover:shadow-glow hover:-translate-y-0.5;
+  }
+  /* Header-scoped glass buttons — override .btn-primary/.btn-outline inside PageHeader actions.
+     All text stays white; primary uses a brighter glass surface + white border to stand out. */
+  .header-actions .btn-primary,
+  .header-btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white transition-all bg-white/25 border border-white/70 shadow-[0_6px_20px_-6px_rgba(255,255,255,0.35)] backdrop-blur-md hover:bg-white/35 hover:shadow-[0_10px_28px_-6px_rgba(255,255,255,0.5)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70;
+  }
+  .header-actions .btn-outline,
+  .header-btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-colors border border-white/30 bg-white/10 backdrop-blur hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50;
+  }
+  .header-actions .btn-ghost,
+  .header-actions button.btn {
+    @apply text-white hover:bg-white/15;
+  }
+  /* Any raw <a>/<button> in the header actions inherits white too, in case a page passes bare markup */
+  .header-actions a,
+  .header-actions button {
+    @apply text-white;
+  }
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .btn-primary {
+    @apply btn bg-brand-gradient text-white shadow-glow hover:opacity-95;
+  }
+  .btn-outline {
+    @apply btn border border-ink-200 bg-white text-ink-700 hover:bg-ink-50;
+  }
+  .btn-ghost {
+    @apply btn text-ink-600 hover:bg-ink-100;
+  }
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700;
+  }
+  .input {
+    @apply w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-800 shadow-sm placeholder:text-ink-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20;
+  }
+  .label {
+    @apply text-xs font-medium uppercase tracking-wider text-ink-500;
+  }
+  .chip {
+    @apply inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium;
+  }
+  .table-th {
+    @apply text-left text-xs font-semibold uppercase tracking-wide text-ink-500 px-4 py-3 border-b border-ink-100 bg-ink-50/60;
+  }
+  .table-td {
+    @apply px-4 py-3 text-sm text-ink-700 border-b border-ink-100;
+  }
+  .section-title {
+    @apply text-sm font-semibold text-ink-900 uppercase tracking-wider;
+  }
+  .kbd {
+    @apply inline-flex items-center rounded border border-ink-200 bg-ink-50 px-1.5 py-0.5 text-[10px] font-medium text-ink-600;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.6);
+  background-clip: padding-box;
+}
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 0px, #e2e8f0 40px, #f1f5f9 80px);
+  background-size: 1000px 100%;
+  animation: shimmer 1.4s linear infinite;
+}
