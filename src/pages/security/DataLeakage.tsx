@@ -1,29 +1,15 @@
+import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
 import { Card, CardHeader } from '@/components/ui/Card'
+import { ChartCard } from '@/components/ui/ChartCard'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { SeverityBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
-import { EyeOff, Radio, KeyRound, Download } from 'lucide-react'
+import { EyeOff, Radio, KeyRound, Download, ShieldAlert } from 'lucide-react'
+import { DLP_ROWS, DLP_POLICIES, REDACTION_VOLUME, EXFIL_CHANNELS, DLPRow } from '@/data/securitySamples'
 
-interface Row {
-  id: string
-  when: string
-  officer: string
-  dept: string
-  type: string
-  channel: string
-  severity: 'Critical' | 'High' | 'Medium' | 'Low'
-  action: string
-}
-const rows: Row[] = [
-  { id: 'DLP-3021', when: '2026-07-07 09:11', officer: 'IAS-2016-MH-0184', dept: 'FIN', type: 'PAN pattern', channel: 'Excel upload', severity: 'Medium', action: 'Auto-redacted' },
-  { id: 'DLP-3020', when: '2026-07-07 08:44', officer: 'IAS-2019-MH-0410', dept: 'HOME', type: 'Aadhaar pattern', channel: 'PDF upload', severity: 'High', action: 'Blocked' },
-  { id: 'DLP-3019', when: '2026-07-07 07:12', officer: 'IAS-2010-MH-0082', dept: 'HFW', type: 'Health record', channel: 'Chat prompt', severity: 'High', action: 'Redacted, alert raised' },
-  { id: 'DLP-3018', when: '2026-07-06 22:08', officer: 'MPSC-2020-1281', dept: 'REV', type: 'Bank IFSC', channel: 'CSV upload', severity: 'Low', action: 'Redacted' },
-  { id: 'DLP-3017', when: '2026-07-06 18:44', officer: 'IAS-2011-MH-0182', dept: 'DIT', type: 'Confidential API key', channel: 'Code snippet', severity: 'Critical', action: 'Blocked; key rotated' },
-]
 export function DataLeakage() {
-  const columns: Column<Row>[] = [
+  const columns: Column<DLPRow>[] = [
     { key: 'id', header: 'ID', sortable: true },
     { key: 'when', header: 'When', sortable: true },
     { key: 'officer', header: 'Officer' },
@@ -47,8 +33,64 @@ export function DataLeakage() {
         <MetricCard label="Secret detections" value={4} icon={<KeyRound className="h-5 w-5" />} delta={-25} source="Demo" confidence={92} />
         <MetricCard label="Data export events" value={62} icon={<Download className="h-5 w-5" />} delta={-6} source="Demo" confidence={90} />
       </div>
+
+      {/* DLP policies + redaction volume + exfil channels */}
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <Card>
+          <CardHeader
+            title="DLP policies"
+            subtitle="8 active · 24h hits"
+            right={<SourceBadge source="Demo" />}
+          />
+          <ul className="space-y-2">
+            {DLP_POLICIES.map((p) => (
+              <li key={p.p} className="flex items-center justify-between gap-2 rounded-md border border-ink-100 px-3 py-2 text-sm">
+                <span className="min-w-0 truncate text-ink-800">{p.p}</span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <SeverityBadge level={p.sev} />
+                  <span className="font-semibold text-brand-600">{p.hits}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <ChartCard title="Redaction volume" subtitle="Last 7 days" source="Demo">
+          <ResponsiveContainer>
+            <BarChart data={REDACTION_VOLUME}>
+              <CartesianGrid vertical={false} stroke="#eef2f7" />
+              <XAxis dataKey="d" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
+              <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
+              <Bar dataKey="redact" name="Redacted" fill="#D81B60" radius={[6,6,0,0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+
+        <Card>
+          <CardHeader
+            title="Top exfil channels"
+            subtitle="Share of blocked attempts"
+            right={<span className="chip border bg-ink-100 text-ink-700 border-ink-200"><ShieldAlert className="h-3 w-3" /> Ranked</span>}
+          />
+          <ul className="space-y-2 text-sm">
+            {EXFIL_CHANNELS.map((c, i) => (
+              <li key={c.ch}>
+                <div className="mb-1 flex items-center justify-between">
+                  <span className="text-ink-800">#{i + 1} · {c.ch}</span>
+                  <span className="font-medium text-ink-700">{c.share}%</span>
+                </div>
+                <div className="h-2 w-full rounded bg-ink-100">
+                  <div className="h-full rounded bg-brand-gradient" style={{ width: `${c.share * 2.5}%` }} />
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+
       <div className="mt-6">
-        <DataTable columns={columns} rows={rows} searchKeys={['officer', 'dept', 'type']} actions={<><SourceBadge source="Demo" /></>} />
+        <DataTable columns={columns} rows={DLP_ROWS} searchKeys={['officer', 'dept', 'type']} actions={<><SourceBadge source="Demo" /></>} />
       </div>
 
       <Card className="mt-6">

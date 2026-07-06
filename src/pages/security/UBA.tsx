@@ -1,10 +1,15 @@
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
+import {
+  ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip,
+  BarChart, Bar, Legend,
+} from 'recharts'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
 import { ChartCard } from '@/components/ui/ChartCard'
 import { Card, CardHeader } from '@/components/ui/Card'
-import { Activity, LogIn, Download, Moon } from 'lucide-react'
-import { SeverityBadge, SourceBadge } from '@/components/ui/Badges'
+import { Activity, LogIn, Download, Moon, Users } from 'lucide-react'
+import { SeverityBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
+import { PEER_COMPARISON, RISKY_PATTERNS, INVESTIGATIONS, UBA_HEATMAP } from '@/data/securitySamples'
+import { HourCell } from './_components/HeatCell'
 
 const heat = [
   { h: '00', v: 4 }, { h: '02', v: 3 }, { h: '04', v: 5 }, { h: '06', v: 12 },
@@ -56,9 +61,9 @@ export function UBA() {
             {risky.map((r) => (
               <li key={r.o} className="rounded-md border border-ink-100 p-3">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <div className="text-sm font-medium text-ink-800">{r.o}</div>
-                    <div className="text-xs text-ink-500">{r.dept} · {r.reason}</div>
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium text-ink-800 truncate">{r.o}</div>
+                    <div className="text-xs text-ink-500 truncate">{r.dept} · {r.reason}</div>
                   </div>
                   <div className="flex items-center gap-2">
                     <SeverityBadge level={r.sev} />
@@ -70,6 +75,103 @@ export function UBA() {
           </ul>
         </Card>
       </div>
+
+      {/* Peer group comparison + Risky patterns catalog */}
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <ChartCard
+          title="Peer group comparison"
+          subtitle="Officer vs peer-department baseline · 24h"
+          source="Demo"
+        >
+          <ResponsiveContainer>
+            <BarChart data={PEER_COMPARISON}>
+              <CartesianGrid vertical={false} stroke="#eef2f7" />
+              <XAxis dataKey="metric" tick={{ fill: '#64748b', fontSize: 10 }} tickLine={false} axisLine={false} />
+              <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
+              <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
+              <Legend wrapperStyle={{ fontSize: 11 }} />
+              <Bar dataKey="officer" name="Officer" fill="#D81B60" radius={[6,6,0,0]} />
+              <Bar dataKey="peer"    name="Peer baseline" fill="#94a3b8" radius={[6,6,0,0]} />
+            </BarChart>
+          </ResponsiveContainer>
+        </ChartCard>
+
+        <Card>
+          <CardHeader
+            title="Risky patterns detected"
+            subtitle="Catalog · count & severity"
+            right={<span className="chip border bg-ink-100 text-ink-700 border-ink-200"><Users className="h-3 w-3" /> Catalog</span>}
+          />
+          <ul className="space-y-2">
+            {RISKY_PATTERNS.map((p) => (
+              <li key={p.p} className="flex items-center justify-between gap-2 rounded-md border border-ink-100 px-3 py-2 text-sm">
+                <span className="min-w-0 truncate text-ink-800">{p.p}</span>
+                <span className="flex shrink-0 items-center gap-2">
+                  <SeverityBadge level={p.sev} />
+                  <span className="font-semibold text-brand-600">{p.count}</span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+
+      {/* Investigations table */}
+      <Card className="mt-6">
+        <CardHeader
+          title="Investigations"
+          subtitle="Open & closed cases · assigned analyst"
+          right={<StatusBadge status="Open" />}
+        />
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr>{['Case', 'Target', 'Pattern', 'Status', 'Analyst'].map((h) => <th key={h} className="table-th">{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {INVESTIGATIONS.map((i) => (
+                <tr key={i.id}>
+                  <td className="table-td font-mono text-xs">{i.id}</td>
+                  <td className="table-td font-medium text-ink-800">{i.target}</td>
+                  <td className="table-td text-ink-700">{i.pattern}</td>
+                  <td className="table-td"><StatusBadge status={i.status} /></td>
+                  <td className="table-td">
+                    <span className="inline-flex items-center gap-2">
+                      <span className="grid h-6 w-6 place-items-center rounded-full bg-brand-gradient text-[10px] font-semibold text-white">{i.analyst}</span>
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      {/* Per-hour heatmap */}
+      <Card className="mt-6">
+        <CardHeader
+          title="Per-hour activity heatmap"
+          subtitle="Prompt volume · 7 days × 24 hours"
+          right={<SourceBadge source="Demo" />}
+        />
+        <div className="overflow-x-auto">
+          <div className="min-w-[720px]">
+            <div className="mb-1 grid grid-cols-[40px_repeat(24,minmax(0,1fr))] gap-0.5 text-[10px] text-ink-500">
+              <div />
+              {Array.from({ length: 24 }).map((_, h) => (
+                <div key={h} className="text-center">{h.toString().padStart(2, '0')}</div>
+              ))}
+            </div>
+            {UBA_HEATMAP.map((row) => (
+              <div key={row.day} className="mb-0.5 grid grid-cols-[40px_repeat(24,minmax(0,1fr))] gap-0.5">
+                <div className="flex items-center text-[11px] font-medium text-ink-700">{row.day}</div>
+                {row.row.map((v, i) => <HourCell key={i} v={v} />)}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="mt-2 text-[11px] text-ink-500">Colour intensity ∝ activity volume; cells outside 08–18 window flag as after-hours.</div>
+      </Card>
     </div>
   )
 }

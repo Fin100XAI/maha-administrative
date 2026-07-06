@@ -1,8 +1,11 @@
 import { useMemo, useState } from 'react'
-import { Search, Copy, Sparkles, Library, Filter } from 'lucide-react'
+import { Search, Copy, Sparkles, Library, Filter, History, ChevronDown, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { RiskBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
 import { cn } from '@/lib/utils'
+import { PROMPT_HISTORY, PromptVersion } from '@/data/adminSamples'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
 
 const CATEGORIES = [
   'Administration', 'Drafting', 'GR Analysis', 'RTI', 'e-Office', 'HR', 'Procurement', 'Budget',
@@ -44,9 +47,17 @@ const PROMPTS: Prompt[] = [
   { id: 'p17', title: 'HR service book audit', useCase: 'Audits e-HRMS service book entries for missing fields, promotions, and pay-fix anomalies.', department: 'DIT', language: 'English', risk: 'Low', status: 'Approved', version: 'v2', category: 'HR' },
 ]
 
+function fallbackHistory(p: Prompt): PromptVersion[] {
+  return [
+    { version: p.version, at: '2026-06-15', by: 'MAII AI', note: 'Latest approved revision.' },
+    { version: 'v0', at: '2026-01-10', by: 'MAII AI', note: 'Initial draft.' },
+  ]
+}
+
 export function PromptLibrary() {
   const [q, setQ] = useState('')
   const [cat, setCat] = useState<string>('All')
+  const [openHistory, setOpenHistory] = useState<Record<string, boolean>>({})
 
   const filtered = useMemo(() => PROMPTS.filter((p) =>
     (cat === 'All' || p.category === cat) &&
@@ -60,6 +71,8 @@ export function PromptLibrary() {
         description="Curated, versioned, approved prompts for administrative tasks. Each prompt is governance-tagged."
         breadcrumb={['Administrative AI', 'Prompt Library']}
         source="Demo"
+        eyebrow="Prompts"
+        icon={<Library className="h-5 w-5" />}
       />
 
       {/* Filter bar — search on its own row, categories on their own row */}
@@ -107,68 +120,120 @@ export function PromptLibrary() {
 
       {/* Cards grid — breathing gap, ordered content, buttons anchored bottom */}
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-        {filtered.map((p) => (
-          <article
-            key={p.id}
-            className="card card-hover flex h-full flex-col gap-4 p-5"
-          >
-            {/* Header — icon + title/meta, wraps cleanly */}
-            <header className="flex items-start gap-3">
-              <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand-600">
-                <Library className="h-4 w-4" />
+        {filtered.map((p) => {
+          const history = PROMPT_HISTORY[p.id] ?? fallbackHistory(p)
+          const isOpen = !!openHistory[p.id]
+          return (
+            <article
+              key={p.id}
+              className="card card-hover flex h-full flex-col gap-4 p-5"
+            >
+              {/* Header — icon + title/meta, wraps cleanly */}
+              <header className="flex items-start gap-3">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-lg bg-brand-soft text-brand-600">
+                  <Library className="h-4 w-4" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-ink-900" title={p.title}>
+                    {p.title}
+                  </h3>
+                  <div className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] text-ink-500">
+                    <span className="font-medium text-ink-700">{p.department}</span>
+                    <span className="text-ink-300">·</span>
+                    <span>{p.language}</span>
+                    <span className="text-ink-300">·</span>
+                    <span>{p.version}</span>
+                  </div>
+                </div>
+              </header>
+
+              {/* Use-case — clamped to 3 lines so cards stay level */}
+              <div className="min-h-[3.75rem]">
+                <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-ink-400">
+                  Use case
+                </div>
+                <p className="line-clamp-3 text-[13px] leading-relaxed text-ink-700">
+                  {p.useCase}
+                </p>
               </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="line-clamp-2 text-sm font-semibold leading-snug text-ink-900" title={p.title}>
-                  {p.title}
-                </h3>
-                <div className="mt-1 flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-[11px] text-ink-500">
-                  <span className="font-medium text-ink-700">{p.department}</span>
-                  <span className="text-ink-300">·</span>
-                  <span>{p.language}</span>
-                  <span className="text-ink-300">·</span>
-                  <span>{p.version}</span>
+
+              {/* Tag row — category is a stand-alone chip; governance chips wrap below */}
+              <div className="space-y-2">
+                <span className="inline-flex max-w-full items-center rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[11px] font-medium text-ink-700">
+                  <span className="truncate">{p.category}</span>
+                </span>
+                <div className="flex flex-wrap gap-1.5">
+                  <RiskBadge level={p.risk} />
+                  <StatusBadge status={p.status as any} />
+                  <button
+                    onClick={() => setOpenHistory((s) => ({ ...s, [p.id]: !s[p.id] }))}
+                    className={cn(
+                      'chip border transition-colors',
+                      isOpen ? 'border-brand-300 bg-brand-soft text-brand-700' : 'border-ink-200 bg-white text-ink-600 hover:bg-ink-50',
+                    )}
+                    title="Show version history"
+                  >
+                    <History className="h-3 w-3" /> History
+                    <ChevronDown className={cn('h-3 w-3 transition-transform', isOpen && 'rotate-180')} />
+                  </button>
                 </div>
               </div>
-            </header>
 
-            {/* Use-case — clamped to 3 lines so cards stay level */}
-            <div className="min-h-[3.75rem]">
-              <div className="mb-1 text-[10px] font-semibold uppercase tracking-wider text-ink-400">
-                Use case
+              {/* Version history — reveal */}
+              {isOpen && (
+                <ol className="relative space-y-2 rounded-lg border border-ink-100 bg-ink-50/40 p-3 text-[12px]">
+                  {history.map((h) => (
+                    <li key={h.version} className="flex items-start gap-2">
+                      <span className="mt-0.5 grid h-5 shrink-0 items-center rounded-md border border-ink-200 bg-white px-1.5 font-mono text-[10px] text-ink-700">
+                        {h.version}
+                      </span>
+                      <div className="min-w-0">
+                        <div className="text-[11px] text-ink-500">{h.at} · {h.by}</div>
+                        <div className="text-[12px] text-ink-700">{h.note}</div>
+                      </div>
+                    </li>
+                  ))}
+                </ol>
+              )}
+
+              {/* Actions — anchored to bottom */}
+              <div className="mt-auto grid grid-cols-2 gap-2 pt-1">
+                <button className="btn-outline !px-3 whitespace-nowrap">
+                  <Copy className="h-4 w-4" /> Copy
+                </button>
+                <button className="btn-primary !px-3 whitespace-nowrap">
+                  <Sparkles className="h-4 w-4" /> Use
+                </button>
               </div>
-              <p className="line-clamp-3 text-[13px] leading-relaxed text-ink-700">
-                {p.useCase}
-              </p>
-            </div>
-
-            {/* Tag row — category is a stand-alone chip; governance chips wrap below */}
-            <div className="space-y-2">
-              <span className="inline-flex max-w-full items-center rounded-full border border-ink-200 bg-ink-50 px-2.5 py-1 text-[11px] font-medium text-ink-700">
-                <span className="truncate">{p.category}</span>
-              </span>
-              <div className="flex flex-wrap gap-1.5">
-                <RiskBadge level={p.risk} />
-                <StatusBadge status={p.status as any} />
-              </div>
-            </div>
-
-            {/* Actions — anchored to bottom */}
-            <div className="mt-auto grid grid-cols-2 gap-2 pt-1">
-              <button className="btn-outline !px-3 whitespace-nowrap">
-                <Copy className="h-4 w-4" /> Copy
-              </button>
-              <button className="btn-primary !px-3 whitespace-nowrap">
-                <Sparkles className="h-4 w-4" /> Use
-              </button>
-            </div>
-          </article>
-        ))}
+            </article>
+          )
+        })}
 
         {filtered.length === 0 && (
           <div className="col-span-full rounded-xl border border-dashed border-ink-200 bg-ink-50/40 p-10 text-center text-sm text-ink-500">
             No prompts match your filters. Try clearing the category or search.
           </div>
         )}
+      </div>
+
+      {/* Quick actions + shortcuts */}
+      <div className="mt-8 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <QuickActions
+          actions={[
+            { label: 'Save selection', icon: <Save className="h-4 w-4" /> },
+            { label: 'Submit prompt for review', icon: <Send className="h-4 w-4" />, primary: true },
+            { label: 'Copy prompt permalink', icon: <Link2 className="h-4 w-4" /> },
+            { label: 'Fork into Workspace', icon: <Sparkles className="h-4 w-4" /> },
+          ]}
+        />
+        <Shortcuts
+          items={[
+            { keys: '⌘ K', label: 'Focus search' },
+            { keys: '⌘ ⇧ H', label: 'Toggle all history panels' },
+            { keys: '⌘ ↵', label: 'Use selected prompt' },
+            { keys: '⌘ C', label: 'Copy prompt text' },
+          ]}
+        />
       </div>
     </div>
   )

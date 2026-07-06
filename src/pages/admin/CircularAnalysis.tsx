@@ -1,7 +1,39 @@
-import { Upload, ListChecks, Bell, MapPin, ClipboardCheck, Calendar } from 'lucide-react'
+import { Upload, ListChecks, Bell, MapPin, ClipboardCheck, Calendar, Megaphone, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge } from '@/components/ui/Badges'
+import { CIRCULAR_UPLOADS } from '@/data/adminSamples'
+import { UploadsTable } from './_components/UploadsTable'
+import { CompareDiff, DiffRow } from './_components/CompareDiff'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
+
+const CIRCULAR_DIFF: DiffRow[] = [
+  {
+    clause: 'Para 2 · Nodal officer',
+    kind: 'modified',
+    left: 'Departments to identify a nodal officer at their convenience.',
+    right: 'Departments to nominate a nodal officer (not below Dy. Secretary) by 12-Jul-2026.',
+  },
+  {
+    clause: 'Para 3 · DPO training',
+    kind: 'added',
+    left: '',
+    right: 'DPO training on DPDP consent lifecycle mandatory by 22-Jul-2026.',
+  },
+  {
+    clause: 'Para 4 · Publish advisory',
+    kind: 'unchanged',
+    left: 'Vernacular citizen advisory to be published on portal.',
+    right: 'Vernacular citizen advisory to be published on portal.',
+  },
+  {
+    clause: 'Para 5 · Manual audit',
+    kind: 'removed',
+    left: 'Departments may conduct RBAC audit at year-end.',
+    right: '',
+  },
+]
 
 export function CircularAnalysis() {
   return (
@@ -11,6 +43,8 @@ export function CircularAnalysis() {
         description="Extract action points from circulars, map responsible officers, and track implementation status."
         breadcrumb={['Administrative AI', 'Circular Analysis']}
         source="Public-source linked"
+        eyebrow="Circular"
+        icon={<Megaphone className="h-5 w-5" />}
       />
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1fr]">
         <Card>
@@ -70,6 +104,40 @@ export function CircularAnalysis() {
               <div className="mt-1 text-xs text-ink-500">62% implementation coverage</div>
             </Card>
           </div>
+        </div>
+      </div>
+
+      {/* Compare two circulars */}
+      <div className="mt-6">
+        <CompareDiff
+          leftLabel="Prior · DIT/CIR/2026/05/17"
+          rightLabel="Current · DIT/CIR/2026/07/22"
+          rows={CIRCULAR_DIFF}
+          title="Compare with previous circular"
+          subtitle="Highlights what changed between the two DIT circulars"
+        />
+      </div>
+
+      {/* Recent uploads + quick actions + shortcuts */}
+      <div className="mt-6 space-y-6">
+        <UploadsTable rows={CIRCULAR_UPLOADS} subtitle="Circulars uploaded across departments this week" />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <QuickActions
+            actions={[
+              { label: 'Save extracted actions', icon: <Save className="h-4 w-4" /> },
+              { label: 'Broadcast to district officers', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy link to circular', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Notify DPO', icon: <Bell className="h-4 w-4" /> },
+            ]}
+          />
+          <Shortcuts
+            items={[
+              { keys: '⌘ K', label: 'Search circulars' },
+              { keys: '⌘ U', label: 'Upload circular' },
+              { keys: '⌘ M', label: 'Map officers to actions' },
+              { keys: '⌘ ⇧ D', label: 'Toggle compare with prior' },
+            ]}
+          />
         </div>
       </div>
     </div>

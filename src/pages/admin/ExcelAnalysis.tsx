@@ -1,8 +1,14 @@
-import { Upload, Table2, LineChart as LC, Grid3x3, Calculator } from 'lucide-react'
+import { Upload, Table2, LineChart as LC, Grid3x3, Calculator, Sheet, Save, Send, Link2 } from 'lucide-react'
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { ConfidenceBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
+import { EXCEL_UPLOADS, EXCEL_BATCH, EXCEL_VOLUME_7D } from '@/data/adminSamples'
+import { UploadsTable } from './_components/UploadsTable'
+import { BatchQueue } from './_components/BatchQueue'
+import { VolumeInsights } from './_components/VolumeInsights'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
 
 const trend = [
   { m: 'Jan', budget: 210, actual: 194 },
@@ -22,6 +28,8 @@ export function ExcelAnalysis() {
         description="Upload an Excel workbook and MAII will detect columns, score data quality, propose pivots and forecast trends."
         breadcrumb={['Administrative AI', 'Excel Analysis']}
         source="Demo"
+        eyebrow="Spreadsheets"
+        icon={<Sheet className="h-5 w-5" />}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1.4fr]">
@@ -91,6 +99,35 @@ export function ExcelAnalysis() {
               <div className="mt-2 text-xs text-ink-500">Suggested by MAII AI for the pivot above.</div>
             </Card>
           </div>
+        </div>
+      </div>
+
+      {/* Insights + batch */}
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <VolumeInsights title="Excel processing volume — last 7 days" data={EXCEL_VOLUME_7D} />
+        <BatchQueue jobs={EXCEL_BATCH} title="Excel batch queue" subtitle="Bulk workbook analyses" />
+      </div>
+
+      {/* Recent uploads + quick actions + shortcuts */}
+      <div className="mt-6 space-y-6">
+        <UploadsTable rows={EXCEL_UPLOADS} subtitle="Workbooks uploaded for MAII analysis" />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <QuickActions
+            actions={[
+              { label: 'Save pivot', icon: <Save className="h-4 w-4" /> },
+              { label: 'Send report to Finance', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy formula', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Auto-forecast next 3 months', icon: <LC className="h-4 w-4" /> },
+            ]}
+          />
+          <Shortcuts
+            items={[
+              { keys: '⌘ U', label: 'Upload workbook' },
+              { keys: '⌘ P', label: 'Pivot suggestions' },
+              { keys: '⌘ F', label: 'Formula helper' },
+              { keys: '⌘ ⇧ F', label: 'Auto-forecast trend' },
+            ]}
+          />
         </div>
       </div>
     </div>

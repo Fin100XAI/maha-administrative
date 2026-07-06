@@ -1,8 +1,11 @@
-import { BookOpen, Globe, Quote, Scale, Sparkles, Download, ExternalLink } from 'lucide-react'
+import { BookOpen, Globe, Quote, Scale, Sparkles, Download, ExternalLink, Building2, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { SourceBadge, ConfidenceBadge, StatusBadge } from '@/components/ui/Badges'
 import { PUBLIC_SOURCES } from '@/data/publicSources'
+import { RELATED_DEPARTMENTS, SIMILAR_RESEARCH } from '@/data/adminSamples'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
 
 export function ResearchAssistant() {
   return (
@@ -12,6 +15,8 @@ export function ResearchAssistant() {
         description="Policy research across public web sources, state and international benchmarks, and scheme comparisons — with citations, confidence and source status."
         breadcrumb={['Administrative AI', 'Research Assistant']}
         source="Public-source linked"
+        eyebrow="Research"
+        icon={<BookOpen className="h-5 w-5" />}
         actions={<>
           <button className="btn-outline"><Download className="h-4 w-4"/> Generate report</button>
           <button className="btn-primary"><Sparkles className="h-4 w-4"/> Ask MAII</button>
@@ -96,6 +101,84 @@ export function ResearchAssistant() {
             </div>
           </Card>
         </div>
+      </div>
+
+      {/* Related resources */}
+      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
+        <Card>
+          <CardHeader
+            title="Related departments"
+            subtitle="Departments to loop in on this research"
+            right={
+              <div className="flex items-center gap-2">
+                <SourceBadge source="Demo" />
+                <Building2 className="h-4 w-4 text-brand-500" />
+              </div>
+            }
+          />
+          <ul className="space-y-2 text-sm">
+            {RELATED_DEPARTMENTS.map((d) => (
+              <li key={d.code} className="flex items-center justify-between gap-3 rounded-lg border border-ink-100 px-3 py-2">
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium text-ink-800">{d.code} · {d.name}</div>
+                  <div className="mt-0.5 text-xs text-ink-500">{d.why}</div>
+                </div>
+                <button className="btn-ghost text-xs">Loop in →</button>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card>
+          <CardHeader
+            title="Similar past research"
+            subtitle="Prior MAII research the current question overlaps with"
+            right={
+              <div className="flex items-center gap-2">
+                <SourceBadge source="Demo" />
+                <Globe className="h-4 w-4 text-brand-500" />
+              </div>
+            }
+          />
+          <ul className="space-y-2 text-sm">
+            {SIMILAR_RESEARCH.map((r) => (
+              <li key={r.id} className="flex items-start justify-between gap-3 rounded-lg border border-ink-100 px-3 py-2">
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium text-ink-800">{r.title}</div>
+                  <div className="mt-0.5 flex flex-wrap items-center gap-1 text-xs text-ink-500">
+                    <span>{r.by}</span>
+                    <span>·</span>
+                    <span>{r.when}</span>
+                    {r.tags.map((tag) => (
+                      <span key={tag} className="chip border border-ink-200 bg-ink-50 text-[10px] text-ink-600">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+                <button className="btn-ghost text-xs">Open →</button>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      </div>
+
+      {/* Quick actions + shortcuts */}
+      <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <QuickActions
+          actions={[
+            { label: 'Save research', icon: <Save className="h-4 w-4" /> },
+            { label: 'Send report to PS', icon: <Send className="h-4 w-4" />, primary: true },
+            { label: 'Copy citations', icon: <Link2 className="h-4 w-4" /> },
+            { label: 'Cross-reference legal', icon: <Scale className="h-4 w-4" /> },
+          ]}
+        />
+        <Shortcuts
+          items={[
+            { keys: '⌘ ↵', label: 'Run research query' },
+            { keys: '⌘ K', label: 'Command palette' },
+            { keys: '⌘ E', label: 'Export report (DOCX)' },
+            { keys: '⌘ ⇧ C', label: 'Copy all citations' },
+          ]}
+        />
       </div>
     </div>
   )

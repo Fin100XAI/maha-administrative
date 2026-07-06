@@ -1,7 +1,13 @@
-import { Upload, FileText, ScanText, Languages } from 'lucide-react'
+import { Upload, FileText, ScanText, Languages, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, ConfidenceBadge } from '@/components/ui/Badges'
+import { OCR_UPLOADS, OCR_BATCH, OCR_VOLUME_7D } from '@/data/adminSamples'
+import { UploadsTable } from './_components/UploadsTable'
+import { BatchQueue } from './_components/BatchQueue'
+import { VolumeInsights } from './_components/VolumeInsights'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
 
 export function OCRIntelligence() {
   return (
@@ -11,6 +17,8 @@ export function OCRIntelligence() {
         description="Scan and extract text from documents in Marathi, Hindi and English. Includes table extraction and handwritten note detection."
         breadcrumb={['Administrative AI', 'OCR Intelligence']}
         source="Demo"
+        eyebrow="Vision"
+        icon={<ScanText className="h-5 w-5" />}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
@@ -59,7 +67,7 @@ export function OCRIntelligence() {
               { s: 'Table on page 3', c: 84 },
             ].map((r) => (
               <li key={r.s} className="flex items-center gap-3">
-                <span className="w-56 shrink-0 text-sm text-ink-700">{r.s}</span>
+                <span className="w-56 shrink-0 truncate text-sm text-ink-700">{r.s}</span>
                 <div className="flex-1"><div className="h-2 rounded bg-ink-100"><div className="h-full rounded bg-brand-gradient" style={{ width: `${r.c}%` }} /></div></div>
                 <span className="w-10 text-right text-sm font-medium text-ink-800">{r.c}%</span>
               </li>
@@ -94,6 +102,35 @@ export function OCRIntelligence() {
             </table>
           </div>
         </Card>
+      </div>
+
+      {/* Insights + batch */}
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <VolumeInsights title="OCR processing volume — last 7 days" data={OCR_VOLUME_7D} />
+        <BatchQueue jobs={OCR_BATCH} title="OCR batch queue" subtitle="Pending and completed OCR bulk jobs" />
+      </div>
+
+      {/* Recent uploads + quick actions + shortcuts */}
+      <div className="mt-6 space-y-6">
+        <UploadsTable rows={OCR_UPLOADS} subtitle="Scans queued to the OCR pipeline this week" />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <QuickActions
+            actions={[
+              { label: 'Save searchable PDF', icon: <Save className="h-4 w-4" /> },
+              { label: 'Send to AI Workspace', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy extracted text', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Translate extraction', icon: <Languages className="h-4 w-4" /> },
+            ]}
+          />
+          <Shortcuts
+            items={[
+              { keys: '⌘ U', label: 'Upload scan' },
+              { keys: '⌘ ↵', label: 'Run OCR on selected pages' },
+              { keys: '⌘ T', label: 'Extract tables from scan' },
+              { keys: '⌘ ⇧ B', label: 'Open batch queue' },
+            ]}
+          />
+        </div>
       </div>
     </div>
   )

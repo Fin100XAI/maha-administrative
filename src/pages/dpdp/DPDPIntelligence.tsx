@@ -2,9 +2,11 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { ChartCard } from '@/components/ui/ChartCard'
-import { ShieldCheck, Cookie, EyeOff, Target, Timer, Layers, Route, Waves } from 'lucide-react'
+import { ShieldCheck, Cookie, EyeOff, Target, Timer, Layers, Route, Waves, CheckCircle2, CircleDashed, XCircle, UserRound, BadgeCheck, PhoneCall } from 'lucide-react'
 import { RiskBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
 import { DPDP_HEATMAP } from '@/data/mockData'
+import { DPDP_OBLIGATIONS, DPDP_QUARTERLY_SCORE, FIDUCIARY_REG, DPO_ROSTER } from '@/data/dpdpSamples'
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
 
 const RISKS = [
   { id: 'PR-118', title: 'Purpose drift on beneficiary data', dept: 'WCD', sev: 'High' as const, sla: '7d' },
@@ -19,6 +21,12 @@ const PIA = [
   { name: 'Aaple Sarkar AI concierge', dept: 'GAD', status: 'Approved' },
   { name: 'e-HRMS transfer optimiser', dept: 'GAD', status: 'Under Review' },
 ]
+
+function ObligationIcon({ status }: { status: 'Compliant' | 'In progress' | 'Gap' }) {
+  if (status === 'Compliant') return <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-500" />
+  if (status === 'In progress') return <CircleDashed className="h-4 w-4 shrink-0 text-amber-500" />
+  return <XCircle className="h-4 w-4 shrink-0 text-red-500" />
+}
 
 export function DPDPIntelligence() {
   return (
@@ -42,7 +50,7 @@ export function DPDPIntelligence() {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.4fr)_1fr]">
-        <ChartCard title="Compliance heatmap" subtitle="Dimension × Department" source="Public-source linked">
+        <ChartCard title="Compliance heatmap" subtitle="Dimension x Department" source="Public-source linked">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[520px] text-xs">
               <thead>
@@ -90,6 +98,120 @@ export function DPDPIntelligence() {
         </Card>
       </div>
 
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.2fr)_1fr]">
+        <Card>
+          <CardHeader
+            title="DPDP obligations coverage"
+            subtitle="Sections 4-13 of the DPDP Act, 2023"
+            right={<SourceBadge source="Public-source linked" />}
+          />
+          <ul className="grid grid-cols-1 gap-2 lg:grid-cols-2">
+            {DPDP_OBLIGATIONS.map((o) => (
+              <li key={o.id} className="rounded-md border border-ink-100 px-3 py-2">
+                <div className="flex items-start gap-2">
+                  <ObligationIcon status={o.status} />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="truncate text-sm font-medium text-ink-800">
+                        <span className="text-ink-500">{o.section} </span>{o.title}
+                      </div>
+                    </div>
+                    <div className="mt-0.5 truncate text-xs text-ink-500">Owner: {o.owner} - {o.evidence}</div>
+                  </div>
+                  <span className={`chip border text-[10px] shrink-0 ${
+                    o.status === 'Compliant' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                    o.status === 'In progress' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+                    'bg-red-50 text-red-700 border-red-200'
+                  }`}>{o.status}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <ChartCard title="Compliance score trend" subtitle="Composite DPDP score by quarter" source="Demo" height={220}>
+          <ResponsiveContainer>
+            <AreaChart data={DPDP_QUARTERLY_SCORE} margin={{ top: 8, right: 12, bottom: 0, left: -12 }}>
+              <defs>
+                <linearGradient id="dpdpScoreGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#ec4899" stopOpacity={0.55} />
+                  <stop offset="100%" stopColor="#a855f7" stopOpacity={0.05} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} stroke="#f1f5f9" />
+              <XAxis dataKey="q" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis domain={[50, 100]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
+              <ReTooltip contentStyle={{ borderRadius: 8, fontSize: 12 }} />
+              <Area type="monotone" dataKey="score" stroke="#a855f7" strokeWidth={2} fill="url(#dpdpScoreGrad)" />
+            </AreaChart>
+          </ResponsiveContainer>
+        </ChartCard>
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1.2fr]">
+        <Card>
+          <CardHeader
+            title="Data Fiduciary registration"
+            subtitle="Active status with Data Protection Board"
+            right={<StatusBadge status="Active" />}
+          />
+          <div className="rounded-xl border border-brand-100 bg-brand-soft/40 p-4">
+            <div className="flex items-start gap-3">
+              <div className="grid h-10 w-10 place-items-center rounded-xl bg-white shadow-sm ring-1 ring-brand-100">
+                <BadgeCheck className="h-5 w-5 text-brand-600" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="text-sm font-semibold text-ink-900">{FIDUCIARY_REG.entity}</div>
+                <div className="mt-0.5 text-xs text-ink-500">Fiduciary ID: <span className="font-mono">{FIDUCIARY_REG.fiduciaryId}</span></div>
+              </div>
+            </div>
+            <dl className="mt-4 grid grid-cols-2 gap-3 text-xs">
+              <div><dt className="text-ink-500">Significant Fiduciary</dt><dd className="mt-0.5 font-medium text-ink-800">{FIDUCIARY_REG.significantFlag ? 'Yes (u/s 10)' : 'No'}</dd></div>
+              <div><dt className="text-ink-500">Registered on</dt><dd className="mt-0.5 font-medium text-ink-800">{FIDUCIARY_REG.registrationDate}</dd></div>
+              <div><dt className="text-ink-500">Renewal due</dt><dd className="mt-0.5 font-medium text-ink-800">{FIDUCIARY_REG.renewalDate}</dd></div>
+              <div><dt className="text-ink-500">Associated depts</dt><dd className="mt-0.5 font-medium text-ink-800">{FIDUCIARY_REG.associatedDepts}</dd></div>
+              <div className="col-span-2"><dt className="text-ink-500">Nominated DPO</dt><dd className="mt-0.5 font-medium text-ink-800">{FIDUCIARY_REG.dpo}</dd></div>
+              <div className="col-span-2"><dt className="text-ink-500">Grievance channel</dt><dd className="mt-0.5 font-mono text-ink-800 truncate">{FIDUCIARY_REG.grievanceContact}</dd></div>
+            </dl>
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader
+            title="DPO on-call rotation"
+            subtitle="7-day roster with masked contact"
+            right={<PhoneCall className="h-4 w-4 text-brand-500" />}
+          />
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[520px] text-xs">
+              <thead>
+                <tr className="text-ink-500">
+                  {['DPO', 'Department', 'Shift', 'Email (masked)', 'Phone'].map((h) => (
+                    <th key={h} className="table-th">{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {DPO_ROSTER.map((d) => (
+                  <tr key={d.name} className="hover:bg-ink-50/40">
+                    <td className="table-td">
+                      <div className="flex items-center gap-2 font-medium text-ink-800">
+                        <UserRound className="h-3.5 w-3.5 text-brand-500" />
+                        {d.name}
+                      </div>
+                    </td>
+                    <td className="table-td">{d.dept}</td>
+                    <td className="table-td">{d.shift}</td>
+                    <td className="table-td font-mono">{d.contact}</td>
+                    <td className="table-td font-mono">{d.phone}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
+
       <Card className="mt-6">
         <CardHeader title="Privacy risk register" right={<SourceBadge source="Demo" />} />
         <ul className="space-y-2">
@@ -97,7 +219,7 @@ export function DPDPIntelligence() {
             <li key={r.id} className="flex items-center justify-between rounded-md border border-ink-100 px-3 py-2">
               <div>
                 <div className="text-sm font-medium text-ink-800">{r.title}</div>
-                <div className="text-xs text-ink-500">{r.id} · {r.dept} · SLA {r.sla}</div>
+                <div className="text-xs text-ink-500">{r.id} - {r.dept} - SLA {r.sla}</div>
               </div>
               <RiskBadge level={r.sev} />
             </li>

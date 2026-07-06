@@ -1,7 +1,11 @@
-import { Upload, ImageIcon, Map, ClipboardCheck } from 'lucide-react'
+import { Upload, ImageIcon, Map, ClipboardCheck, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { SourceBadge, StatusBadge, ConfidenceBadge } from '@/components/ui/Badges'
+import { IMAGE_UPLOADS } from '@/data/adminSamples'
+import { UploadsTable } from './_components/UploadsTable'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
 
 export function ImageUnderstanding() {
   return (
@@ -11,6 +15,8 @@ export function ImageUnderstanding() {
         description="Analyse documents, forms, charts, maps, and field inspection photos for administrative decisions."
         breadcrumb={['Administrative AI', 'Image Understanding']}
         source="Demo"
+        eyebrow="Vision"
+        icon={<ImageIcon className="h-5 w-5" />}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
@@ -58,6 +64,29 @@ export function ImageUnderstanding() {
           <p className="text-sm text-ink-700">The uploaded chart shows month-wise disbursements for FY 25-26 with a 22% dip in September due to model-code freeze. Peak in March aligns with year-end reconciliation.</p>
           <div className="mt-2"><SourceBadge source="Demo" /></div>
         </Card>
+      </div>
+
+      {/* Recent uploads + quick actions + shortcuts */}
+      <div className="mt-6 space-y-6">
+        <UploadsTable rows={IMAGE_UPLOADS} subtitle="Field images and scans sent for understanding" />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <QuickActions
+            actions={[
+              { label: 'Save extracted fields', icon: <Save className="h-4 w-4" /> },
+              { label: 'Send to grant desk', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy analysis link', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Compare with prior visit', icon: <ClipboardCheck className="h-4 w-4" /> },
+            ]}
+          />
+          <Shortcuts
+            items={[
+              { keys: '⌘ U', label: 'Upload image' },
+              { keys: '⌘ F', label: 'Extract form fields' },
+              { keys: '⌘ M', label: 'Map understanding mode' },
+              { keys: '⌘ ⇧ C', label: 'Chart interpretation mode' },
+            ]}
+          />
+        </div>
       </div>
     </div>
   )

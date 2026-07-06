@@ -1,10 +1,11 @@
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip, RadarChart, PolarGrid, PolarAngleAxis, Radar, BarChart, Bar } from 'recharts'
-import { Sparkles, Boxes, ClipboardCheck, AlertTriangle, Eye, Bug, Cpu, GaugeCircle } from 'lucide-react'
+import { Sparkles, Boxes, ClipboardCheck, AlertTriangle, Eye, Bug, Cpu, GaugeCircle, Flag, GitCommit, Users2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
 import { ChartCard } from '@/components/ui/ChartCard'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, RiskBadge, SeverityBadge } from '@/components/ui/Badges'
+import { REVIEWERS } from '@/data/governanceSamples'
 
 const perf = [
   { m: 'Jan', BharatGPT: 89, Sarvam: 87, Llama: 84 },
@@ -27,6 +28,22 @@ const usage = [
 
 const sla = [
   { s: 'Reviewer assigned', v: 96 }, { s: 'First response', v: 88 }, { s: 'Decision', v: 74 }, { s: 'Publish', v: 82 },
+]
+
+const ROADMAP = [
+  { q: 'Q3 2026', title: 'Bias Auditor v2', desc: 'Fairness eval for scheme shortlisting; on-prem RTX pod', status: 'In flight' },
+  { q: 'Q3 2026', title: 'Prompt Registry v3', desc: 'Version diff, blame view, red-team probes gate', status: 'In flight' },
+  { q: 'Q4 2026', title: 'Model Sovereign Council', desc: 'Federated fine-tune across 3 DCs; disaster failover', status: 'Planned' },
+  { q: 'Q4 2026', title: 'DPDP Consent Ledger', desc: 'Immutable consent record for citizen AI touch-points', status: 'Planned' },
+  { q: 'Q1 2027', title: 'AI Audit CMDB', desc: 'Regulator-ready evidence bundle export', status: 'Planned' },
+  { q: 'Q1 2027', title: 'Multilingual RAG SLA', desc: '11 Indic languages, p95 < 800 ms', status: 'Backlog' },
+]
+
+const POLICY_CHANGES = [
+  { at: '07 Jul 2026', policy: 'Model Risk', change: 'Canary requirement made mandatory before promote', by: 'DIT — Model Risk Cell' },
+  { at: '03 Jul 2026', policy: 'Third-party Model Use', change: 'VAPT before enable — added to gate', by: 'AI SOC' },
+  { at: '01 Jul 2026', policy: 'Incident Reporting', change: 'RCA SLA tightened from 96h to 72h', by: 'AI SOC' },
+  { at: '20 Jun 2026', policy: 'Acceptable-Use of AI', change: 'Prompt-injection clause added (v3.1)', by: 'AI Gov Officer' },
 ]
 
 export function AIGovernance() {
@@ -140,6 +157,86 @@ export function AIGovernance() {
             ))}
           </ul>
           <div className="mt-3 flex gap-2"><RiskBadge level="Low" /><SourceBadge source="Public-source linked" /></div>
+        </Card>
+      </div>
+
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
+        <Card>
+          <CardHeader
+            title="Governance roadmap"
+            subtitle="Q3 2026 → Q1 2027"
+            right={<div className="flex items-center gap-2"><Flag className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
+          />
+          <ol className="relative space-y-4 border-l border-ink-100 pl-6">
+            {ROADMAP.map((m, i) => (
+              <li key={i} className="relative">
+                <span className="absolute -left-[27px] top-1 grid h-5 w-5 place-items-center rounded-full bg-white ring-2 ring-brand-400">
+                  <Flag className="h-3 w-3 text-brand-500" />
+                </span>
+                <div className="text-[11px] font-semibold uppercase tracking-wider text-brand-600">{m.q}</div>
+                <div className="text-sm font-semibold text-ink-800">{m.title}</div>
+                <div className="mt-0.5 line-clamp-2 text-xs text-ink-500">{m.desc}</div>
+                <div className="mt-1.5">
+                  <StatusBadge status={m.status === 'In flight' ? 'Active' : m.status === 'Planned' ? 'Under Review' : 'Draft'} />
+                </div>
+              </li>
+            ))}
+          </ol>
+        </Card>
+
+        <Card>
+          <CardHeader
+            title="Recent policy changes"
+            subtitle="Last 30 days"
+            right={<div className="flex items-center gap-2"><GitCommit className="h-4 w-4 text-brand-500" /><SourceBadge source="Public-source linked" /></div>}
+          />
+          <ul className="space-y-2 text-sm">
+            {POLICY_CHANGES.map((c, i) => (
+              <li key={i} className="rounded-xl border border-ink-100 p-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium text-ink-800">{c.policy}</div>
+                    <div className="mt-0.5 line-clamp-2 text-xs text-ink-600">{c.change}</div>
+                    <div className="mt-1 truncate text-[11px] text-ink-500">by {c.by}</div>
+                  </div>
+                  <span className="shrink-0 text-[11px] text-ink-500">{c.at}</span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card>
+          <CardHeader
+            title="Reviewer workload"
+            subtitle="Queue depth by reviewer"
+            right={<div className="flex items-center gap-2"><Users2 className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
+          />
+          <ul className="space-y-2">
+            {REVIEWERS.map((r) => {
+              const load = Math.min(r.queue * 8, 100)
+              return (
+                <li key={r.name} className="rounded-xl border border-ink-100 p-3">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-gradient text-[11px] font-semibold text-white">
+                      {r.initials}
+                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium text-ink-800">{r.name}</div>
+                      <div className="truncate text-[11px] text-ink-500">{r.role} · avg {r.avg}</div>
+                    </div>
+                    <span className="shrink-0 text-xs font-semibold text-ink-700">{r.queue}</span>
+                  </div>
+                  <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-ink-100">
+                    <div
+                      className="h-full rounded-full bg-brand-gradient"
+                      style={{ width: `${load}%` }}
+                    />
+                  </div>
+                </li>
+              )
+            })}
+          </ul>
         </Card>
       </div>
     </div>

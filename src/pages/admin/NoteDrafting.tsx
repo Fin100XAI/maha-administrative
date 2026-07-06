@@ -1,9 +1,14 @@
 import { useState } from 'react'
-import { Download, ClipboardCheck, Sparkles, ShieldAlert, IndianRupee, Scale } from 'lucide-react'
+import { Download, ClipboardCheck, Sparkles, ShieldAlert, IndianRupee, Scale, FileText, Send, Save, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, ClassificationBadge, RiskBadge } from '@/components/ui/Badges'
 import { DEPARTMENTS } from '@/data/departments'
+import { NOTE_TEMPLATES, RECENT_NOTES } from '@/data/adminSamples'
+import { TemplateGallery } from './_components/TemplateGallery'
+import { RecentActivity } from './_components/RecentActivity'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
 
 export function NoteDrafting() {
   const [dept, setDept] = useState('DIT')
@@ -23,6 +28,8 @@ export function NoteDrafting() {
         description="Generate a note sheet for approval with decision options and risk analysis."
         breadcrumb={['Administrative AI', 'Note Drafting']}
         source="Demo"
+        eyebrow="Note sheet"
+        icon={<FileText className="h-5 w-5" />}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1fr]">
@@ -79,6 +86,7 @@ export function NoteDrafting() {
               <p className="mt-2"><b>3. Financial implication:</b> {fin}</p>
               <p className="mt-2"><b>4. Legal implication:</b> {legal}</p>
               <p className="mt-2"><b>5. Recommendation:</b> {reco}</p>
+              <p className="mt-2"><b>6. Preferred decision option:</b> Option {decision}</p>
               <p className="mt-6 text-right">Section Officer</p>
             </div>
           </Card>
@@ -133,6 +141,35 @@ export function NoteDrafting() {
             </Card>
           </div>
         </div>
+      </div>
+
+      {/* Templates gallery */}
+      <div className="mt-6">
+        <TemplateGallery items={NOTE_TEMPLATES} subtitle="Pre-approved note-sheet blueprints" />
+      </div>
+
+      {/* Quick actions + recent activity + shortcuts */}
+      <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <div className="space-y-4">
+          <QuickActions
+            actions={[
+              { label: 'Save draft', icon: <Save className="h-4 w-4" /> },
+              { label: 'Move to Under Secretary', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy note link', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Attach annexure', icon: <ClipboardCheck className="h-4 w-4" /> },
+            ]}
+          />
+          <RecentActivity items={RECENT_NOTES} />
+        </div>
+        <Shortcuts
+          items={[
+            { keys: '⌘ K', label: 'Open command palette' },
+            { keys: '⌘ ↵', label: 'Generate note sheet from fields' },
+            { keys: '⌘ D', label: 'Cycle decision option A → B → C' },
+            { keys: '⌘ S', label: 'Save note draft' },
+            { keys: '⌘ ⇧ R', label: 'Regenerate risk analysis' },
+          ]}
+        />
       </div>
     </div>
   )

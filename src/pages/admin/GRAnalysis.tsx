@@ -1,8 +1,46 @@
 import { useState } from 'react'
-import { Upload, Search, Link2, FileSearch, AlertTriangle, Calendar, Building2, Users, IndianRupee, ClipboardCheck } from 'lucide-react'
+import { Upload, Search, Link2, FileSearch, AlertTriangle, Calendar, Building2, Users, IndianRupee, ClipboardCheck, ScrollText, Save, Send, Printer } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, RiskBadge, ConfidenceBadge } from '@/components/ui/Badges'
+import { GR_UPLOADS } from '@/data/adminSamples'
+import { UploadsTable } from './_components/UploadsTable'
+import { CompareDiff, DiffRow } from './_components/CompareDiff'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
+
+const DIFF_ROWS: DiffRow[] = [
+  {
+    clause: 'Clause 3.1',
+    kind: 'modified',
+    left: 'Aadhaar e-KYC is recommended for beneficiary applications.',
+    right: 'Aadhaar e-KYC is MANDATORY for all beneficiary applications, along with consent artefact under DPDP Act.',
+  },
+  {
+    clause: 'Clause 4.2',
+    kind: 'modified',
+    left: 'MahaDBT cross-check within 30 days of application receipt.',
+    right: 'MahaDBT cross-check within 15 days of application receipt.',
+  },
+  {
+    clause: 'Clause 5.1',
+    kind: 'added',
+    left: '',
+    right: 'District Grievance Committee to be notified within 7 days of publication.',
+  },
+  {
+    clause: 'Clause 6.3',
+    kind: 'unchanged',
+    left: 'Financial outlay unchanged; disbursement via DBT.',
+    right: 'Financial outlay unchanged; disbursement via DBT.',
+  },
+  {
+    clause: 'Clause 7.1',
+    kind: 'removed',
+    left: 'Manual verification by ULB inspector permitted as fallback.',
+    right: '',
+  },
+]
 
 export function GRAnalysis() {
   const [tab, setTab] = useState<'upload' | 'link' | 'search'>('upload')
@@ -14,6 +52,8 @@ export function GRAnalysis() {
         description="Upload a Government Resolution, paste its public link, or search the GR repository — MAII will extract clauses, obligations, and impact."
         breadcrumb={['Administrative AI', 'GR Analysis']}
         source="Public-source linked"
+        eyebrow="Resolution"
+        icon={<ScrollText className="h-5 w-5" />}
         actions={
           <>
             <button className="btn-outline"><FileSearch className="h-4 w-4" /> View extracted clauses</button>
@@ -161,6 +201,40 @@ export function GRAnalysis() {
             <CardHeader title="AI risk flag" right={<RiskBadge level="Medium" />} />
             <p className="text-sm text-ink-700">The GR text does not explicitly address rural-migrant applicants who lack local domicile proof. Recommend clarificatory circular to prevent implementation ambiguity.</p>
           </Card>
+        </div>
+      </div>
+
+      {/* Compare two GRs */}
+      <div className="mt-6">
+        <CompareDiff
+          leftLabel="Baseline · GR-2024-URD-074"
+          rightLabel="Current · GR-2026-URD-118"
+          rows={DIFF_ROWS}
+          title="Compare two GRs"
+          subtitle="Clause-level diff between the superseded GR and the current one"
+        />
+      </div>
+
+      {/* Recent uploads + quick actions + shortcuts */}
+      <div className="mt-6 space-y-6">
+        <UploadsTable rows={GR_UPLOADS} subtitle="Government Resolutions uploaded across departments" />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <QuickActions
+            actions={[
+              { label: 'Save GR analysis', icon: <Save className="h-4 w-4" /> },
+              { label: 'Send checklist to nodal officer', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy link to analysis', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Print summary', icon: <Printer className="h-4 w-4" /> },
+            ]}
+          />
+          <Shortcuts
+            items={[
+              { keys: '⌘ K', label: 'Search GR repository' },
+              { keys: '⌘ U', label: 'Upload new GR' },
+              { keys: '⌘ D', label: 'Toggle compare-with-previous' },
+              { keys: '⌘ ⇧ C', label: 'Generate compliance checklist' },
+            ]}
+          />
         </div>
       </div>
     </div>

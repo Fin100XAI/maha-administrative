@@ -1,7 +1,11 @@
-import { Upload, ChevronRight, AlertTriangle, FileText, ClipboardCheck } from 'lucide-react'
+import { Upload, ChevronRight, AlertTriangle, FileText, ClipboardCheck, FolderOpen, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
-import { Card, CardHeader } from '@/components/ui/Card'
+import { Card, CardHeader, EmptyState } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, RiskBadge, ConfidenceBadge } from '@/components/ui/Badges'
+import { RECENT_FILES } from '@/data/adminSamples'
+import { RecentActivity } from './_components/RecentActivity'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
 
 export function FileSummarization() {
   return (
@@ -11,6 +15,8 @@ export function FileSummarization() {
         description="Ingest a file (e-Office bundle) and get a timeline, key decisions, pending approvals, missing annexures and suggested next actions."
         breadcrumb={['Administrative AI', 'File Summarization']}
         source="Demo"
+        eyebrow="e-Office"
+        icon={<FolderOpen className="h-5 w-5" />}
       />
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1fr]">
         <Card>
@@ -33,6 +39,16 @@ export function FileSummarization() {
               ))}
             </ul>
           </div>
+
+          {/* Empty state showcase for "no similar files" fallback */}
+          <div className="mt-6">
+            <div className="section-title mb-2">Related retrievals</div>
+            <EmptyState
+              title="No similar files matched confidently"
+              hint="Try refining the file subject or upload additional context."
+              icon={<FolderOpen className="h-5 w-5" />}
+            />
+          </div>
         </Card>
 
         <div className="space-y-4">
@@ -50,6 +66,7 @@ export function FileSummarization() {
                 { d: '05-Jul-2026', t: 'Preliminary note sheet drafted' },
                 { d: '05-Jul-2026', t: 'Sarvam evaluation report attached' },
                 { d: '06-Jul-2026', t: 'Draft moved to US · pending decision' },
+                { d: '07-Jul-2026', t: 'US requested clarification on Annexure-B' },
               ].map((s, i) => (
                 <li key={i} className="relative">
                   <span className="absolute -left-[21px] top-1 grid h-3 w-3 place-items-center rounded-full bg-white ring-2 ring-brand-400"></span>
@@ -102,6 +119,29 @@ export function FileSummarization() {
             </div>
           </Card>
         </div>
+      </div>
+
+      {/* Recent activity + quick actions + shortcuts */}
+      <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <div className="space-y-4">
+          <QuickActions
+            actions={[
+              { label: 'Save summary', icon: <Save className="h-4 w-4" /> },
+              { label: 'Move to Deputy Secretary', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy file link', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Request Annexures', icon: <ClipboardCheck className="h-4 w-4" /> },
+            ]}
+          />
+          <RecentActivity items={RECENT_FILES} title="Recent files" subtitle="Last 5 e-Office files summarised by MAII" />
+        </div>
+        <Shortcuts
+          items={[
+            { keys: '⌘ K', label: 'Search files' },
+            { keys: '⌘ U', label: 'Upload e-Office bundle' },
+            { keys: '⌘ T', label: 'Regenerate file timeline' },
+            { keys: '⌘ ⇧ M', label: 'Move file to next reviewer' },
+          ]}
+        />
       </div>
     </div>
   )

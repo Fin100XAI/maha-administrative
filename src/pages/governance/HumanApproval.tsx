@@ -2,19 +2,12 @@ import { useMemo, useState } from 'react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { RiskBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
-import { Check, X, ArrowRight } from 'lucide-react'
+import { Check, X, ArrowRight, Clock, Filter, UserCheck } from 'lucide-react'
+import { EXTRA_APPROVALS, ApprovalItem } from '@/data/governanceSamples'
 
 type Column = 'Awaiting Review' | 'Under Review' | 'Approved' | 'Rejected' | 'Escalated'
 
-interface Item {
-  id: string
-  title: string
-  dept: string
-  officer: string
-  due: string
-  risk: 'Low' | 'Medium' | 'High'
-  col: Column
-}
+type Item = ApprovalItem
 
 const START: Item[] = [
   { id: 'AP-401', title: 'GR summary for CS desk', dept: 'GAD', officer: 'A. Deshmukh', due: '2026-07-08', risk: 'Low', col: 'Awaiting Review' },
@@ -25,13 +18,48 @@ const START: Item[] = [
   { id: 'AP-406', title: 'Crop-loss appeal draft (MR)', dept: 'AGR', officer: 'S. Jadhav', due: '2026-07-11', risk: 'Medium', col: 'Rejected' },
   { id: 'AP-407', title: 'e-Office file movement note', dept: 'ALL', officer: 'M. Kore', due: '2026-07-12', risk: 'Low', col: 'Approved' },
   { id: 'AP-408', title: 'Marathi note tone (v2)', dept: 'GAD', officer: 'A. Deshmukh', due: '2026-07-13', risk: 'Low', col: 'Awaiting Review' },
+  ...EXTRA_APPROVALS,
 ]
 
 const COLS: Column[] = ['Awaiting Review', 'Under Review', 'Approved', 'Rejected', 'Escalated']
+const TODAY = new Date('2026-07-07T00:00:00Z')
+
+function slaFor(due: string): { label: string; tone: 'ok' | 'warn' | 'over' } {
+  const d = new Date(due + 'T23:59:59Z').getTime()
+  const diffH = Math.round((d - TODAY.getTime()) / (1000 * 60 * 60))
+  if (diffH < 0) return { label: `Overdue ${Math.abs(diffH)}h`, tone: 'over' }
+  if (diffH <= 24) return { label: `Due in ${diffH}h`, tone: 'warn' }
+  return { label: `Due in ${Math.round(diffH / 24)}d`, tone: 'ok' }
+}
+
+function SlaChip({ due }: { due: string }) {
+  const s = slaFor(due)
+  const cls =
+    s.tone === 'over' ? 'bg-red-50 text-red-700 border-red-200' :
+    s.tone === 'warn' ? 'bg-amber-50 text-amber-700 border-amber-200' :
+    'bg-emerald-50 text-emerald-700 border-emerald-200'
+  return (
+    <span className={`chip border !text-[10px] ${cls}`} title={`Due ${due}`}>
+      <Clock className="h-3 w-3" /> {s.label}
+    </span>
+  )
+}
 
 export function HumanApproval() {
-  const [items, setItems] = useState(START)
-  const grouped = useMemo(() => COLS.reduce<Record<Column, Item[]>>((acc, c) => { acc[c] = items.filter((i) => i.col === c); return acc }, {} as any), [items])
+  const [items, setItems] = useState<Item[]>(START)
+  const [risk, setRisk] = useState('All')
+  const [dept, setDept] = useState('All')
+
+  const depts = useMemo(() => ['All', ...Array.from(new Set(items.map((i) => i.dept)))], [items])
+  const filtered = useMemo(() => items.filter((i) => (
+    (risk === 'All' || i.risk === risk) &&
+    (dept === 'All' || i.dept === dept)
+  )), [items, risk, dept])
+
+  const grouped = useMemo(() => COLS.reduce<Record<Column, Item[]>>((acc, c) => { acc[c] = filtered.filter((i) => i.col === c); return acc }, {} as any), [filtered])
+
+  const myAssignments = filtered.filter((i) => i.officer === 'A. Deshmukh')
+  const overdue = filtered.filter((i) => slaFor(i.due).tone === 'over').length
 
   const move = (id: string, to: Column) => setItems(items.map((i) => i.id === id ? { ...i, col: to } : i))
 
@@ -43,6 +71,70 @@ export function HumanApproval() {
         breadcrumb={['Governance', 'Human Approval']}
         source="Demo"
       />
+
+      <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <Card>
+          <CardHeader
+            title="My assignments"
+            subtitle="A. Deshmukh · AI Governance Officer"
+            right={<UserCheck className="h-4 w-4 text-brand-500" />}
+          />
+          <div className="grid grid-cols-3 gap-2 text-center">
+            <div className="rounded-lg border border-ink-100 p-2">
+              <div className="text-lg font-semibold text-ink-900">{myAssignments.length}</div>
+              <div className="text-[11px] text-ink-500">Total</div>
+            </div>
+            <div className="rounded-lg border border-ink-100 p-2">
+              <div className="text-lg font-semibold text-amber-700">{myAssignments.filter((i) => i.col === 'Awaiting Review').length}</div>
+              <div className="text-[11px] text-ink-500">Awaiting</div>
+            </div>
+            <div className="rounded-lg border border-ink-100 p-2">
+              <div className="text-lg font-semibold text-red-700">{myAssignments.filter((i) => slaFor(i.due).tone === 'over').length}</div>
+              <div className="text-[11px] text-ink-500">Overdue</div>
+            </div>
+          </div>
+        </Card>
+
+        <Card>
+          <CardHeader title="Queue snapshot" subtitle="Across all reviewers" right={<SourceBadge source="Demo" />} />
+          <div className="grid grid-cols-5 gap-2 text-center">
+            {COLS.map((c) => (
+              <div key={c} className="rounded-lg border border-ink-100 p-2">
+                <div className="text-lg font-semibold text-ink-900">{grouped[c].length}</div>
+                <div className="truncate text-[10px] text-ink-500" title={c}>{c.split(' ')[0]}</div>
+              </div>
+            ))}
+          </div>
+          {overdue > 0 && (
+            <div className="mt-2 rounded-md border border-red-200 bg-red-50 p-2 text-xs text-red-700">
+              {overdue} item{overdue > 1 ? 's' : ''} past due · escalate
+            </div>
+          )}
+        </Card>
+
+        <Card>
+          <CardHeader
+            title="Filters"
+            subtitle="Narrow the board"
+            right={<Filter className="h-4 w-4 text-brand-500" />}
+          />
+          <div className="grid grid-cols-2 gap-3">
+            <label className="flex flex-col gap-1 text-xs text-ink-600">
+              <span>Risk</span>
+              <select value={risk} onChange={(e) => setRisk(e.target.value)} className="input !py-1.5 !text-xs">
+                {['All', 'Low', 'Medium', 'High'].map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </label>
+            <label className="flex flex-col gap-1 text-xs text-ink-600">
+              <span>Department</span>
+              <select value={dept} onChange={(e) => setDept(e.target.value)} className="input !py-1.5 !text-xs">
+                {depts.map((o) => <option key={o} value={o}>{o}</option>)}
+              </select>
+            </label>
+          </div>
+          <div className="mt-2 text-[11px] text-ink-500">{filtered.length} of {items.length} shown</div>
+        </Card>
+      </div>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
         {COLS.map((c) => (
@@ -66,6 +158,7 @@ export function HumanApproval() {
                   </div>
                   <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1">
                     <RiskBadge level={it.risk} />
+                    <SlaChip due={it.due} />
                     <span className="truncate text-[11px] text-ink-500" title={it.officer}>{it.officer}</span>
                   </div>
                   <div className="mt-3 grid grid-cols-3 gap-1.5">

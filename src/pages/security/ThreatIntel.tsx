@@ -1,7 +1,8 @@
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { SeverityBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
-import { Shield, Bug, Radar, ExternalLink } from 'lucide-react'
+import { Shield, Bug, ExternalLink, Rss, Fingerprint, Wrench } from 'lucide-react'
+import { AI_ATTACK_TECHNIQUES, THREAT_FEEDS, IOC_SAMPLES, COUNTERMEASURES } from '@/data/securitySamples'
 
 const THREATS = [
   { id: 'AIT-2026-014', title: 'Multi-agent tool-abuse via file connectors', sev: 'High' as const, mitre: 'AIT-T1.4' as const, ctrl: 'Deny external connector calls unless approved', source: 'CERT-In advisory 2026/07' },
@@ -73,6 +74,107 @@ export function ThreatIntel() {
           </a>
         </div>
       </div>
+
+      {/* AI-specific attack techniques (MITRE ATLAS-style) */}
+      <Card className="mt-6">
+        <CardHeader
+          title="AI-specific attack techniques"
+          subtitle="MITRE ATLAS-style catalog"
+          right={<SourceBadge source="Public-source linked" />}
+        />
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr>{['ATLAS ID', 'Technique', 'Tactic', 'Severity'].map((h) => <th key={h} className="table-th">{h}</th>)}</tr>
+            </thead>
+            <tbody>
+              {AI_ATTACK_TECHNIQUES.map((t) => (
+                <tr key={t.id}>
+                  <td className="table-td font-mono text-xs">{t.id}</td>
+                  <td className="table-td font-medium text-ink-800">{t.name}</td>
+                  <td className="table-td text-ink-700">{t.tactic}</td>
+                  <td className="table-td"><SeverityBadge level={t.sev} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+
+      {/* Threat-feed subscription list + IOC samples */}
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2">
+        <Card>
+          <CardHeader
+            title="Threat-feed subscriptions"
+            subtitle="External + internal sources"
+            right={<span className="chip border bg-ink-100 text-ink-700 border-ink-200"><Rss className="h-3 w-3" /> Feeds</span>}
+          />
+          <ul className="space-y-2 text-sm">
+            {THREAT_FEEDS.map((f) => (
+              <li key={f.name} className="flex items-center justify-between gap-2 rounded-md border border-ink-100 px-3 py-2">
+                <div className="min-w-0">
+                  <div className="font-medium text-ink-800 truncate">{f.name}</div>
+                  <div className="text-xs text-ink-500">{f.iocs.toLocaleString()} IOCs · refresh {f.freq}</div>
+                </div>
+                <div className="flex shrink-0 items-center gap-2">
+                  <StatusBadge status={f.status} />
+                  {f.url && f.url !== '#' && (
+                    <a href={f.url} target="_blank" rel="noreferrer" className="text-brand-600 hover:text-brand-800" title={`Open ${f.name}`}>
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Card>
+
+        <Card>
+          <CardHeader
+            title="Indicators of Compromise (IOC)"
+            subtitle="Sample — 8 recent entries"
+            right={<span className="chip border bg-ink-100 text-ink-700 border-ink-200"><Fingerprint className="h-3 w-3" /> IOC</span>}
+          />
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr>{['Type', 'Indicator', 'Seen', 'Source', 'Sev'].map((h) => <th key={h} className="table-th">{h}</th>)}</tr>
+              </thead>
+              <tbody>
+                {IOC_SAMPLES.map((i) => (
+                  <tr key={i.ioc}>
+                    <td className="table-td"><span className="chip border bg-ink-100 text-ink-700 border-ink-200">{i.type}</span></td>
+                    <td className="table-td font-mono text-xs text-ink-800 truncate max-w-[200px]">{i.ioc}</td>
+                    <td className="table-td text-xs">{i.seen}</td>
+                    <td className="table-td text-xs text-ink-700">{i.src}</td>
+                    <td className="table-td"><SeverityBadge level={i.sev} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      </div>
+
+      {/* Countermeasure library */}
+      <Card className="mt-6">
+        <CardHeader
+          title="Countermeasure library"
+          subtitle="Controls mapped to attack techniques"
+          right={<span className="chip border bg-emerald-50 text-emerald-700 border-emerald-200"><Wrench className="h-3 w-3" /> Controls</span>}
+        />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {COUNTERMEASURES.map((c) => (
+            <div key={c.name} className="rounded-xl border border-ink-100 bg-brand-soft/30 p-3">
+              <div className="flex items-center gap-2">
+                <Shield className="h-4 w-4 text-brand-600" />
+                <span className="text-sm font-semibold text-ink-800">{c.name}</span>
+              </div>
+              <p className="mt-1 text-xs text-ink-600 line-clamp-2">{c.desc}</p>
+            </div>
+          ))}
+        </div>
+      </Card>
     </div>
   )
 }

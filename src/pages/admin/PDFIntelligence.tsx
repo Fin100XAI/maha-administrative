@@ -1,7 +1,41 @@
-import { Upload, GitCompare, Table2, Signature, FileText, AlertTriangle } from 'lucide-react'
+import { Upload, GitCompare, Table2, Signature, FileText, AlertTriangle, FileBox, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, RiskBadge } from '@/components/ui/Badges'
+import { PDF_UPLOADS, PDF_BATCH, PDF_VOLUME_7D } from '@/data/adminSamples'
+import { CompareDiff, DiffRow } from './_components/CompareDiff'
+import { UploadsTable } from './_components/UploadsTable'
+import { BatchQueue } from './_components/BatchQueue'
+import { VolumeInsights } from './_components/VolumeInsights'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
+
+const PDF_DIFF: DiffRow[] = [
+  {
+    clause: 'Section 3 · Beneficiary criteria',
+    kind: 'modified',
+    left: 'Applicant must produce local domicile proof issued within the last 2 years.',
+    right: 'Applicant may present Aadhaar or any DPDP-compliant identity artefact; domicile relaxed for rural migrants.',
+  },
+  {
+    clause: 'Section 4 · Timelines',
+    kind: 'modified',
+    left: 'Cross-verification within 30 working days.',
+    right: 'Cross-verification within 15 working days via MahaDBT API.',
+  },
+  {
+    clause: 'Section 5 · Grievance',
+    kind: 'added',
+    left: '',
+    right: 'District Grievance Committee constituted within 7 days of GR publication.',
+  },
+  {
+    clause: 'Section 7 · Fallback',
+    kind: 'removed',
+    left: 'Manual ULB fallback permitted if digital verification fails twice.',
+    right: '',
+  },
+]
 
 export function PDFIntelligence() {
   return (
@@ -11,6 +45,8 @@ export function PDFIntelligence() {
         description="Ask a PDF, compare two PDFs, extract tables, detect missing pages, extract signatures, generate executive summary, and flag risky clauses."
         breadcrumb={['Administrative AI', 'PDF Intelligence']}
         source="Demo"
+        eyebrow="Documents"
+        icon={<FileBox className="h-5 w-5" />}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
@@ -70,6 +106,47 @@ export function PDFIntelligence() {
             <li>Counter-signed by <b>Nitin Kareer</b>, Chief Secretary · Page 12</li>
           </ul>
         </Card>
+      </div>
+
+      {/* Compare two PDFs */}
+      <div className="mt-6">
+        <CompareDiff
+          leftLabel="v1 · draft-2026-05.pdf"
+          rightLabel="v2 · GR-2026-URD-118.pdf"
+          rows={PDF_DIFF}
+          title="Compare two PDFs"
+          subtitle="Section-level diff across two versions of the same document"
+        />
+      </div>
+
+      {/* Insights + batch */}
+      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+        <VolumeInsights title="PDF processing volume — last 7 days" data={PDF_VOLUME_7D} />
+        <BatchQueue jobs={PDF_BATCH} title="PDF batch queue" subtitle="Bulk PDF extraction jobs" />
+      </div>
+
+      {/* Recent uploads + quick actions + shortcuts */}
+      <div className="mt-6 space-y-6">
+        <UploadsTable rows={PDF_UPLOADS} subtitle="PDFs uploaded to the intelligence pipeline this week" />
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+          <QuickActions
+            actions={[
+              { label: 'Save summary', icon: <Save className="h-4 w-4" /> },
+              { label: 'Send answer to Workspace', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy citation link', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Extract all tables', icon: <Table2 className="h-4 w-4" /> },
+            ]}
+          />
+          <Shortcuts
+            items={[
+              { keys: '⌘ U', label: 'Upload PDF' },
+              { keys: '⌘ K', label: 'Ask this PDF' },
+              { keys: '⌘ D', label: 'Toggle compare mode' },
+              { keys: '⌘ T', label: 'Extract tables' },
+              { keys: '⌘ ⇧ B', label: 'Open batch queue' },
+            ]}
+          />
+        </div>
       </div>
     </div>
   )

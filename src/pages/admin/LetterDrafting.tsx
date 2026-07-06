@@ -1,9 +1,14 @@
 import { useState } from 'react'
-import { Download, ClipboardCheck, Sparkles, FileText, Clock, History, Paperclip, ShieldCheck } from 'lucide-react'
+import { Download, ClipboardCheck, Sparkles, FileText, Clock, History, Paperclip, ShieldCheck, PenLine, Save, Send, Link2, Printer } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, ClassificationBadge } from '@/components/ui/Badges'
 import { DEPARTMENTS, LANGUAGES } from '@/data/departments'
+import { LETTER_TEMPLATES, RECENT_LETTERS } from '@/data/adminSamples'
+import { TemplateGallery } from './_components/TemplateGallery'
+import { RecentActivity } from './_components/RecentActivity'
+import { QuickActions } from './_components/QuickActions'
+import { Shortcuts } from './_components/Shortcuts'
 
 const TONES = ['Formal', 'Formal — Urgent', 'Formal — Sympathy', 'Directive', 'Advisory', 'Explanatory']
 
@@ -24,6 +29,8 @@ export function LetterDrafting() {
         description="Generate government-grade letters with department-specific formatting, tone, and language."
         breadcrumb={['Administrative AI', 'Letter Drafting']}
         source="Demo"
+        eyebrow="Correspondence"
+        icon={<PenLine className="h-5 w-5" />}
       />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1fr]">
@@ -89,7 +96,7 @@ export function LetterDrafting() {
                   </div>
                   <div className="text-right text-xs text-ink-500">
                     <div>Ref: <span className="font-medium text-ink-800">{refNo}</span></div>
-                    <div>Date: 06-Jul-2026</div>
+                    <div>Date: 07-Jul-2026</div>
                   </div>
                 </div>
                 <div className="mb-3">To,<br /><span className="font-medium">{recipient}</span></div>
@@ -129,9 +136,9 @@ export function LetterDrafting() {
             <CardHeader title="Version history" subtitle="All revisions are stored under file DIT/AI/2026/07/118" right={<History className="h-4 w-4 text-ink-400" />} />
             <ul className="space-y-2 text-sm">
               {[
-                { v: 'v0.3', at: '2026-07-06 09:14', by: 'MAII AI · autosave', s: 'Draft' as const },
-                { v: 'v0.2', at: '2026-07-06 09:11', by: 'R. Mahajan · edited paragraph 2', s: 'Draft' as const },
-                { v: 'v0.1', at: '2026-07-06 09:08', by: 'MAII AI · initial draft', s: 'Draft' as const },
+                { v: 'v0.3', at: '2026-07-07 09:14', by: 'MAII AI · autosave', s: 'Draft' as const },
+                { v: 'v0.2', at: '2026-07-07 09:11', by: 'R. Mahajan · edited paragraph 2', s: 'Draft' as const },
+                { v: 'v0.1', at: '2026-07-07 09:08', by: 'MAII AI · initial draft', s: 'Draft' as const },
               ].map((r) => (
                 <li key={r.v} className="flex items-center justify-between rounded-lg border border-ink-100 p-3">
                   <div className="min-w-0">
@@ -158,6 +165,38 @@ export function LetterDrafting() {
             <div className="mt-2 text-xs text-ink-500">Current status: <b>Awaiting review by Under Secretary</b></div>
           </Card>
         </div>
+      </div>
+
+      {/* Templates gallery */}
+      <div className="mt-6">
+        <TemplateGallery
+          items={LETTER_TEMPLATES}
+          subtitle="Pick a pre-approved template as your starting point"
+        />
+      </div>
+
+      {/* Quick actions + shortcuts + recent activity */}
+      <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)]">
+        <div className="space-y-4">
+          <QuickActions
+            actions={[
+              { label: 'Save draft', icon: <Save className="h-4 w-4" /> },
+              { label: 'Send to Under Secretary', icon: <Send className="h-4 w-4" />, primary: true },
+              { label: 'Copy shareable link', icon: <Link2 className="h-4 w-4" /> },
+              { label: 'Print letterhead', icon: <Printer className="h-4 w-4" /> },
+            ]}
+          />
+          <RecentActivity items={RECENT_LETTERS} />
+        </div>
+        <Shortcuts
+          items={[
+            { keys: '⌘ K', label: 'Open command palette' },
+            { keys: '⌘ ↵', label: 'Draft letter with current fields' },
+            { keys: '⌘ S', label: 'Save draft to file DIT/AI/2026/07/118' },
+            { keys: '⌘ ⇧ P', label: 'Print letter with letterhead' },
+            { keys: '⌘ /', label: 'Toggle Marathi register preview' },
+          ]}
+        />
       </div>
     </div>
   )

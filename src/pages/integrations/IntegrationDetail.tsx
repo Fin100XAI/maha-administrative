@@ -1,9 +1,31 @@
 import { useParams, Link } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge } from '@/components/ui/Badges'
 import { INTEGRATIONS } from '@/data/integrations'
-import { ExternalLink, Wifi, Lock, ClipboardCheck, User, ChevronLeft } from 'lucide-react'
+import {
+  testStepsFor,
+  SAMPLE_REQUEST,
+  SAMPLE_RESPONSE,
+  CHANGE_LOG,
+  ENDPOINT_METRICS,
+} from '@/data/platformSamples'
+import {
+  ExternalLink,
+  Wifi,
+  Lock,
+  ClipboardCheck,
+  User,
+  ChevronLeft,
+  CheckCircle2,
+  XCircle,
+  MinusCircle,
+  FlaskConical,
+  GitBranch,
+  BarChart3,
+  Code2,
+} from 'lucide-react'
 
 export function IntegrationDetail() {
   const { slug } = useParams<{ slug: string }>()
@@ -16,6 +38,10 @@ export function IntegrationDetail() {
       </div>
     )
   }
+
+  const steps = testStepsFor(i.slug)
+  const passCount = steps.filter((s) => s.status === 'Pass').length
+
   return (
     <div>
       <PageHeader
@@ -43,10 +69,98 @@ export function IntegrationDetail() {
           </Card>
 
           <Card>
+            <CardHeader
+              title="Test connection"
+              subtitle={`${passCount} of ${steps.length} steps passed`}
+              right={<div className="flex items-center gap-2"><FlaskConical className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
+            />
+            <ol className="space-y-2 text-sm">
+              {steps.map((s, idx) => (
+                <motion.li
+                  key={s.name}
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: idx * 0.05 }}
+                  className="flex items-start justify-between gap-3 rounded-md border border-ink-100 px-3 py-2"
+                >
+                  <div className="flex min-w-0 items-start gap-2">
+                    <StepIcon status={s.status} />
+                    <div className="min-w-0">
+                      <div className="font-medium text-ink-800">{idx + 1}. {s.name}</div>
+                      <div className="truncate text-xs text-ink-500" title={s.detail}>{s.detail}</div>
+                    </div>
+                  </div>
+                  <div className="shrink-0 text-right text-xs text-ink-500">
+                    <div className={
+                      s.status === 'Pass' ? 'text-emerald-700' :
+                      s.status === 'Fail' ? 'text-red-700' : 'text-ink-500'
+                    }>{s.status}</div>
+                    <div>{s.ms > 0 ? `${s.ms}ms` : '—'}</div>
+                  </div>
+                </motion.li>
+              ))}
+            </ol>
+          </Card>
+
+          <Card>
+            <CardHeader
+              title="Sample request / response"
+              subtitle="Illustrative payloads. Sensitive fields shown as placeholders."
+              right={<div className="flex items-center gap-2"><Code2 className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
+            />
+            <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              <div className="min-w-0">
+                <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-ink-500">Request</div>
+                <pre className="max-h-64 overflow-auto rounded-md border border-ink-100 bg-ink-50/70 p-3 text-[11px] leading-relaxed text-ink-800">
+{SAMPLE_REQUEST}
+                </pre>
+              </div>
+              <div className="min-w-0">
+                <div className="mb-1 text-xs font-semibold uppercase tracking-widest text-ink-500">Response</div>
+                <pre className="max-h-64 overflow-auto rounded-md border border-ink-100 bg-ink-50/70 p-3 text-[11px] leading-relaxed text-ink-800">
+{SAMPLE_RESPONSE}
+                </pre>
+              </div>
+            </div>
+          </Card>
+
+          <Card>
+            <CardHeader
+              title="Per-endpoint metrics"
+              subtitle="Last 24 hours across the six busiest endpoints."
+              right={<div className="flex items-center gap-2"><BarChart3 className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
+            />
+            <div className="max-w-full overflow-x-auto">
+              <table className="w-full min-w-[560px] text-sm">
+                <thead>
+                  <tr className="text-left text-xs uppercase tracking-wide text-ink-500">
+                    <th className="table-th">Endpoint</th>
+                    <th className="table-th text-right">Calls · 24h</th>
+                    <th className="table-th text-right">p95</th>
+                    <th className="table-th text-right">Error rate</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ENDPOINT_METRICS.map((m) => (
+                    <tr key={m.endpoint} className="hover:bg-ink-50/40">
+                      <td className="table-td font-mono text-xs text-ink-800">{m.endpoint}</td>
+                      <td className="table-td text-right">{m.calls24h.toLocaleString()}</td>
+                      <td className="table-td text-right">{m.p95ms}ms</td>
+                      <td className={'table-td text-right ' + (m.errorRate > 0.3 ? 'text-red-700' : m.errorRate > 0.1 ? 'text-amber-700' : 'text-emerald-700')}>
+                        {m.errorRate.toFixed(2)}%
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+
+          <Card>
             <CardHeader title="Required approvals" />
             <ul className="space-y-2 text-sm">
               {i.requiredApprovals.map((a) => (
-                <li key={a} className="rounded-md border border-ink-100 px-3 py-2 text-ink-700">✔ {a}</li>
+                <li key={a} className="rounded-md border border-ink-100 px-3 py-2 text-ink-700">{a}</li>
               ))}
             </ul>
           </Card>
@@ -77,6 +191,25 @@ export function IntegrationDetail() {
             </div>
           </Card>
           <Card>
+            <CardHeader
+              title="Change log"
+              subtitle="Recent connector versions."
+              right={<div className="flex items-center gap-2"><GitBranch className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
+            />
+            <ol className="relative space-y-3 border-l border-ink-100 pl-4 text-sm">
+              {CHANGE_LOG.map((c) => (
+                <li key={c.version} className="relative">
+                  <span className="absolute -left-[21px] top-1.5 h-2 w-2 rounded-full bg-brand-gradient" />
+                  <div className="flex items-baseline justify-between gap-2">
+                    <span className="font-semibold text-ink-800">{c.version}</span>
+                    <span className="text-xs text-ink-500">{c.date}</span>
+                  </div>
+                  <div className="text-xs text-ink-600">{c.note}</div>
+                </li>
+              ))}
+            </ol>
+          </Card>
+          <Card>
             <CardHeader title="Next steps" />
             <ul className="space-y-2 text-sm text-ink-700">
               <li className="flex items-center gap-2"><ClipboardCheck className="h-4 w-4 text-brand-500" /> Sign MoU with data owner</li>
@@ -89,6 +222,12 @@ export function IntegrationDetail() {
       </div>
     </div>
   )
+}
+
+function StepIcon({ status }: { status: 'Pass' | 'Fail' | 'Skipped' }) {
+  if (status === 'Pass') return <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+  if (status === 'Fail') return <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
+  return <MinusCircle className="mt-0.5 h-4 w-4 shrink-0 text-ink-400" />
 }
 
 function Info({ k, v }: { k: string; v: string }) {
