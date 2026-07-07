@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Upload, Search, Link2, FileSearch, AlertTriangle, Calendar, Building2, Users, IndianRupee, ClipboardCheck, ScrollText, Save, Send, Printer } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
@@ -42,8 +42,24 @@ const DIFF_ROWS: DiffRow[] = [
   },
 ]
 
+const GR_REPO = [
+  'GR-2026-URD-118 · PMAY-U 2.0 Beneficiary Verification',
+  'GR-2025-URD-092 · PMAY-U Grievance SOP',
+  'GR-2024-URD-074 · Municipal Housing Data Standards',
+  'GR-2025-RD-058 · Rural Migrant Domicile Relaxation',
+  'GR-2023-URD-045 · Aadhaar Consent Framework',
+  'GR-2026-FIN-011 · DBT Disbursement Guidelines',
+]
+
 export function GRAnalysis() {
   const [tab, setTab] = useState<'upload' | 'link' | 'search'>('upload')
+  const [repoQuery, setRepoQuery] = useState('')
+
+  const repoResults = useMemo(
+    () =>
+      GR_REPO.filter((r) => r.toLowerCase().includes(repoQuery.trim().toLowerCase())),
+    [repoQuery],
+  )
 
   return (
     <div>
@@ -64,7 +80,7 @@ export function GRAnalysis() {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1fr]">
         <Card>
-          <div className="mb-4 flex items-center gap-2 border-b border-ink-100 pb-3">
+          <div className="mb-4 flex flex-wrap items-center gap-2 border-b border-ink-100 pb-3">
             {[
               { k: 'upload' as const, label: 'Upload GR PDF', icon: Upload },
               { k: 'link' as const, label: 'Paste GR link', icon: Link2 },
@@ -99,27 +115,33 @@ export function GRAnalysis() {
             <div>
               <label className="label">Search GR repository</label>
               <div className="mt-1 flex gap-2">
-                <input className="input" placeholder="e.g. PMAY-U 2.0 verification…" />
+                <input
+                  className="input"
+                  placeholder="e.g. PMAY-U 2.0 verification…"
+                  value={repoQuery}
+                  onChange={(e) => setRepoQuery(e.target.value)}
+                />
                 <button className="btn-primary"><Search className="h-4 w-4" /> Search</button>
               </div>
               <div className="mt-3 space-y-2 text-sm">
-                {[
-                  'GR-2026-URD-118 · PMAY-U 2.0 Beneficiary Verification',
-                  'GR-2025-URD-092 · PMAY-U Grievance SOP',
-                  'GR-2024-URD-074 · Municipal Housing Data Standards',
-                ].map((r) => (
+                {repoResults.map((r) => (
                   <div key={r} className="flex items-center justify-between rounded-lg border border-ink-100 p-3">
                     <span className="text-ink-800">{r}</span>
                     <button className="btn-ghost text-xs">Open →</button>
                   </div>
                 ))}
+                {repoResults.length === 0 && (
+                  <div className="rounded-lg border border-dashed border-ink-200 bg-ink-50/40 p-6 text-center text-ink-500">
+                    No GRs match "{repoQuery}".
+                  </div>
+                )}
               </div>
             </div>
           )}
 
           <div className="mt-5 rounded-xl border border-ink-100 bg-ink-50/50 p-4">
             <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-500">Detected metadata</div>
-            <dl className="grid grid-cols-2 gap-2 text-sm">
+            <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
               <div><dt className="text-ink-500">GR Number</dt><dd className="font-medium text-ink-800">GR-2026-URD-118</dd></div>
               <div><dt className="text-ink-500">Department</dt><dd className="font-medium text-ink-800">Urban Development</dd></div>
               <div><dt className="text-ink-500">Effective from</dt><dd className="font-medium text-ink-800">04-Jul-2026</dd></div>
@@ -131,7 +153,7 @@ export function GRAnalysis() {
         </Card>
 
         <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
             <Info title="Effective Date" icon={<Calendar className="h-4 w-4" />} value="04-Jul-2026" hint="Applies immediately" />
             <Info title="Responsible Dept" icon={<Building2 className="h-4 w-4" />} value="Urban Development" hint="Coordinated with MahaDBT" />
             <Info title="Deadline" icon={<Calendar className="h-4 w-4" />} value="11-Jul-2026" hint="Committee formation" />

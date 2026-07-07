@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip,
   BarChart, Bar, Legend,
@@ -24,7 +25,14 @@ const risky = [
   { o: 'MPSC-2017-0721', dept: 'AGR', score: 55, sev: 'Medium' as const, reason: 'Weekend document access' },
 ]
 
+const SEV_FILTERS = ['All', 'High', 'Medium', 'Low'] as const
+
 export function UBA() {
+  const [sev, setSev] = useState<(typeof SEV_FILTERS)[number]>('All')
+  const riskyRows = useMemo(
+    () => (sev === 'All' ? risky : risky.filter((r) => r.sev === sev)),
+    [sev],
+  )
   return (
     <div>
       <PageHeader
@@ -34,7 +42,7 @@ export function UBA() {
         source="Demo"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Login anomalies" value={6} icon={<LogIn className="h-5 w-5" />} delta={-25} source="Demo" confidence={92} />
         <MetricCard label="Document access spikes" value={4} icon={<Activity className="h-5 w-5" />} delta={-20} source="Demo" confidence={90} />
         <MetricCard label="Bulk download risk" value={2} icon={<Download className="h-5 w-5" />} delta={-40} source="Demo" confidence={88} />
@@ -56,22 +64,35 @@ export function UBA() {
         </ChartCard>
 
         <Card>
-          <CardHeader title="Officer risk scores" right={<SourceBadge source="Demo" />} />
+          <CardHeader
+            title="Officer risk scores"
+            right={<div className="flex items-center gap-2">
+              <select className="input h-8 w-auto py-1 text-xs" value={sev} onChange={(e) => setSev(e.target.value as any)} aria-label="Filter by severity">
+                {SEV_FILTERS.map((s) => <option key={s}>{s === 'All' ? 'All severities' : s}</option>)}
+              </select>
+              <SourceBadge source="Demo" />
+            </div>}
+          />
           <ul className="space-y-2">
-            {risky.map((r) => (
+            {riskyRows.map((r) => (
               <li key={r.o} className="rounded-md border border-ink-100 p-3">
                 <div className="flex items-center justify-between">
                   <div className="min-w-0">
                     <div className="text-sm font-medium text-ink-800 truncate">{r.o}</div>
                     <div className="text-xs text-ink-500 truncate">{r.dept} · {r.reason}</div>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex shrink-0 items-center gap-2">
                     <SeverityBadge level={r.sev} />
                     <span className="text-lg font-semibold text-brand-600">{r.score}</span>
                   </div>
                 </div>
               </li>
             ))}
+            {riskyRows.length === 0 && (
+              <li className="rounded-md border border-dashed border-ink-200 p-4 text-center text-xs text-ink-500">
+                No officers at the selected severity.
+              </li>
+            )}
           </ul>
         </Card>
       </div>

@@ -1,21 +1,32 @@
 import { Bell, ChevronDown, Command, Menu, Search, ShieldCheck, LogOut, BadgeCheck } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useState, type FormEvent } from 'react'
+import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'
 
 export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchFocused, setSearchFocused] = useState(false)
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
+  const [query, setQuery] = useState('')
+
+  const askCopilot = (e: FormEvent) => {
+    e.preventDefault()
+    const q = query.trim()
+    navigate(q ? `/workspace?q=${encodeURIComponent(q)}` : '/workspace')
+    setQuery('')
+    setMobileSearchOpen(false)
+  }
 
   return (
-    <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-ink-100 bg-white/80 px-4 backdrop-blur-lg">
+    <header className="sticky top-0 z-30 flex h-16 items-center gap-2 border-b border-ink-100 bg-white/80 px-3 backdrop-blur-lg sm:gap-3 sm:px-4">
       <button className="btn-ghost !p-2" onClick={onToggleSidebar} aria-label="Toggle sidebar">
         <Menu className="h-5 w-5" />
       </button>
 
       {/* Search input with focus glow */}
-      <div className="relative hidden max-w-xl flex-1 md:block">
+      <form onSubmit={askCopilot} className="relative hidden max-w-xl flex-1 md:block">
         <div
           className={`relative rounded-lg transition-all duration-300 ${
             searchFocused
@@ -44,8 +55,10 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             }`}
           />
           <input
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
             className="input relative bg-white pl-9 pr-16"
-            placeholder="Ask MAII AI — search GRs, circulars, files, officers…"
+            placeholder="Ask Maha Copilot — GRs, circulars, files, officers…"
             onFocus={() => setSearchFocused(true)}
             onBlur={() => setSearchFocused(false)}
           />
@@ -55,11 +68,23 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             </span>
           </span>
         </div>
-      </div>
+      </form>
 
-      <div className="ml-auto flex items-center gap-2">
+      <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
+        {/* Mobile search toggle */}
+        <button
+          className="btn-ghost !p-2 md:hidden"
+          aria-label="Search"
+          onClick={() => setMobileSearchOpen((v) => !v)}
+        >
+          <Search className="h-5 w-5" />
+        </button>
+
+        {/* Language switcher — EN / हिं / मरा */}
+        <LanguageSwitcher />
+
         {/* Encryption/session chip with animated shimmer border */}
-        <div className="relative hidden md:block">
+        <div className="relative hidden xl:block">
           <span
             aria-hidden
             className="pointer-events-none absolute inset-0 rounded-lg"
@@ -115,6 +140,30 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
           <LogOut className="h-4 w-4" />
         </Link>
       </div>
+
+      {/* Mobile search row — slides in under the header */}
+      <AnimatePresence>
+        {mobileSearchOpen && (
+          <motion.div
+            className="absolute inset-x-0 top-full border-b border-ink-100 bg-white/95 p-3 shadow-lg backdrop-blur-lg md:hidden"
+            initial={{ opacity: 0, y: -8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+          >
+            <form onSubmit={askCopilot} className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
+              <input
+                autoFocus
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="input bg-white pl-9"
+                placeholder="Ask Maha Copilot — GRs, circulars, files, officers…"
+              />
+            </form>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Subtle bottom gradient line */}
       <span

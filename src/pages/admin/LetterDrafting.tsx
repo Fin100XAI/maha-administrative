@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Download, ClipboardCheck, Sparkles, FileText, Clock, History, Paperclip, ShieldCheck, PenLine, Save, Send, Link2, Printer } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { Download, ClipboardCheck, FileText, Clock, History, Paperclip, ShieldCheck, PenLine, Save, Send, Link2, Printer } from 'lucide-react'
+import { exportDoc, exportPagePdf } from '@/lib/exportUtils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, ClassificationBadge } from '@/components/ui/Badges'
@@ -12,6 +13,102 @@ import { Shortcuts } from './_components/Shortcuts'
 
 const TONES = ['Formal', 'Formal — Urgent', 'Formal — Sympathy', 'Directive', 'Advisory', 'Explanatory']
 
+type LetterCopy = {
+  govt: string
+  address: string
+  refLabel: string
+  dateLabel: string
+  toLabel: string
+  subjectLabel: string
+  salutation: string
+  opening: string
+  request: string
+  enclosureLine: string
+  closing: string
+  designation: string
+  enclosureLabel: string
+}
+
+// Language + tone drive the rendered letter so switching either filter is visible.
+const LETTER_I18N: Record<string, Omit<LetterCopy, 'salutation' | 'request'>> = {
+  English: {
+    govt: 'Government of Maharashtra',
+    address: 'Mantralaya, Mumbai — 400 032',
+    refLabel: 'Ref',
+    dateLabel: 'Date',
+    toLabel: 'To,',
+    subjectLabel: 'Subject:',
+    opening:
+      'With reference to the subject cited above, this is to inform that the Directorate of Information Technology has been directed to roll out the MAII AI Workspace across all divisional offices in a phased manner between July and October 2026. The system will be made available under sovereign hosting with full DPDP compliance and on-prem deployment where applicable.',
+    enclosureLine: 'A copy of the roll-out schedule and readiness checklist is enclosed for ready reference.',
+    closing: 'Yours faithfully,',
+    designation: 'Principal Secretary (IT)',
+    enclosureLabel: 'Enclosure: Roll-out schedule (Annexure-A), Readiness checklist (Annexure-B).',
+  },
+  'मराठी (Marathi)': {
+    govt: 'महाराष्ट्र शासन',
+    address: 'मंत्रालय, मुंबई — ४०० ०३२',
+    refLabel: 'संदर्भ',
+    dateLabel: 'दिनांक',
+    toLabel: 'प्रति,',
+    subjectLabel: 'विषय:',
+    opening:
+      'उपरोक्त विषयाच्या संदर्भात कळविण्यात येते की, माहिती तंत्रज्ञान संचालनालयास जुलै ते ऑक्टोबर २०२६ या कालावधीत सर्व विभागीय कार्यालयांमध्ये टप्प्याटप्प्याने MAII AI Workspace कार्यान्वित करण्याचे निर्देश देण्यात आले आहेत. ही प्रणाली सार्वभौम होस्टिंगखाली, संपूर्ण DPDP अनुपालनासह उपलब्ध करून दिली जाईल.',
+    enclosureLine: 'कार्यान्वयन वेळापत्रक व सज्जता तपासणी सूची संदर्भासाठी सोबत जोडली आहे.',
+    closing: 'आपला विश्वासू,',
+    designation: 'प्रधान सचिव (माहिती तंत्रज्ञान)',
+    enclosureLabel: 'सोबत: कार्यान्वयन वेळापत्रक (परिशिष्ट-अ), सज्जता तपासणी सूची (परिशिष्ट-ब).',
+  },
+  'हिंदी (Hindi)': {
+    govt: 'महाराष्ट्र सरकार',
+    address: 'मंत्रालय, मुंबई — ४०० ०३२',
+    refLabel: 'संदर्भ',
+    dateLabel: 'दिनांक',
+    toLabel: 'सेवा में,',
+    subjectLabel: 'विषय:',
+    opening:
+      'उपर्युक्त विषय के संदर्भ में सूचित किया जाता है कि सूचना प्रौद्योगिकी निदेशालय को जुलाई से अक्टूबर २०२६ के दौरान सभी संभागीय कार्यालयों में चरणबद्ध रूप से MAII AI Workspace लागू करने के निर्देश दिए गए हैं। यह प्रणाली संपूर्ण DPDP अनुपालन के साथ सार्वभौम होस्टिंग के अंतर्गत उपलब्ध कराई जाएगी।',
+    enclosureLine: 'कार्यान्वयन कार्यक्रम एवं तत्परता जाँच-सूची की एक प्रति संदर्भ हेतु संलग्न है।',
+    closing: 'भवदीय,',
+    designation: 'प्रधान सचिव (सूचना प्रौद्योगिकी)',
+    enclosureLabel: 'संलग्न: कार्यान्वयन कार्यक्रम (अनुबंध-अ), तत्परता जाँच-सूची (अनुबंध-ब)।',
+  },
+}
+
+// Tone changes the salutation register and the operative request sentence.
+const TONE_COPY: Record<string, { salutation: string; request: string }> = {
+  Formal: {
+    salutation: 'Sir/Madam,',
+    request:
+      'You are requested to kindly nominate a nodal officer from your Division to coordinate readiness, training and go-live activities. The nomination may please be communicated to this office latest by 20 July 2026.',
+  },
+  'Formal — Urgent': {
+    salutation: 'Sir/Madam,',
+    request:
+      'In view of the time-bound roll-out, you are requested to URGENTLY nominate a nodal officer from your Division. The nomination must reach this office without fail by 20 July 2026, as onboarding cannot commence otherwise.',
+  },
+  'Formal — Sympathy': {
+    salutation: 'Respected Sir/Madam,',
+    request:
+      'We are mindful of the existing workload at your Division and shall extend every support during the transition. At your convenience, kindly nominate a nodal officer to coordinate readiness, preferably by 20 July 2026.',
+  },
+  Directive: {
+    salutation: 'Sir/Madam,',
+    request:
+      'You are hereby directed to nominate a nodal officer from your Division and ensure the nomination reaches this office by 20 July 2026. Compliance is to be reported on the same date.',
+  },
+  Advisory: {
+    salutation: 'Sir/Madam,',
+    request:
+      'It is advised that a nodal officer be nominated from your Division to oversee readiness and training. Nominating the officer by 20 July 2026 would help align with the state-wide schedule.',
+  },
+  Explanatory: {
+    salutation: 'Sir/Madam,',
+    request:
+      'To explain the process: each Division designates a nodal officer who coordinates readiness assessment, staff training and go-live. Kindly identify and nominate this officer to this office by 20 July 2026.',
+  },
+}
+
 export function LetterDrafting() {
   const [dept, setDept] = useState('DIT')
   const [recipient, setRecipient] = useState('Divisional Commissioner, Pune Division')
@@ -21,6 +118,11 @@ export function LetterDrafting() {
   const [lang, setLang] = useState<typeof LANGUAGES[number]>('English')
   const [purpose, setPurpose] = useState('Convey the state-wide roll-out schedule of the MAII AI Workspace and request nomination of nodal officers by 20 July 2026.')
   const [showOutput, setShowOutput] = useState(true)
+  const previewRef = useRef<HTMLDivElement>(null)
+
+  const base = LETTER_I18N[lang] ?? LETTER_I18N.English
+  const toneCopy = TONE_COPY[tone] ?? TONE_COPY.Formal
+  const copy: LetterCopy = { ...base, ...toneCopy }
 
   return (
     <div>
@@ -36,7 +138,7 @@ export function LetterDrafting() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1fr]">
         <Card>
           <CardHeader title="Letter details" subtitle="Fill fields and generate a compliant draft" />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Field label="Department">
               <select className="input" value={dept} onChange={(e) => setDept(e.target.value)}>
                 {DEPARTMENTS.map((d) => <option key={d.code} value={d.code}>{d.code} · {d.name}</option>)}
@@ -72,9 +174,9 @@ export function LetterDrafting() {
             </Field>
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <button onClick={() => setShowOutput(true)} className="btn-primary"><Sparkles className="h-4 w-4" /> Draft letter</button>
-            <button className="btn-outline"><Download className="h-4 w-4" /> DOCX</button>
-            <button className="btn-outline"><Download className="h-4 w-4" /> PDF</button>
+            <button onClick={() => setShowOutput(true)} className="btn-primary"><PenLine className="h-4 w-4" /> Draft letter</button>
+            <button onClick={() => exportDoc(`Letter-${refNo}`, previewRef.current?.innerHTML ?? '')} className="btn-outline"><Download className="h-4 w-4" /> DOCX</button>
+            <button onClick={() => exportPagePdf('Letter Drafting')} className="btn-outline"><Download className="h-4 w-4" /> PDF</button>
             <button className="btn-outline"><ClipboardCheck className="h-4 w-4" /> Send for approval</button>
             <div className="ml-auto flex items-center gap-2">
               <StatusBadge status="Draft" />
@@ -87,42 +189,33 @@ export function LetterDrafting() {
           <Card>
             <CardHeader title="Editable draft preview" subtitle="Formal template · Government of Maharashtra" right={<ClassificationBadge level="Internal" />} />
             {showOutput ? (
-              <div className="rounded-xl border border-ink-100 bg-white p-6 font-serif text-[13px] leading-relaxed text-ink-800">
-                <div className="mb-4 flex items-start justify-between">
+              <div ref={previewRef} className="rounded-xl border border-ink-100 bg-white p-4 font-serif text-[13px] leading-relaxed text-ink-800 sm:p-6">
+                <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
                   <div>
-                    <div className="font-bold uppercase tracking-wider">Government of Maharashtra</div>
+                    <div className="font-bold uppercase tracking-wider">{copy.govt}</div>
                     <div className="text-xs text-ink-500">{DEPARTMENTS.find((d) => d.code === dept)?.name}</div>
-                    <div className="text-xs text-ink-500">Mantralaya, Mumbai — 400 032</div>
+                    <div className="text-xs text-ink-500">{copy.address}</div>
                   </div>
                   <div className="text-right text-xs text-ink-500">
-                    <div>Ref: <span className="font-medium text-ink-800">{refNo}</span></div>
-                    <div>Date: 07-Jul-2026</div>
+                    <div>{copy.refLabel}: <span className="font-medium text-ink-800">{refNo}</span></div>
+                    <div>{copy.dateLabel}: 07-Jul-2026</div>
                   </div>
                 </div>
-                <div className="mb-3">To,<br /><span className="font-medium">{recipient}</span></div>
-                <div className="mb-3"><span className="font-medium">Subject:</span> {subject}</div>
-                <div className="mb-3">Sir/Madam,</div>
-                <p className="mb-3">
-                  With reference to the subject cited above, this is to inform that the Directorate of Information
-                  Technology has been directed to roll out the MAII AI Workspace across all divisional offices in
-                  a phased manner between July and October 2026. The system will be made available under sovereign
-                  hosting with full DPDP compliance and on-prem deployment where applicable.
-                </p>
-                <p className="mb-3">
-                  You are requested to kindly nominate a nodal officer (not below the rank of Deputy Secretary /
-                  Additional Collector) from your Division to coordinate readiness assessment, training and go-live
-                  activities. The nomination may please be communicated to this office latest by <b>20 July 2026</b>.
-                </p>
-                <p className="mb-3">
-                  A copy of the roll-out schedule and readiness checklist is enclosed for ready reference.
-                </p>
+                <div className="mb-3">{copy.toLabel}<br /><span className="font-medium">{recipient}</span></div>
+                <div className="mb-3"><span className="font-medium">{copy.subjectLabel}</span> {subject}</div>
+                <div className="mb-1 text-xs uppercase tracking-wide text-brand-500">{tone} · {lang}</div>
+                <div className="mb-3">{copy.salutation}</div>
+                <p className="mb-3">{copy.opening}</p>
+                {purpose.trim() && <p className="mb-3">{purpose}</p>}
+                <p className="mb-3">{copy.request}</p>
+                <p className="mb-3">{copy.enclosureLine}</p>
                 <div className="mt-6">
-                  Yours faithfully,<br />
+                  {copy.closing}<br />
                   <div className="mt-8 font-medium">(Rajesh Mahajan)</div>
-                  <div className="text-xs text-ink-500">Principal Secretary (IT)<br />Directorate of Information Technology, GoM</div>
+                  <div className="text-xs text-ink-500">{copy.designation}<br />{DEPARTMENTS.find((d) => d.code === dept)?.name}, GoM</div>
                 </div>
                 <div className="mt-6 border-t border-dashed border-ink-200 pt-3 text-xs text-ink-500">
-                  Enclosure: Roll-out schedule (Annexure-A), Readiness checklist (Annexure-B).
+                  {copy.enclosureLabel}
                 </div>
               </div>
             ) : (
@@ -204,7 +297,7 @@ export function LetterDrafting() {
 
 function Field({ label, full, children }: { label: string; full?: boolean; children: any }) {
   return (
-    <div className={full ? 'col-span-2' : ''}>
+    <div className={full ? 'sm:col-span-2' : ''}>
       <label className="label">{label}</label>
       <div className="mt-1">{children}</div>
     </div>

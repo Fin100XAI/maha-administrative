@@ -16,17 +16,20 @@ import { Card, CardHeader } from '@/components/ui/Card'
 import { ChartCard } from '@/components/ui/ChartCard'
 import { SourceBadge, RiskBadge, StatusBadge } from '@/components/ui/Badges'
 import { IntegrationCard } from '@/components/panels/IntegrationCard'
-import { INTEGRATIONS } from '@/data/integrations'
+import { INTEGRATIONS, Integration } from '@/data/integrations'
 import {
   CONNECTOR_ROADMAP,
   CONNECTOR_ERRORS,
   CONNECTOR_TRAFFIC_7D,
   CONNECTOR_SLA,
 } from '@/data/platformSamples'
-import { Network, Wifi, ShieldCheck, Clock, Route, AlertOctagon, Activity, Gauge } from 'lucide-react'
+import { Network, Wifi, ShieldCheck, Clock, Route, AlertOctagon, Activity, Gauge, Search, Power, PowerOff } from 'lucide-react'
 
 const CATEGORIES = ['All', 'Workflow', 'Citizen', 'HR', 'Welfare', 'Communication', 'Storage', 'Platform'] as const
 type Cat = typeof CATEGORIES[number]
+
+const STATUSES = ['All', 'Connected', 'Public-source linked', 'API pending', 'Department access required', 'In development'] as const
+type StatusFilter = typeof STATUSES[number]
 
 const STAGE_ORDER: Record<string, number> = {
   Discovery: 0,
@@ -47,13 +50,37 @@ const STAGE_COLORS: Record<string, string> = {
 
 export function IntegrationsDashboard() {
   const [cat, setCat] = useState<Cat>('All')
+  const [status, setStatus] = useState<StatusFilter>('All')
+  const [query, setQuery] = useState('')
+  const [items, setItems] = useState<Integration[]>(INTEGRATIONS)
 
+  const toggleConnected = (slug: string) =>
+    setItems((prev) =>
+      prev.map((i) =>
+        i.slug === slug
+          ? { ...i, status: i.status === 'Connected' ? 'Department access required' : 'Connected' }
+          : i,
+      ),
+    )
+
+  const q = query.trim().toLowerCase()
   const filtered = useMemo(
-    () => (cat === 'All' ? INTEGRATIONS : INTEGRATIONS.filter((i) => i.category === cat)),
-    [cat],
+    () =>
+      items.filter((i) => {
+        const matchesCat = cat === 'All' || i.category === cat
+        const matchesStatus = status === 'All' || i.status === status
+        const matchesQuery =
+          q === '' ||
+          i.name.toLowerCase().includes(q) ||
+          i.description.toLowerCase().includes(q) ||
+          i.category.toLowerCase().includes(q) ||
+          i.dataOwner.toLowerCase().includes(q)
+        return matchesCat && matchesStatus && matchesQuery
+      }),
+    [items, cat, status, q],
   )
-  const connected = INTEGRATIONS.filter((i) => i.status === 'Connected').length
-  const pending = INTEGRATIONS.filter((i) => /pending|required|development/.test(i.status)).length
+  const connected = items.filter((i) => i.status === 'Connected').length
+  const pending = items.filter((i) => /pending|required|development/.test(i.status)).length
 
   return (
     <div>
@@ -65,7 +92,7 @@ export function IntegrationsDashboard() {
         eyebrow="Connector estate"
         icon={<Network className="h-5 w-5" />}
       />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard label="Total connectors" value={INTEGRATIONS.length} icon={<Network className="h-5 w-5" />} delta={0} source="Public-source linked" confidence={94} />
         <MetricCard label="Connected" value={connected} icon={<Wifi className="h-5 w-5" />} delta={12} source="Public-source linked" confidence={92} />
         <MetricCard label="Pending / required" value={pending} icon={<Clock className="h-5 w-5" />} delta={-8} source="Public-source linked" confidence={90} />
@@ -75,13 +102,33 @@ export function IntegrationsDashboard() {
       {/* Category filter chip strip */}
       <Card className="mt-6">
         <CardHeader
-          title="Filter by category"
-          subtitle="Narrow the estate to a single connector family."
+          title="Filter connectors"
+          subtitle="Search, filter by status, or narrow the estate to a single connector family."
           right={<SourceBadge source="Public-source linked" />}
         />
+        <div className="mb-3 flex flex-col gap-2 sm:flex-row">
+          <div className="relative flex-1">
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
+            <input
+              className="input pl-9"
+              placeholder="Search by name, owner, category, or description…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+          </div>
+          <select
+            className="input sm:w-60"
+            value={status}
+            onChange={(e) => setStatus(e.target.value as StatusFilter)}
+          >
+            {STATUSES.map((s) => (
+              <option key={s} value={s}>{s === 'All' ? 'All statuses' : s}</option>
+            ))}
+          </select>
+        </div>
         <div className="-mx-1 flex flex-wrap gap-2">
           {CATEGORIES.map((c) => {
-            const count = c === 'All' ? INTEGRATIONS.length : INTEGRATIONS.filter((i) => i.category === c).length
+            const count = c === 'All' ? items.length : items.filter((i) => i.category === c).length
             const active = c === cat
             return (
               <button
@@ -106,18 +153,48 @@ export function IntegrationsDashboard() {
       </Card>
 
       {/* Connector grid (filtered) */}
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
-        {filtered.map((i, idx) => (
-          <motion.div
-            key={i.slug}
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: idx * 0.03, duration: 0.25 }}
-          >
-            <IntegrationCard i={i} />
-          </motion.div>
-        ))}
-      </div>
+      {filtered.length === 0 ? (
+        <Card className="mt-6">
+          <div className="flex flex-col items-center justify-center gap-2 py-12 text-center">
+            <Network className="h-8 w-8 text-ink-300" />
+            <div className="text-sm font-medium text-ink-700">No connectors match your filters</div>
+            <div className="text-xs text-ink-500">Try a different category, status, or search term.</div>
+            <button
+              type="button"
+              onClick={() => { setCat('All'); setStatus('All'); setQuery('') }}
+              className="btn-outline mt-2"
+            >
+              Reset filters
+            </button>
+          </div>
+        </Card>
+      ) : (
+        <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {filtered.map((i, idx) => (
+            <motion.div
+              key={i.slug}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: idx * 0.03, duration: 0.25 }}
+              className="flex flex-col"
+            >
+              <IntegrationCard i={i} />
+              <button
+                type="button"
+                onClick={() => toggleConnected(i.slug)}
+                className={
+                  (i.status === 'Connected' ? 'btn-outline' : 'btn-primary') +
+                  ' mt-2 w-full justify-center'
+                }
+              >
+                {i.status === 'Connected'
+                  ? (<><PowerOff className="h-4 w-4" /> Disconnect</>)
+                  : (<><Power className="h-4 w-4" /> Connect</>)}
+              </button>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Roadmap + Error log */}
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.1fr)_1fr]">
@@ -213,7 +290,7 @@ export function IntegrationsDashboard() {
                     <span className="truncate font-medium text-ink-800">{s.name}</span>
                     <StatusBadge status={hit ? 'Approved' : 'Under Review'} />
                   </div>
-                  <div className="flex items-center gap-3 text-xs text-ink-600">
+                  <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-600">
                     <span>Target {s.slaTarget}%</span>
                     <span className={hit ? 'text-emerald-700' : 'text-amber-700'}>Observed {s.observed}%</span>
                     <span className="ml-auto text-ink-500">{s.incidents30d} incidents</span>

@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import {
   ResponsiveContainer, AreaChart, Area, XAxis, YAxis, CartesianGrid,
   Tooltip as ReTooltip, PieChart, Pie, Cell, BarChart, Bar, Legend,
@@ -39,7 +40,14 @@ const prm = [
 
 const COLORS = ['#DC2626', '#EA580C', '#D97706', '#059669']
 
+const SEV_FILTERS = ['All', 'Critical', 'High', 'Medium', 'Low'] as const
+
 export function SecurityOps() {
+  const [feedSev, setFeedSev] = useState<(typeof SEV_FILTERS)[number]>('All')
+  const feed = useMemo(
+    () => (feedSev === 'All' ? SIEM_FEED : SIEM_FEED.filter((e) => e.sev === feedSev)),
+    [feedSev],
+  )
   return (
     <div>
       <PageHeader
@@ -64,11 +72,16 @@ export function SecurityOps() {
         <Card>
           <CardHeader
             title="Live SIEM feed"
-            subtitle="10 rolling events · dept-wide"
-            right={<span className="chip border bg-emerald-50 text-emerald-700 border-emerald-200"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"/> Streaming</span>}
+            subtitle="Rolling events · dept-wide"
+            right={<div className="flex items-center gap-2">
+              <select className="input h-8 w-auto py-1 text-xs" value={feedSev} onChange={(e) => setFeedSev(e.target.value as any)} aria-label="Filter feed by severity">
+                {SEV_FILTERS.map((s) => <option key={s}>{s === 'All' ? 'All severities' : s}</option>)}
+              </select>
+              <span className="chip border bg-emerald-50 text-emerald-700 border-emerald-200"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse"/> Streaming</span>
+            </div>}
           />
           <ul className="space-y-1.5 text-sm">
-            {SIEM_FEED.map((e) => (
+            {feed.map((e) => (
               <li key={e.t + e.msg} className="flex items-start gap-2 rounded-md border border-ink-100 px-2.5 py-1.5">
                 <span className="mt-0.5 shrink-0 rounded bg-ink-50 px-1.5 py-0.5 font-mono text-[10px] text-ink-600">{e.t}</span>
                 <span className="mt-0.5 shrink-0 rounded bg-brand-soft px-1.5 py-0.5 text-[10px] font-medium text-brand-700">{e.src}</span>
@@ -76,6 +89,11 @@ export function SecurityOps() {
                 <SeverityBadge level={e.sev} />
               </li>
             ))}
+            {feed.length === 0 && (
+              <li className="rounded-md border border-dashed border-ink-200 px-3 py-4 text-center text-xs text-ink-500">
+                No {feedSev.toLowerCase()} events in the current window.
+              </li>
+            )}
           </ul>
         </Card>
 
@@ -155,7 +173,7 @@ export function SecurityOps() {
             subtitle="Illustrative mapping · 0 = none, 4 = strong"
             right={<SourceBadge source="Demo" />}
           />
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
             {MITRE_TACTICS.map((tac, i) => (
               <CoverageCell key={tac} label={tac} level={MITRE_COVERAGE[i] ?? 0} />
             ))}

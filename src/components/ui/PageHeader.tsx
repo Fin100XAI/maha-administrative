@@ -1,6 +1,8 @@
 import { ReactNode } from 'react'
-import { Download, Sparkles, ChevronRight, Globe, Info, ServerCog, Database } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import { Download, MessageSquare, ChevronRight, Globe, Info, ServerCog, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { exportPagePdf } from '@/lib/exportUtils'
 
 export interface PageHeaderProps {
   title: string
@@ -23,6 +25,7 @@ export function PageHeader({
   eyebrow,
   icon,
 }: PageHeaderProps) {
+  const navigate = useNavigate()
   return (
     <div className={cn('relative mb-6 overflow-hidden rounded-2xl', compact && 'mb-4')}>
       {/* Gradient base */}
@@ -38,7 +41,7 @@ export function PageHeader({
       {/* Sheen line */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
 
-      <div className={cn('relative flex flex-col gap-4 px-6 py-6 md:flex-row md:items-start md:justify-between md:px-8 md:py-7', compact && 'py-4 md:py-5')}>
+      <div className={cn('relative flex flex-col gap-4 px-4 py-5 sm:px-6 sm:py-6 md:flex-row md:items-start md:justify-between md:px-8 md:py-7', compact && 'py-4 md:py-5')}>
         <div className="min-w-0 flex-1">
           {/* Breadcrumb */}
           {breadcrumb && breadcrumb.length > 0 && (
@@ -55,7 +58,7 @@ export function PageHeader({
           {/* Eyebrow chip */}
           {eyebrow && (
             <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur">
-              <Sparkles className="h-3 w-3" /> {eyebrow}
+              {eyebrow}
             </div>
           )}
 
@@ -91,11 +94,11 @@ export function PageHeader({
           <HeaderActionsProvider>
             {actions ?? (
               <>
-                <button className="header-btn-outline">
+                <button className="header-btn-outline" onClick={() => exportPagePdf(title)}>
                   <Download className="h-4 w-4" /> Export
                 </button>
-                <button className="header-btn-primary">
-                  <Sparkles className="h-4 w-4" /> Ask MAII AI
+                <button className="header-btn-primary" onClick={() => navigate('/workspace')}>
+                  <MessageSquare className="h-4 w-4" /> Ask Maha Copilot
                 </button>
               </>
             )}

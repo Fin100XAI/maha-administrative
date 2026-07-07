@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Search, Copy, Sparkles, Library, Filter, History, ChevronDown, Save, Send, Link2 } from 'lucide-react'
+import { Search, Copy, Library, Filter, History, ChevronDown, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { RiskBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
 import { cn } from '@/lib/utils'
@@ -202,7 +202,7 @@ export function PromptLibrary() {
                   <Copy className="h-4 w-4" /> Copy
                 </button>
                 <button className="btn-primary !px-3 whitespace-nowrap">
-                  <Sparkles className="h-4 w-4" /> Use
+                  <Send className="h-4 w-4" /> Use
                 </button>
               </div>
             </article>
@@ -223,7 +223,7 @@ export function PromptLibrary() {
             { label: 'Save selection', icon: <Save className="h-4 w-4" /> },
             { label: 'Submit prompt for review', icon: <Send className="h-4 w-4" />, primary: true },
             { label: 'Copy prompt permalink', icon: <Link2 className="h-4 w-4" /> },
-            { label: 'Fork into Workspace', icon: <Sparkles className="h-4 w-4" /> },
+            { label: 'Fork into Workspace', icon: <Copy className="h-4 w-4" /> },
           ]}
         />
         <Shortcuts

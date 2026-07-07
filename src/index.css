@@ -7,7 +7,7 @@ html, body, #root {
 }
 
 body {
-  font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Inter', 'Noto Sans Devanagari', ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #0f172a;
@@ -93,6 +93,17 @@ body {
   }
 }
 
+/* Devanagari (hi/mr): wide tracking breaks matras/conjuncts — pull it back to near-normal */
+html[lang='hi'] .tracking-widest, html[lang='mr'] .tracking-widest,
+html[lang='hi'] [class*='tracking-[0.2'], html[lang='mr'] [class*='tracking-[0.2'],
+html[lang='hi'] .tracking-wider, html[lang='mr'] .tracking-wider {
+  letter-spacing: 0.02em;
+}
+html[lang='hi'] .tracking-wide, html[lang='mr'] .tracking-wide,
+html[lang='hi'] .tracking-tight, html[lang='mr'] .tracking-tight {
+  letter-spacing: normal;
+}
+
 /* Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
@@ -115,4 +126,13 @@ body {
   background: linear-gradient(90deg, #f1f5f9 0px, #e2e8f0 40px, #f1f5f9 80px);
   background-size: 1000px 100%;
   animation: shimmer 1.4s linear infinite;
+}
+
+/* Print / PDF export — hide app chrome, show only page content */
+@media print {
+  header, aside, footer, nav, .no-print { display: none !important; }
+  main { max-width: none !important; padding: 0 !important; }
+  body { background: #fff !important; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card, [class*="rounded"] { break-inside: avoid; }
 }

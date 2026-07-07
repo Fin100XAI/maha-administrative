@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import { ResponsiveContainer, LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
@@ -20,7 +21,14 @@ const endpoints = [
   { path: '/v1/integrations/aaple-sarkar', p95: 1240, err: 2.4, status: 'Under Review' },
 ]
 
+const SEV_FILTERS = ['All', 'Critical', 'High', 'Medium', 'Low'] as const
+
 export function APISecurity() {
+  const [sev, setSev] = useState<(typeof SEV_FILTERS)[number]>('All')
+  const callers = useMemo(
+    () => (sev === 'All' ? ANOMALOUS_CALLERS : ANOMALOUS_CALLERS.filter((c) => c.sev === sev)),
+    [sev],
+  )
   return (
     <div>
       <PageHeader
@@ -29,7 +37,7 @@ export function APISecurity() {
         breadcrumb={['Security & AI SOC', 'API Security']}
         source="Demo"
       />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="API Gateway status" value="Healthy" icon={<Cpu className="h-5 w-5" />} delta={0} source="Demo" confidence={96} status={<StatusBadge status="Approved" />} />
         <MetricCard label="API calls (24h)" value="1.78 M" icon={<Activity className="h-5 w-5" />} delta={11.2} source="Demo" confidence={92} />
         <MetricCard label="Failed auth" value={62} icon={<KeyRound className="h-5 w-5" />} delta={-18} source="Demo" confidence={92} />
@@ -135,7 +143,12 @@ export function APISecurity() {
         <CardHeader
           title="Anomalous callers watchlist"
           subtitle="Elevated request rate, unusual pattern or auth"
-          right={<span className="chip border bg-rose-50 text-rose-700 border-rose-200"><ShieldAlert className="h-3 w-3" /> Watchlist</span>}
+          right={<div className="flex items-center gap-2">
+            <select className="input h-8 w-auto py-1 text-xs" value={sev} onChange={(e) => setSev(e.target.value as any)} aria-label="Filter by severity">
+              {SEV_FILTERS.map((s) => <option key={s}>{s === 'All' ? 'All severities' : s}</option>)}
+            </select>
+            <span className="chip border bg-rose-50 text-rose-700 border-rose-200"><ShieldAlert className="h-3 w-3" /> Watchlist</span>
+          </div>}
         />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -143,7 +156,7 @@ export function APISecurity() {
               <tr>{['Caller', 'Rate', 'Anomaly', 'Severity', 'Action'].map((h) => <th key={h} className="table-th">{h}</th>)}</tr>
             </thead>
             <tbody>
-              {ANOMALOUS_CALLERS.map((c) => (
+              {callers.map((c) => (
                 <tr key={c.caller}>
                   <td className="table-td font-mono text-xs text-ink-800">{c.caller}</td>
                   <td className="table-td">{c.rate}</td>
@@ -152,6 +165,11 @@ export function APISecurity() {
                   <td className="table-td"><button className="btn-outline">Slow-mode</button></td>
                 </tr>
               ))}
+              {callers.length === 0 && (
+                <tr>
+                  <td className="table-td text-center text-ink-500" colSpan={5}>No callers at the selected severity.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

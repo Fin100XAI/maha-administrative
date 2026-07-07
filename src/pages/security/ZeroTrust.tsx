@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
 import { Card, CardHeader } from '@/components/ui/Card'
@@ -21,7 +22,21 @@ const dimensions = [
 
 const PIPE_ICONS = [UserCheck, Smartphone, MapPin, Activity, Lock]
 
+const PRIV_SESSIONS = [
+  { o: 'Rajesh Mahajan', r: 'Principal Secretary', d: 'DIT', dev: 'Managed laptop · Windows', l: 'Mumbai', s: 'Low' as const },
+  { o: 'Nitin Kareer', r: 'Chief Secretary', d: 'GAD', dev: 'Managed laptop · macOS', l: 'Mumbai', s: 'Low' as const },
+  { o: 'Ashutosh Salil', r: 'Municipal Commissioner', d: 'UDD', dev: 'Managed tablet · iPadOS', l: 'Nashik', s: 'Medium' as const },
+  { o: 'Praveen Darade', r: 'District Collector', d: 'REV', dev: 'BYOD · Android', l: 'Aurangabad', s: 'Medium' as const },
+]
+
+const RISK_FILTERS = ['All', 'Low', 'Medium', 'High'] as const
+
 export function ZeroTrust() {
+  const [risk, setRisk] = useState<(typeof RISK_FILTERS)[number]>('All')
+  const sessions = useMemo(
+    () => (risk === 'All' ? PRIV_SESSIONS : PRIV_SESSIONS.filter((s) => s.s === risk)),
+    [risk],
+  )
   return (
     <div>
       <PageHeader
@@ -31,7 +46,7 @@ export function ZeroTrust() {
         source="Demo"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Device trust" value="92%" icon={<Smartphone className="h-5 w-5" />} delta={2.4} source="Demo" confidence={92} />
         <MetricCard label="MFA coverage" value="96%" icon={<KeyRound className="h-5 w-5" />} delta={1.2} source="Demo" confidence={94} />
         <MetricCard label="Location anomalies (24h)" value={3} icon={<Globe className="h-5 w-5" />} delta={-25} source="Demo" confidence={90} />
@@ -106,7 +121,7 @@ export function ZeroTrust() {
               return (
                 <div key={d.s} className={`rounded-xl border p-3 ${tone}`}>
                   <div className="text-xs font-semibold uppercase tracking-wider opacity-80">{d.s}</div>
-                  <div className="mt-1 text-2xl font-semibold">{d.count.toLocaleString()}</div>
+                  <div className="mt-1 text-xl font-semibold sm:text-2xl">{d.count.toLocaleString()}</div>
                 </div>
               )
             })}
@@ -128,19 +143,22 @@ export function ZeroTrust() {
       </div>
 
       <Card className="mt-6">
-        <CardHeader title="Privileged access — active sessions" right={<StatusBadge status="Under Review" />} />
+        <CardHeader
+          title="Privileged access — active sessions"
+          right={<div className="flex items-center gap-2">
+            <select className="input h-9 w-auto py-1.5 text-xs" value={risk} onChange={(e) => setRisk(e.target.value as any)} aria-label="Filter by session risk">
+              {RISK_FILTERS.map((r) => <option key={r}>{r === 'All' ? 'All risk levels' : r}</option>)}
+            </select>
+            <StatusBadge status="Under Review" />
+          </div>}
+        />
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead><tr>
               {['Officer', 'Role', 'Dept', 'Device', 'Location', 'Session risk', 'Actions'].map((h) => <th key={h} className="table-th">{h}</th>)}
             </tr></thead>
             <tbody>
-              {[
-                { o: 'Rajesh Mahajan', r: 'Principal Secretary', d: 'DIT', dev: 'Managed laptop · Windows', l: 'Mumbai', s: 'Low' as const },
-                { o: 'Nitin Kareer', r: 'Chief Secretary', d: 'GAD', dev: 'Managed laptop · macOS', l: 'Mumbai', s: 'Low' as const },
-                { o: 'Ashutosh Salil', r: 'Municipal Commissioner', d: 'UDD', dev: 'Managed tablet · iPadOS', l: 'Nashik', s: 'Medium' as const },
-                { o: 'Praveen Darade', r: 'District Collector', d: 'REV', dev: 'BYOD · Android', l: 'Aurangabad', s: 'Medium' as const },
-              ].map((r) => (
+              {sessions.map((r) => (
                 <tr key={r.o}>
                   <td className="table-td font-medium text-ink-800">{r.o}</td>
                   <td className="table-td">{r.r}</td>
@@ -151,6 +169,11 @@ export function ZeroTrust() {
                   <td className="table-td"><button className="btn-outline"><ClipboardCheck className="h-4 w-4" /> Verify</button></td>
                 </tr>
               ))}
+              {sessions.length === 0 && (
+                <tr>
+                  <td className="table-td text-center text-ink-500" colSpan={7}>No active sessions at the selected risk level.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

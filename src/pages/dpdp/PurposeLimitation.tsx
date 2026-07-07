@@ -41,7 +41,7 @@ export function PurposeLimitation() {
         <Card>
           <CardHeader title="Registered purposes" right={<SourceBadge source="Demo" />} />
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="w-full min-w-[560px] text-sm">
               <thead><tr>{['Purpose', 'Used for', 'Owner', 'Risk', 'Status'].map((h) => <th key={h} className="table-th">{h}</th>)}</tr></thead>
               <tbody>
                 {PURPOSES.map((p) => (
@@ -78,9 +78,9 @@ export function PurposeLimitation() {
           <Card>
             <CardHeader title="Approvals" />
             <ul className="space-y-2 text-sm">
-              <li className="flex justify-between"><span>Health record intelligence</span><StatusBadge status="Under Review" /></li>
-              <li className="flex justify-between"><span>e-HRMS transfer optimiser</span><StatusBadge status="Under Review" /></li>
-              <li className="flex justify-between"><span>Aaple Sarkar concierge</span><StatusBadge status="Approved" /></li>
+              <li className="flex items-center justify-between gap-2"><span>Health record intelligence</span><StatusBadge status="Under Review" /></li>
+              <li className="flex items-center justify-between gap-2"><span>e-HRMS transfer optimiser</span><StatusBadge status="Under Review" /></li>
+              <li className="flex items-center justify-between gap-2"><span>Aaple Sarkar concierge</span><StatusBadge status="Approved" /></li>
             </ul>
           </Card>
         </div>

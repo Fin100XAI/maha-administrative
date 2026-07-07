@@ -78,13 +78,13 @@ export function PrivacyRisk() {
           <ul className="space-y-2">
             {PIA.map((p) => (
               <li key={p.name} className="rounded-xl border border-ink-100 p-3">
-                <div className="flex items-start justify-between">
+                <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="text-sm font-medium text-ink-800">{p.name}</div>
                     <div className="text-xs text-ink-500">{p.dept} - Responsible officer: {p.officer}</div>
                     <div className="mt-1 text-xs text-ink-700"><b>Mitigation:</b> {p.mitigation}</div>
                   </div>
-                  <div className="flex flex-col items-end gap-1">
+                  <div className="flex shrink-0 flex-col items-end gap-1">
                     <RiskBadge level={p.risk} />
                     <StatusBadge status={p.status} />
                   </div>

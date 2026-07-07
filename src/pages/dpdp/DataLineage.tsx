@@ -1,14 +1,14 @@
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { RiskBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
-import { Database, Upload, Cpu, Sparkles, ClipboardCheck, Archive, ArrowRight, FolderTree, ShieldAlert, GaugeCircle } from 'lucide-react'
+import { Database, Upload, Cpu, Bot, ClipboardCheck, Archive, ArrowRight, FolderTree, ShieldAlert, GaugeCircle } from 'lucide-react'
 import { ASSET_TREE, LINEAGE_IMPACT, QUALITY_GATES, AssetNode } from '@/data/dpdpSamples'
 
 const NODES = [
   { name: 'Source', icon: Upload, desc: 'MahaDBT - e-Office - Aaple Sarkar - Manual upload', color: 'from-sky-500 to-sky-700' },
   { name: 'Ingestion', icon: Database, desc: 'DLP scan - classification - consent check', color: 'from-google-blue-500 to-google-blue-700' },
   { name: 'Processing', icon: Cpu, desc: 'OCR - extraction - normalisation - vectorisation', color: 'from-brand-500 to-brand-900' },
-  { name: 'AI Use', icon: Sparkles, desc: 'Retrieval - reasoning - drafting - translation', color: 'from-google-red-500 to-google-red-700' },
+  { name: 'AI Use', icon: Bot, desc: 'Retrieval - reasoning - drafting - translation', color: 'from-google-red-500 to-google-red-700' },
   { name: 'Output', icon: ClipboardCheck, desc: 'Draft note - summary - advisory - reply', color: 'from-amber-500 to-orange-600' },
   { name: 'Approval', icon: ClipboardCheck, desc: 'HITL - SO to US to DS to PS to CS', color: 'from-emerald-500 to-emerald-700' },
   { name: 'Archive', icon: Archive, desc: 'Immutable log - retention - legal hold', color: 'from-ink-500 to-ink-800' },

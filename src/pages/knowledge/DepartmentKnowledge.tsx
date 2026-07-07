@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Search, Filter, Network, ChevronRight, Sparkles, TrendingUp, Trophy, Wand2, BookOpen } from 'lucide-react'
+import { Search, Filter, Network, ChevronRight, Send, TrendingUp, Trophy, BookOpen } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
@@ -41,8 +41,8 @@ export function DepartmentKnowledge() {
         source="Demo"
       />
       <Card className="mb-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
-          <div className="relative md:col-span-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="relative sm:col-span-2">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
             <input className="input pl-9" placeholder="Search GRs, circulars, SOPs, FAQs, notes…" value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
@@ -55,12 +55,12 @@ export function DepartmentKnowledge() {
           <select className="input" value={type} onChange={(e) => setType(e.target.value)}>
             {['All','GR','Circular','SOP','FAQ','Note','Policy'].map((t) => <option key={t}>{t}</option>)}
           </select>
-          <select className="input md:col-span-2" value={lang} onChange={(e) => setLang(e.target.value)}>
+          <select className="input sm:col-span-2" value={lang} onChange={(e) => setLang(e.target.value)}>
             {['All','English','Marathi','Hindi','Bilingual'].map((t) => <option key={t}>{t}</option>)}
           </select>
 
           {/* Semantic vs Keyword toggle */}
-          <div className="flex flex-wrap items-center gap-2 md:col-span-2">
+          <div className="flex flex-wrap items-center gap-2 sm:col-span-2">
             <div className="inline-flex overflow-hidden rounded-full border border-ink-200 bg-white p-0.5">
               {(['semantic', 'keyword'] as SearchMode[]).map((m) => {
                 const active = mode === m
@@ -73,7 +73,7 @@ export function DepartmentKnowledge() {
                       active ? 'bg-brand-gradient text-white shadow-glow' : 'text-ink-600 hover:text-brand-600'
                     }`}
                   >
-                    {m === 'semantic' ? <Sparkles className="h-3 w-3" /> : <Filter className="h-3 w-3" />}
+                    {m === 'semantic' ? <Network className="h-3 w-3" /> : <Filter className="h-3 w-3" />}
                     {m === 'semantic' ? 'Semantic' : 'Keyword'}
                   </button>
                 )
@@ -120,7 +120,7 @@ export function DepartmentKnowledge() {
             <CardHeader
               title="Ask MAII AI about the knowledge base"
               subtitle="Grounded on department GRs, circulars and SOPs. Cites every claim."
-              right={<Wand2 className="h-4 w-4 text-brand-500" />}
+              right={<BookOpen className="h-4 w-4 text-brand-500" />}
             />
             <div className="relative">
               <input
@@ -130,7 +130,7 @@ export function DepartmentKnowledge() {
                 onChange={(e) => setAskInput(e.target.value)}
               />
               <button className="btn-primary absolute right-1 top-1/2 -translate-y-1/2 !px-3 !py-1.5 text-xs">
-                <Sparkles className="h-3.5 w-3.5" /> Ask
+                <Send className="h-3.5 w-3.5" /> Ask
               </button>
             </div>
             <div className="mt-3 flex flex-wrap gap-1.5">

@@ -1,4 +1,6 @@
+import { useRef } from 'react'
 import { Upload, ChevronRight, AlertTriangle, FileText, ClipboardCheck, FolderOpen, Save, Send, Link2 } from 'lucide-react'
+import { exportDoc } from '@/lib/exportUtils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader, EmptyState } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, RiskBadge, ConfidenceBadge } from '@/components/ui/Badges'
@@ -8,6 +10,7 @@ import { QuickActions } from './_components/QuickActions'
 import { Shortcuts } from './_components/Shortcuts'
 
 export function FileSummarization() {
+  const summaryRef = useRef<HTMLDivElement>(null)
   return (
     <div>
       <PageHeader
@@ -51,8 +54,8 @@ export function FileSummarization() {
           </div>
         </Card>
 
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
+        <div ref={summaryRef} className="space-y-4">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="text-sm font-semibold text-ink-800">File DIT/AI/2026/07/118</div>
             <SourceBadge source="Demo" />
             <ConfidenceBadge score={89} />
@@ -113,8 +116,8 @@ export function FileSummarization() {
           <Card>
             <CardHeader title="Suggested next action" right={<StatusBadge status="Open" />} />
             <p className="text-sm text-ink-700">Attach Annexure-B and Annexure-D, then move file to Deputy Secretary for decision.</p>
-            <div className="mt-3 flex gap-2">
-              <button className="btn-outline"><FileText className="h-4 w-4" /> Export summary (DOCX)</button>
+            <div className="mt-3 flex flex-wrap gap-2">
+              <button onClick={() => exportDoc('File-Summary', summaryRef.current?.innerHTML ?? '')} className="btn-outline"><FileText className="h-4 w-4" /> Export summary (DOCX)</button>
               <button className="btn-primary">Move to Deputy Secretary <ChevronRight className="h-4 w-4" /></button>
             </div>
           </Card>

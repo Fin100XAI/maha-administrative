@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import { Radar, ShieldAlert, Bug, Radio, Cpu, Globe, ClipboardList } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
@@ -21,7 +22,14 @@ const PLAYBOOKS = [
   { name: 'Zero-day model abuse', steps: 6, sla: '30m' },
 ]
 
+const SEV_FILTERS = ['All', 'Critical', 'High', 'Medium', 'Low'] as const
+
 export function AISOC() {
+  const [feedSev, setFeedSev] = useState<(typeof SEV_FILTERS)[number]>('All')
+  const feed = useMemo(
+    () => (feedSev === 'All' ? FEED : FEED.filter((f) => f.sev === feedSev)),
+    [feedSev],
+  )
   return (
     <div>
       <PageHeader
@@ -31,7 +39,7 @@ export function AISOC() {
         source="Demo"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Open alerts" value={17} icon={<ShieldAlert className="h-5 w-5" />} delta={-12} source="Demo" confidence={92} />
         <MetricCard label="Blocked events (24h)" value={214} icon={<Radar className="h-5 w-5" />} delta={8} source="Demo" confidence={92} />
         <MetricCard label="Playbooks" value={PLAYBOOKS.length} icon={<Bug className="h-5 w-5" />} delta={0} source="Demo" confidence={100} />
@@ -40,9 +48,18 @@ export function AISOC() {
 
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.4fr)_1fr]">
         <Card>
-          <CardHeader title="Live SOC feed" subtitle="Rolling 24h · high-priority first" right={<StatusBadge status="Active" />} />
+          <CardHeader
+            title="Live SOC feed"
+            subtitle="Rolling 24h · high-priority first"
+            right={<div className="flex items-center gap-2">
+              <select className="input h-8 w-auto py-1 text-xs" value={feedSev} onChange={(e) => setFeedSev(e.target.value as any)} aria-label="Filter feed by severity">
+                {SEV_FILTERS.map((s) => <option key={s}>{s === 'All' ? 'All severities' : s}</option>)}
+              </select>
+              <StatusBadge status="Active" />
+            </div>}
+          />
           <ul className="space-y-2">
-            {FEED.map((f) => (
+            {feed.map((f) => (
               <li key={f.t + f.title} className="flex items-center gap-3 rounded-lg border border-ink-100 p-3">
                 <div className="grid h-8 w-8 place-items-center rounded-lg bg-brand-soft text-brand-600"><Radar className="h-4 w-4" /></div>
                 <div className="min-w-0 flex-1">
@@ -52,6 +69,11 @@ export function AISOC() {
                 <SeverityBadge level={f.sev} />
               </li>
             ))}
+            {feed.length === 0 && (
+              <li className="rounded-lg border border-dashed border-ink-200 p-4 text-center text-xs text-ink-500">
+                No {feedSev.toLowerCase()} alerts in the current window.
+              </li>
+            )}
           </ul>
         </Card>
         <Card>

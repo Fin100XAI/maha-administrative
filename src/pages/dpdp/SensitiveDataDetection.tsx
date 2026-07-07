@@ -30,7 +30,7 @@ export function SensitiveDataDetection() {
         breadcrumb={['DPDP', 'Sensitive Data']}
         source="Demo"
       />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="PII records (30d)" value="2.24 L" icon={<EyeOff className="h-5 w-5" />} delta={-4.2} source="Demo" confidence={82} />
         <MetricCard label="Financial data" value="62 K" icon={<IndianRupee className="h-5 w-5" />} delta={-8} source="Demo" confidence={84} />
         <MetricCard label="Health data" value="8.9 K" icon={<HeartPulse className="h-5 w-5" />} delta={-2.4} source="Demo" confidence={86} />
@@ -40,7 +40,7 @@ export function SensitiveDataDetection() {
       <Card className="mt-6">
         <CardHeader title="Detection categories" subtitle="Values shown are MASKED - never full identifiers" right={<SourceBadge source="Demo" />} />
         <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+          <table className="w-full min-w-[640px] text-sm">
             <thead><tr>{['Category', 'Count', 'Masked preview', 'Risk', 'Recommendation', 'Status'].map((h) => <th key={h} className="table-th">{h}</th>)}</tr></thead>
             <tbody>
               {detections.map((d) => (
@@ -166,7 +166,7 @@ export function SensitiveDataDetection() {
         </Card>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader title="Recommended redactions" right={<ShieldAlert className="h-4 w-4 text-amber-500" />} />
           <ul className="space-y-2 text-sm text-ink-700">

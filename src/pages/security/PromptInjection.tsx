@@ -1,12 +1,24 @@
+import { useMemo, useState } from 'react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { DataTable, Column } from '@/components/ui/DataTable'
 import { SeverityBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { MetricCard } from '@/components/ui/MetricCard'
-import { ShieldAlert, Ban, Wand2, ClipboardCheck, Filter } from 'lucide-react'
+import { ShieldAlert, Ban, ClipboardCheck, Filter } from 'lucide-react'
 import { PROMPT_ROWS, INGRESS_CHANNELS, PI_SIGNATURES, SANITISER_POLICIES, PIRow } from '@/data/securitySamples'
 
+const SEV_FILTERS = ['All', 'Critical', 'High', 'Medium', 'Low'] as const
+const ACTION_FILTERS = ['All', 'Blocked', 'Sanitized', 'Under Review'] as const
+
 export function PromptInjection() {
+  const [sev, setSev] = useState<(typeof SEV_FILTERS)[number]>('All')
+  const [action, setAction] = useState<(typeof ACTION_FILTERS)[number]>('All')
+  const rows = useMemo(
+    () => PROMPT_ROWS.filter((r) =>
+      (sev === 'All' || r.severity === sev) && (action === 'All' || r.action === action),
+    ),
+    [sev, action],
+  )
   const columns: Column<PIRow>[] = [
     { key: 'id', header: 'ID', sortable: true },
     { key: 'pattern', header: 'Pattern' },
@@ -32,9 +44,9 @@ export function PromptInjection() {
         source="Demo"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Blocked (24h)" value={94} icon={<Ban className="h-5 w-5"/>} delta={12} source="Demo" confidence={94} />
-        <MetricCard label="Sanitized" value={38} icon={<Wand2 className="h-5 w-5"/>} delta={4} source="Demo" confidence={90} />
+        <MetricCard label="Sanitized" value={38} icon={<Filter className="h-5 w-5"/>} delta={4} source="Demo" confidence={90} />
         <MetricCard label="High-risk patterns" value={7} icon={<ShieldAlert className="h-5 w-5"/>} delta={-14} source="Demo" confidence={92} />
         <MetricCard label="Policy hits" value={132} icon={<ClipboardCheck className="h-5 w-5"/>} delta={8} source="Demo" confidence={92} />
       </div>
@@ -63,7 +75,21 @@ export function PromptInjection() {
       </Card>
 
       <div className="mt-6">
-        <DataTable columns={columns} rows={PROMPT_ROWS} searchKeys={['pattern', 'origin', 'dept']} actions={<><SourceBadge source="Demo" /></>} />
+        <DataTable
+          columns={columns}
+          rows={rows}
+          searchKeys={['pattern', 'origin', 'dept']}
+          emptyText="No detections match the selected filters."
+          actions={<>
+            <select className="input h-9 w-auto py-1.5 text-xs" value={sev} onChange={(e) => setSev(e.target.value as any)} aria-label="Filter by severity">
+              {SEV_FILTERS.map((s) => <option key={s}>{s === 'All' ? 'All severities' : s}</option>)}
+            </select>
+            <select className="input h-9 w-auto py-1.5 text-xs" value={action} onChange={(e) => setAction(e.target.value as any)} aria-label="Filter by action">
+              {ACTION_FILTERS.map((a) => <option key={a}>{a === 'All' ? 'All actions' : a}</option>)}
+            </select>
+            <SourceBadge source="Demo" />
+          </>}
+        />
       </div>
 
       {/* Signature library + Sanitiser policies */}

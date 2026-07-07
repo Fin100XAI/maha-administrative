@@ -48,7 +48,7 @@ function OfficerCard({ o, onShare }: { o: OfficerRow; onShare: (o: OfficerRow) =
           </div>
         </div>
       </div>
-      <div className="mt-3 flex items-center gap-2">
+      <div className="mt-3 flex flex-wrap items-center gap-2">
         <span className="chip border border-brand-100 bg-brand-soft text-brand-700">{o.serviceType}</span>
         <StatusBadge status="Active" />
         <SourceBadge source="Department API required" />
@@ -161,8 +161,8 @@ export function OfficerSearch() {
       />
 
       <Card className="mb-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
-          <div className="relative md:col-span-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="relative sm:col-span-2 lg:col-span-4">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
             <input className="input pl-9" placeholder="Search by name, role, department, service ID…" value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
@@ -287,7 +287,7 @@ export function OfficerSearch() {
                   </div>
                 </div>
                 <div className="flex items-center gap-2 rounded-md border border-brand-100 bg-white px-3 py-2 text-xs text-ink-700">
-                  <span className="truncate">https://maii.gov.in/invite/{shareTarget.service.slice(-6)}</span>
+                  <span className="min-w-0 truncate">https://maii.gov.in/invite/{shareTarget.service.slice(-6)}</span>
                   <button className="ml-auto text-brand-600 hover:text-brand-700" aria-label="Copy link"><Copy className="h-3.5 w-3.5" /></button>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">

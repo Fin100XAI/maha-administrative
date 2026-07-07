@@ -41,7 +41,7 @@ export function ExcelAnalysis() {
             <input type="file" className="hidden" />
           </label>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button className="btn-outline"><Table2 className="h-4 w-4" /> Detect columns</button>
             <button className="btn-outline"><Grid3x3 className="h-4 w-4" /> Pivot suggestions</button>
             <button className="btn-outline"><Calculator className="h-4 w-4" /> Formula helper</button>

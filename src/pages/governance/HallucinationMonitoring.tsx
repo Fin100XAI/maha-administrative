@@ -50,7 +50,7 @@ export function HallucinationMonitoring() {
         source="Demo"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard label="Unsupported claim alerts" value={9} icon={<AlertTriangle className="h-5 w-5" />} delta={-18} source="Demo" confidence={86} />
         <MetricCard label="Missing citation alerts" value={12} icon={<Quote className="h-5 w-5" />} delta={-11} source="Demo" confidence={82} />
         <MetricCard label="Fact-check auto-pass" value="88%" icon={<ClipboardCheck className="h-5 w-5" />} delta={2.4} source="Demo" confidence={90} />
@@ -63,7 +63,7 @@ export function HallucinationMonitoring() {
           subtitle="Every AI output flows through these gates before human sees it"
           right={<SourceBadge source="Demo" />}
         />
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-4">
           {PIPELINE.map((s, i) => {
             const Icon = s.icon
             return (

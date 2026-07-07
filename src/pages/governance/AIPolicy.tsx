@@ -36,7 +36,7 @@ export function AIPolicy() {
         source="Public-source linked"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-4">
         {[
           { l: 'Active Policies', v: POLICIES.length, i: <FileText className="h-5 w-5" /> },
           { l: 'Under Review', v: POLICIES.filter(p => p.status === 'Under Review').length, i: <Scale className="h-5 w-5" /> },
@@ -84,7 +84,7 @@ export function AIPolicy() {
                 </div>
               )}
 
-              <div className="mt-3 flex items-center gap-2">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 <RiskBadge level={p.risk as any} />
                 <SourceBadge source="Public-source linked" />
                 <span className="ml-auto text-xs text-ink-500">Updated {p.updated}</span>

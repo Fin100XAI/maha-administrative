@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import {
   ResponsiveContainer,
   BarChart,
@@ -27,6 +28,7 @@ import {
   HIGH_RISK_ACTIONS,
   SAVED_QUERIES,
 } from '@/data/platformSamples'
+import { exportPageExcel } from '@/lib/exportUtils'
 
 interface Log {
   ts: string
@@ -50,7 +52,25 @@ const LOGS: Log[] = [
   { ts: '2026-07-06 13:18:31', officer: 'MPSC-2018-1102', role: 'Section Officer', dept: 'FIN', action: 'Excel upload with PII', module: 'Excel Analysis', ip: '10.14.55.14', device: 'Windows · managed', risk: 'Medium', status: 'Approved' },
 ]
 
+const RISK_OPTIONS = ['All risk', 'Low', 'Medium', 'High'] as const
+const STATUS_OPTIONS = ['All status', 'Approved', 'Blocked', 'Under Review'] as const
+const TIME_OPTIONS = ['All time', 'Today', 'Last 48h'] as const
+
 export function AuditLogs() {
+  const [risk, setRisk] = useState<(typeof RISK_OPTIONS)[number]>('All risk')
+  const [status, setStatus] = useState<(typeof STATUS_OPTIONS)[number]>('All status')
+  const [time, setTime] = useState<(typeof TIME_OPTIONS)[number]>('All time')
+
+  const rows = useMemo(() => {
+    return LOGS.filter((l) => {
+      if (risk !== 'All risk' && l.risk !== risk) return false
+      if (status !== 'All status' && l.status !== status) return false
+      if (time === 'Today' && !l.ts.startsWith('2026-07-07')) return false
+      if (time === 'Last 48h' && !(l.ts.startsWith('2026-07-07') || l.ts.startsWith('2026-07-06'))) return false
+      return true
+    })
+  }, [risk, status, time])
+
   const columns: Column<Log>[] = [
     { key: 'ts', header: 'Timestamp', sortable: true },
     { key: 'officer', header: 'Officer' },
@@ -73,12 +93,28 @@ export function AuditLogs() {
         icon={<ClipboardList className="h-5 w-5" />}
         actions={<>
           <SourceBadge source="Demo" />
-          <button className="btn-outline"><Download className="h-4 w-4"/> Export CSV</button>
+          <button onClick={() => exportPageExcel('Audit Logs')} className="btn-outline"><Download className="h-4 w-4"/> Export CSV</button>
           <button className="btn-primary"><ClipboardList className="h-4 w-4"/> Filter & report</button>
         </>}
       />
 
-      <DataTable columns={columns} rows={LOGS} searchKeys={['officer', 'action', 'module']} />
+      <DataTable
+        columns={columns}
+        rows={rows}
+        searchKeys={['officer', 'action', 'module']}
+        emptyText="No log entries match the selected filters."
+        actions={<>
+          <select className="input h-9 w-auto py-1.5 text-xs" value={risk} onChange={(e) => setRisk(e.target.value as any)} aria-label="Filter by risk">
+            {RISK_OPTIONS.map((o) => <option key={o}>{o}</option>)}
+          </select>
+          <select className="input h-9 w-auto py-1.5 text-xs" value={status} onChange={(e) => setStatus(e.target.value as any)} aria-label="Filter by status">
+            {STATUS_OPTIONS.map((o) => <option key={o}>{o}</option>)}
+          </select>
+          <select className="input h-9 w-auto py-1.5 text-xs" value={time} onChange={(e) => setTime(e.target.value as any)} aria-label="Filter by time range">
+            {TIME_OPTIONS.map((o) => <option key={o}>{o}</option>)}
+          </select>
+        </>}
+      />
 
       {/* Integrity + Compliance */}
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.1fr)_1fr]">
@@ -120,7 +156,7 @@ export function AuditLogs() {
               <li key={r.name} className="rounded-md border border-ink-100 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-medium text-ink-800">{r.name}</span>
-                  <button className="btn-outline text-xs"><Download className="h-3 w-3" /> Export</button>
+                  <button onClick={() => exportPageExcel('Audit Logs')} className="btn-outline text-xs"><Download className="h-3 w-3" /> Export</button>
                 </div>
                 <div className="mt-1 text-xs text-ink-600">{r.scope}</div>
                 <div className="mt-1 flex flex-wrap gap-x-3 text-[11px] text-ink-500">

@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils'
 
 export function Card({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn('card p-5', className)} {...props}>
+    <div className={cn('card p-4 sm:p-5', className)} {...props}>
       {children}
     </div>
   )
@@ -21,7 +21,7 @@ export function CardHeader({
   className?: string
 }) {
   return (
-    <div className={cn('mb-4 flex items-start justify-between gap-4', className)}>
+    <div className={cn('mb-4 flex flex-wrap items-start justify-between gap-x-4 gap-y-2', className)}>
       <div>
         <h3 className="text-base font-semibold text-ink-900">{title}</h3>
         {subtitle && <p className="mt-0.5 text-xs text-ink-500">{subtitle}</p>}

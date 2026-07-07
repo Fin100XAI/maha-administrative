@@ -72,7 +72,7 @@ export function HumanApproval() {
         source="Demo"
       />
 
-      <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
         <Card>
           <CardHeader
             title="My assignments"

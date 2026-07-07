@@ -1,4 +1,4 @@
-import { AlertTriangle, CheckCircle2, Info, ShieldAlert, ShieldCheck, Sparkles, Clock, Lock, Globe, ServerCog, Database } from 'lucide-react'
+import { AlertTriangle, CheckCircle2, Info, ShieldAlert, ShieldCheck, Clock, Lock, Globe, ServerCog, Database } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export function StatusBadge({
@@ -107,7 +107,7 @@ export function ConfidenceBadge({
   } as const
   return (
     <span className={cn('chip border', map[level], className)}>
-      <Sparkles className="h-3 w-3" />
+      <CheckCircle2 className="h-3 w-3" />
       Confidence: {score}% ({level})
     </span>
   )

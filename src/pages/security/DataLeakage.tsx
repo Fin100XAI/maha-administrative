@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
@@ -8,7 +9,14 @@ import { SeverityBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
 import { EyeOff, Radio, KeyRound, Download, ShieldAlert } from 'lucide-react'
 import { DLP_ROWS, DLP_POLICIES, REDACTION_VOLUME, EXFIL_CHANNELS, DLPRow } from '@/data/securitySamples'
 
+const SEV_FILTERS = ['All', 'Critical', 'High', 'Medium', 'Low'] as const
+
 export function DataLeakage() {
+  const [sev, setSev] = useState<(typeof SEV_FILTERS)[number]>('All')
+  const rows = useMemo(
+    () => (sev === 'All' ? DLP_ROWS : DLP_ROWS.filter((r) => r.severity === sev)),
+    [sev],
+  )
   const columns: Column<DLPRow>[] = [
     { key: 'id', header: 'ID', sortable: true },
     { key: 'when', header: 'When', sortable: true },
@@ -27,7 +35,7 @@ export function DataLeakage() {
         breadcrumb={['Security & AI SOC', 'Data Leakage']}
         source="Demo"
       />
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="PII detected (24h)" value={38} icon={<EyeOff className="h-5 w-5" />} delta={-8} source="Demo" confidence={92} />
         <MetricCard label="Sensitive file access" value={112} icon={<Radio className="h-5 w-5" />} delta={4} source="Demo" confidence={90} />
         <MetricCard label="Secret detections" value={4} icon={<KeyRound className="h-5 w-5" />} delta={-25} source="Demo" confidence={92} />
@@ -90,7 +98,18 @@ export function DataLeakage() {
       </div>
 
       <div className="mt-6">
-        <DataTable columns={columns} rows={DLP_ROWS} searchKeys={['officer', 'dept', 'type']} actions={<><SourceBadge source="Demo" /></>} />
+        <DataTable
+          columns={columns}
+          rows={rows}
+          searchKeys={['officer', 'dept', 'type']}
+          emptyText="No leakage events match the selected severity."
+          actions={<>
+            <select className="input h-9 w-auto py-1.5 text-xs" value={sev} onChange={(e) => setSev(e.target.value as any)} aria-label="Filter by severity">
+              {SEV_FILTERS.map((s) => <option key={s}>{s === 'All' ? 'All severities' : s}</option>)}
+            </select>
+            <SourceBadge source="Demo" />
+          </>}
+        />
       </div>
 
       <Card className="mt-6">

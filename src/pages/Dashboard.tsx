@@ -1,8 +1,9 @@
 import {
   Users, Building2, MessageSquare, FileText, PenTool, ClipboardCheck, AlertTriangle, ShieldCheck, Network, Radar,
-  Database, Timer, Sparkles, ArrowRight, LayoutDashboard, Activity, Gauge, Siren, Radio, TrendingUp,
+  Database, Timer, ArrowRight, LayoutDashboard, Activity, Gauge, Siren, Radio, TrendingUp,
   CalendarClock, Bell, ShieldAlert, Cpu, CheckCircle2,
 } from 'lucide-react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip, Area, AreaChart,
@@ -71,7 +72,7 @@ function HeroTile({ eyebrow, label, value, sublabel, icon, accent, children, pul
             )}
           </div>
           <div className="mt-1 text-sm font-medium text-ink-700">{label}</div>
-          <div className="mt-1 text-[34px] font-semibold leading-none tracking-tight text-ink-900 md:text-[38px]">
+          <div className="mt-1 text-[28px] font-semibold leading-none tracking-tight text-ink-900 sm:text-[34px] md:text-[38px]">
             {value}
           </div>
           <div className="mt-2 text-xs text-ink-500">{sublabel}</div>
@@ -157,9 +158,17 @@ const sourceStatusStyle = (s: string) => {
   }
 }
 
+const DEPT_OPTIONS = ['All', ...AI_USAGE_BY_DEPT.map((d) => d.dept)]
+
 export function Dashboard() {
   const m = DASHBOARD_METRICS
   const topSources = PUBLIC_SOURCES.slice(0, 5)
+
+  // Department filter drives the AI-usage chart and the DPDP heatmap so the control is live.
+  const [dept, setDept] = useState('All')
+  const usageData = dept === 'All' ? AI_USAGE_BY_DEPT : AI_USAGE_BY_DEPT.filter((d) => d.dept === dept)
+  const heatmapData = dept === 'All' ? DPDP_HEATMAP : DPDP_HEATMAP.filter((r) => r.dept === dept)
+  const deptSuffix = dept === 'All' ? 'all departments' : dept
 
   return (
     <div>
@@ -171,8 +180,18 @@ export function Dashboard() {
         icon={<LayoutDashboard className="h-5 w-5" />}
         actions={
           <>
+            <select
+              className="input w-auto"
+              value={dept}
+              onChange={(e) => setDept(e.target.value)}
+              aria-label="Filter by department"
+            >
+              {DEPT_OPTIONS.map((d) => (
+                <option key={d} value={d}>{d === 'All' ? 'All departments' : d}</option>
+              ))}
+            </select>
             <button className="btn-outline">Public source status</button>
-            <Link to="/workspace" className="btn-primary"><Sparkles className="h-4 w-4"/>Open AI Workspace <ArrowRight className="h-4 w-4" /></Link>
+            <Link to="/workspace" className="btn-primary"><MessageSquare className="h-4 w-4"/>Open AI Workspace <ArrowRight className="h-4 w-4" /></Link>
           </>
         }
       />
@@ -262,7 +281,7 @@ export function Dashboard() {
       </motion.div>
 
       {/* KPI cards */}
-      <div className="mb-3 flex items-center justify-between">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-1">
         <div className="flex items-center gap-2">
           <Cpu className="h-4 w-4 text-brand-600" />
           <h2 className="text-sm font-semibold uppercase tracking-widest text-ink-600">Key Performance Indicators</h2>
@@ -303,9 +322,9 @@ export function Dashboard() {
 
       {/* Charts row 1 */}
       <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <ChartCard title="AI Usage by Department" subtitle="Rolling 30-day request volume" source="Demo">
+        <ChartCard title="AI Usage by Department" subtitle={`Rolling 30-day request volume · ${deptSuffix}`} source="Demo">
           <ResponsiveContainer>
-            <BarChart data={AI_USAGE_BY_DEPT} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
+            <BarChart data={usageData} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
               <defs>
                 <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="0%" stopColor="#0B57D0" stopOpacity={0.9} />
@@ -395,7 +414,13 @@ export function Dashboard() {
           </ResponsiveContainer>
         </ChartCard>
 
-        <ChartCard title="DPDP Compliance Heatmap" subtitle="Dimension-wise score, department-wise" source="Public-source linked">
+        <ChartCard title="DPDP Compliance Heatmap" subtitle={`Dimension-wise score · ${deptSuffix}`} source="Public-source linked">
+          {heatmapData.length === 0 ? (
+            <div className="flex h-full min-h-[160px] flex-col items-center justify-center gap-1 text-center">
+              <div className="text-sm font-medium text-ink-700">No DPDP scores for {dept}</div>
+              <div className="text-xs text-ink-500">This department is not yet in the compliance audit set.</div>
+            </div>
+          ) : (
           <div className="overflow-x-auto">
             <table className="w-full min-w-[420px] text-xs">
               <thead>
@@ -407,7 +432,7 @@ export function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {DPDP_HEATMAP.map((row) => (
+                {heatmapData.map((row) => (
                   <tr key={row.dept}>
                     <td className="p-1 font-medium text-ink-800">{row.dept}</td>
                     {(['consent','retention','purpose','lineage','class'] as const).map((k) => {
@@ -427,6 +452,7 @@ export function Dashboard() {
               </tbody>
             </table>
           </div>
+          )}
         </ChartCard>
       </div>
 
@@ -531,7 +557,7 @@ export function Dashboard() {
             subtitle="Composite across Governance, Security, DPDP, Ops"
             right={<SourceBadge source="Demo" />}
           />
-          <div className="relative flex items-center gap-5">
+          <div className="relative flex flex-col items-center gap-5 sm:flex-row">
             <div className="relative h-40 w-40 shrink-0">
               <ResponsiveContainer>
                 <RadialBarChart innerRadius="70%" outerRadius="100%" data={[{ v: 82, fill: 'url(#gRad)' }]} startAngle={90} endAngle={-270}>
@@ -549,7 +575,7 @@ export function Dashboard() {
                 <div className="-mt-1 text-[10px] font-medium uppercase tracking-widest text-ink-400">/ 100</div>
               </div>
             </div>
-            <div className="min-w-0 flex-1">
+            <div className="w-full min-w-0 flex-1">
               <div className="text-xs font-medium text-emerald-700">Ready for tier-2 roll-out</div>
               <ul className="mt-3 space-y-2 text-xs">
                 {[
@@ -589,13 +615,13 @@ export function Dashboard() {
           <div className="space-y-3">
             {RECENT_GR.map((g) => (
               <div key={g.id} className="rounded-xl border border-ink-100 p-4">
-                <div className="flex items-start justify-between gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                   <div className="min-w-0">
                     <div className="text-xs text-ink-500">{g.id} · {g.dept} · {g.date}</div>
                     <div className="text-sm font-semibold text-ink-900">{g.title}</div>
                     <p className="mt-1 text-sm text-ink-600">{g.summary}</p>
                   </div>
-                  <div className="flex shrink-0 flex-col items-end gap-2">
+                  <div className="flex shrink-0 flex-row flex-wrap items-center gap-2 sm:flex-col sm:items-end">
                     <RiskBadge level={g.impact as any} />
                     <SourceBadge source="Public-source linked" />
                   </div>
@@ -632,8 +658,8 @@ export function Dashboard() {
         transition={{ delay: 0.15 }}
         className="mt-6 overflow-hidden rounded-2xl border border-brand-100 bg-gradient-to-r from-brand-50/70 via-white to-brand-100/50 p-4 shadow-sm"
       >
-        <div className="mb-3 flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+          <div className="flex flex-wrap items-center gap-2">
             <div className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-500 opacity-70" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />

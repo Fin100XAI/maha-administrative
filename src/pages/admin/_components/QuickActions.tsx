@@ -6,6 +6,7 @@ export interface QuickAction {
   label: string
   icon?: ReactNode
   primary?: boolean
+  onClick?: () => void
 }
 
 export function QuickActions({
@@ -29,7 +30,7 @@ export function QuickActions({
       <CardHeader title={title} subtitle={subtitle} right={<Zap className="h-4 w-4 text-brand-500" />} />
       <div className="flex flex-wrap gap-2">
         {items.map((a) => (
-          <button key={a.label} className={a.primary ? 'btn-primary' : 'btn-outline'}>
+          <button key={a.label} onClick={a.onClick} className={a.primary ? 'btn-primary' : 'btn-outline'}>
             {a.icon}
             {a.label}
           </button>

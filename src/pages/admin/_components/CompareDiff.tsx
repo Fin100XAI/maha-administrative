@@ -50,7 +50,7 @@ export function CompareDiff({
           </div>
         }
       />
-      <div className="mb-3 grid grid-cols-2 gap-3 text-xs">
+      <div className="mb-3 grid grid-cols-1 gap-3 text-xs md:grid-cols-2">
         <div className="rounded-lg border border-ink-100 bg-ink-50 px-3 py-2 font-medium text-ink-700">{leftLabel}</div>
         <div className="rounded-lg border border-brand-200 bg-brand-soft px-3 py-2 font-medium text-brand-700">{rightLabel}</div>
       </div>

@@ -19,6 +19,24 @@ import { ExcelAnalysis } from '@/pages/admin/ExcelAnalysis'
 import { ResearchAssistant } from '@/pages/admin/ResearchAssistant'
 import { PromptLibrary } from '@/pages/admin/PromptLibrary'
 
+// Administrative Intelligence
+import { ExecutiveCockpit } from '@/pages/intelligence/ExecutiveCockpit'
+import { IntelligenceIndex } from '@/pages/intelligence/IntelligenceIndex'
+import { FileMovement } from '@/pages/intelligence/FileMovement'
+import { DecisionIntelligence } from '@/pages/intelligence/DecisionIntelligence'
+import { DepartmentPerformance } from '@/pages/intelligence/DepartmentPerformance'
+import { OfficerPerformance } from '@/pages/intelligence/OfficerPerformance'
+import { WorkflowSLA } from '@/pages/intelligence/WorkflowSLA'
+import { CabinetDecisions } from '@/pages/intelligence/CabinetDecisions'
+import { MeetingIntelligence } from '@/pages/intelligence/MeetingIntelligence'
+import { InspectionIntelligence } from '@/pages/intelligence/InspectionIntelligence'
+import { AuditIntelligence } from '@/pages/intelligence/AuditIntelligence'
+import { CourtCaseIntelligence } from '@/pages/intelligence/CourtCaseIntelligence'
+import { CitizenGrievance } from '@/pages/intelligence/CitizenGrievance'
+import { OutcomeIntelligence } from '@/pages/intelligence/OutcomeIntelligence'
+import { AIWorkforce } from '@/pages/intelligence/AIWorkforce'
+import { OfficerWorkspace } from '@/pages/intelligence/OfficerWorkspace'
+
 // Governance
 import { AIGovernance } from '@/pages/governance/AIGovernance'
 import { ModelRegistry } from '@/pages/governance/ModelRegistry'
@@ -34,6 +52,7 @@ import { HumanApproval } from '@/pages/governance/HumanApproval'
 import { AIIncidents } from '@/pages/governance/AIIncidents'
 
 // Security
+import { AISecureInfrastructure } from '@/pages/security/AISecureInfrastructure'
 import { SecurityOps } from '@/pages/security/SecurityOps'
 import { AISOC } from '@/pages/security/AISOC'
 import { PromptInjection } from '@/pages/security/PromptInjection'
@@ -64,6 +83,15 @@ import { OfficerSearch } from '@/pages/knowledge/OfficerSearch'
 // Integrations
 import { IntegrationsDashboard } from '@/pages/integrations/IntegrationsDashboard'
 import { IntegrationDetail } from '@/pages/integrations/IntegrationDetail'
+import { EOfficePage } from '@/pages/integrations/detail/EOfficePage'
+import { RTIPage } from '@/pages/integrations/detail/RTIPage'
+import { EHRMSPage } from '@/pages/integrations/detail/EHRMSPage'
+import { AapleSarkarPage } from '@/pages/integrations/detail/AapleSarkarPage'
+import { MahaDBTPage } from '@/pages/integrations/detail/MahaDBTPage'
+import { EmailPage } from '@/pages/integrations/detail/EmailPage'
+import { SMSPage } from '@/pages/integrations/detail/SMSPage'
+import { DMSPage } from '@/pages/integrations/detail/DMSPage'
+import { APIGatewayPage } from '@/pages/integrations/detail/APIGatewayPage'
 
 // Platform Admin
 import { SecureLoginInfo } from '@/pages/platform/SecureLoginInfo'
@@ -94,6 +122,23 @@ export default function App() {
         <Route path="/research" element={<ResearchAssistant />} />
         <Route path="/prompt-library" element={<PromptLibrary />} />
 
+        <Route path="/administrative-intelligence/executive-cockpit" element={<ExecutiveCockpit />} />
+        <Route path="/administrative-intelligence/index" element={<IntelligenceIndex />} />
+        <Route path="/administrative-intelligence/file-movement" element={<FileMovement />} />
+        <Route path="/administrative-intelligence/decision-intelligence" element={<DecisionIntelligence />} />
+        <Route path="/administrative-intelligence/department-performance" element={<DepartmentPerformance />} />
+        <Route path="/administrative-intelligence/officer-performance" element={<OfficerPerformance />} />
+        <Route path="/administrative-intelligence/workflow-sla" element={<WorkflowSLA />} />
+        <Route path="/administrative-intelligence/cabinet-decisions" element={<CabinetDecisions />} />
+        <Route path="/administrative-intelligence/meeting-intelligence" element={<MeetingIntelligence />} />
+        <Route path="/administrative-intelligence/inspection-intelligence" element={<InspectionIntelligence />} />
+        <Route path="/administrative-intelligence/audit-intelligence" element={<AuditIntelligence />} />
+        <Route path="/administrative-intelligence/court-case-intelligence" element={<CourtCaseIntelligence />} />
+        <Route path="/administrative-intelligence/citizen-grievance" element={<CitizenGrievance />} />
+        <Route path="/administrative-intelligence/outcome-intelligence" element={<OutcomeIntelligence />} />
+        <Route path="/administrative-intelligence/ai-workforce" element={<AIWorkforce />} />
+        <Route path="/administrative-intelligence/officer-workspace" element={<OfficerWorkspace />} />
+
         <Route path="/governance" element={<AIGovernance />} />
         <Route path="/model-registry" element={<ModelRegistry />} />
         <Route path="/model-versioning" element={<ModelVersioning />} />
@@ -107,6 +152,7 @@ export default function App() {
         <Route path="/human-approval" element={<HumanApproval />} />
         <Route path="/ai-incidents" element={<AIIncidents />} />
 
+        <Route path="/security-infrastructure" element={<AISecureInfrastructure />} />
         <Route path="/security" element={<SecurityOps />} />
         <Route path="/ai-soc" element={<AISOC />} />
         <Route path="/prompt-injection" element={<PromptInjection />} />
@@ -133,6 +179,15 @@ export default function App() {
         <Route path="/officer-search" element={<OfficerSearch />} />
 
         <Route path="/integrations" element={<IntegrationsDashboard />} />
+        <Route path="/integrations/e-office" element={<EOfficePage />} />
+        <Route path="/integrations/rti" element={<RTIPage />} />
+        <Route path="/integrations/e-hrms" element={<EHRMSPage />} />
+        <Route path="/integrations/aaple-sarkar" element={<AapleSarkarPage />} />
+        <Route path="/integrations/mahadbt" element={<MahaDBTPage />} />
+        <Route path="/integrations/email" element={<EmailPage />} />
+        <Route path="/integrations/sms" element={<SMSPage />} />
+        <Route path="/integrations/dms" element={<DMSPage />} />
+        <Route path="/integrations/api-gateway" element={<APIGatewayPage />} />
         <Route path="/integrations/:slug" element={<IntegrationDetail />} />
 
         <Route path="/login-info" element={<SecureLoginInfo />} />

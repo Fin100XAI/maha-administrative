@@ -56,7 +56,7 @@ export function CircularAnalysis() {
             <input type="file" className="hidden" />
           </label>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button className="btn-outline"><ListChecks className="h-4 w-4" /> Extract action points</button>
             <button className="btn-outline"><Bell className="h-4 w-4" /> Draft notification</button>
             <button className="btn-outline"><ClipboardCheck className="h-4 w-4" /> Compliance checklist</button>

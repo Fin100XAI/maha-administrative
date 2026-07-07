@@ -28,7 +28,7 @@ export function ImageUnderstanding() {
             <input type="file" className="hidden" />
           </label>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button className="btn-outline"><ImageIcon className="h-4 w-4" /> Document image</button>
             <button className="btn-outline"><ClipboardCheck className="h-4 w-4" /> Form extraction</button>
             <button className="btn-outline">Chart interpretation</button>
@@ -38,7 +38,7 @@ export function ImageUnderstanding() {
 
         <Card>
           <CardHeader title="Field inspection photo analysis" subtitle="Village school building — Ahmednagar" right={<ConfidenceBadge score={84} />} />
-          <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
             <Kv k="Structure" v="Concrete, 2-storey" />
             <Kv k="Roof condition" v="Deteriorated (moss)" />
             <Kv k="Toilet block" v="Absent" />
@@ -50,7 +50,7 @@ export function ImageUnderstanding() {
 
         <Card>
           <CardHeader title="Extracted form fields" right={<StatusBadge status="Approved" />} />
-          <div className="grid grid-cols-2 gap-3 text-sm">
+          <div className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
             <Kv k="Applicant name" v="Sunita R. Kadam" />
             <Kv k="Application no." v="MHDBT/2026/PU/00218" />
             <Kv k="Scheme" v="PMAY-U 2.0" />

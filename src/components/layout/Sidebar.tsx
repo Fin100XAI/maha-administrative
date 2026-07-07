@@ -1,11 +1,11 @@
 import { NavLink } from 'react-router-dom'
 import {
   LayoutDashboard, MessageSquare, PencilLine, FileText, FileSearch, FileStack, ScanText, Files, ImageIcon, Presentation,
-  Table2, BookOpen, Library, Shuffle, Languages, Sparkles, Boxes, GitBranch, ClipboardCheck, Scale, AlertTriangle,
+  Table2, BookOpen, Library, Shuffle, Languages, Boxes, GitBranch, ClipboardCheck, Scale, AlertTriangle,
   Eye, GaugeCircle, ShieldCheck, UserCheck, Bug, Radar, Radio, ShieldAlert, Cpu, Activity, Fingerprint, KeyRound,
   Lock, Cookie, EyeOff, Layers, Route, Timer, Target, Waves, Database, Building2, Library as LibIcon, Scroll,
   BookText, MessagesSquare, SearchCode, Mail, Send, Network, Users, KeyRound as Auth, ShieldQuestion,
-  ClipboardList, Server, HeartPulse, Landmark, ChevronRight, BadgeCheck,
+  ClipboardList, Server, HeartPulse, Landmark, ChevronRight, BadgeCheck, Gauge, Bot,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
@@ -17,7 +17,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Administrative AI',
     items: [
-      { to: '/workspace', label: 'AI Workspace', icon: MessageSquare },
+      { to: '/workspace', label: 'Maha Copilot', icon: MessageSquare },
       { to: '/letter-drafting', label: 'Letter Drafting', icon: PencilLine },
       { to: '/note-drafting', label: 'Note Drafting', icon: FileText },
       { to: '/gr-analysis', label: 'GR Analysis', icon: FileSearch },
@@ -34,9 +34,30 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    title: 'Administrative Intelligence',
+    items: [
+      { to: '/administrative-intelligence/executive-cockpit', label: 'Executive Cockpit', icon: Gauge },
+      { to: '/administrative-intelligence/index', label: 'Intelligence Index', icon: GaugeCircle },
+      { to: '/administrative-intelligence/file-movement', label: 'File Movement', icon: FileStack },
+      { to: '/administrative-intelligence/decision-intelligence', label: 'Decision Intelligence', icon: GitBranch },
+      { to: '/administrative-intelligence/department-performance', label: 'Department Performance', icon: Building2 },
+      { to: '/administrative-intelligence/officer-performance', label: 'Officer Workload', icon: Users },
+      { to: '/administrative-intelligence/workflow-sla', label: 'Workflow & SLA', icon: Timer },
+      { to: '/administrative-intelligence/cabinet-decisions', label: 'Cabinet Decisions', icon: Landmark },
+      { to: '/administrative-intelligence/meeting-intelligence', label: 'Meeting Intelligence', icon: MessagesSquare },
+      { to: '/administrative-intelligence/inspection-intelligence', label: 'Inspection Intelligence', icon: ClipboardCheck },
+      { to: '/administrative-intelligence/audit-intelligence', label: 'Audit Intelligence', icon: ClipboardList },
+      { to: '/administrative-intelligence/court-case-intelligence', label: 'Court Case Intelligence', icon: Scale },
+      { to: '/administrative-intelligence/citizen-grievance', label: 'Citizen Grievance', icon: Users },
+      { to: '/administrative-intelligence/outcome-intelligence', label: 'Outcome Intelligence', icon: Target },
+      { to: '/administrative-intelligence/ai-workforce', label: 'Government AI Workforce', icon: Bot },
+      { to: '/administrative-intelligence/officer-workspace', label: 'Officer Workspace', icon: UserCheck },
+    ],
+  },
+  {
     title: 'Governance & Responsible AI',
     items: [
-      { to: '/governance', label: 'AI Governance', icon: Sparkles },
+      { to: '/governance', label: 'AI Governance', icon: Landmark },
       { to: '/model-registry', label: 'Model Registry', icon: Boxes },
       { to: '/model-versioning', label: 'Model Versioning', icon: GitBranch },
       { to: '/prompt-registry', label: 'Prompt Registry', icon: ClipboardList },
@@ -53,6 +74,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Security & AI SOC',
     items: [
+      { to: '/security-infrastructure', label: 'AI Secure Infrastructure', icon: ShieldCheck },
       { to: '/security', label: 'Security Operations', icon: ShieldCheck },
       { to: '/ai-soc', label: 'AI SOC', icon: Radar },
       { to: '/prompt-injection', label: 'Prompt Injection', icon: ShieldAlert },
@@ -118,6 +140,7 @@ export const NAV: NavGroup[] = [
 // Group theme colors — a small dot before each group title (Google multi-color palette)
 const GROUP_DOT: Record<string, string> = {
   'Administrative AI': 'bg-brand-500',
+  'Administrative Intelligence': 'bg-indigo-500',
   'Governance & Responsible AI': 'bg-google-blue-500',
   'Security & AI SOC': 'bg-google-red-500',
   'DPDP & Data Governance': 'bg-google-yellow-500',
@@ -130,7 +153,7 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
   return (
     <aside
       className={cn(
-        'sticky top-0 h-screen shrink-0 border-r border-ink-100 bg-white/80 backdrop-blur-lg transition-[width] duration-200',
+        'sticky top-0 h-screen max-w-full shrink-0 border-r border-ink-100 bg-white/90 backdrop-blur-lg transition-[width] duration-200',
         collapsed ? 'w-16' : 'w-72'
       )}
     >

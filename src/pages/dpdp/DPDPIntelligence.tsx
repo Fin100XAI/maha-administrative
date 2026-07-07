@@ -86,7 +86,7 @@ export function DPDPIntelligence() {
           <CardHeader title="Privacy Impact Assessments" right={<StatusBadge status="Approved" />} />
           <ul className="space-y-2 text-sm">
             {PIA.map((p) => (
-              <li key={p.name} className="flex items-center justify-between rounded-md border border-ink-100 px-3 py-2">
+              <li key={p.name} className="flex items-center justify-between gap-2 rounded-md border border-ink-100 px-3 py-2">
                 <div className="min-w-0">
                   <div className="font-medium text-ink-800">{p.name}</div>
                   <div className="text-xs text-ink-500">{p.dept}</div>
@@ -216,7 +216,7 @@ export function DPDPIntelligence() {
         <CardHeader title="Privacy risk register" right={<SourceBadge source="Demo" />} />
         <ul className="space-y-2">
           {RISKS.map((r) => (
-            <li key={r.id} className="flex items-center justify-between rounded-md border border-ink-100 px-3 py-2">
+            <li key={r.id} className="flex items-center justify-between gap-3 rounded-md border border-ink-100 px-3 py-2">
               <div>
                 <div className="text-sm font-medium text-ink-800">{r.title}</div>
                 <div className="text-xs text-ink-500">{r.id} - {r.dept} - SLA {r.sla}</div>

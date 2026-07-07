@@ -1,4 +1,4 @@
-import { LayoutTemplate, Sparkles } from 'lucide-react'
+import { LayoutTemplate } from 'lucide-react'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { SourceBadge } from '@/components/ui/Badges'
 import type { AdminTemplate } from '@/data/adminSamples'
@@ -42,7 +42,7 @@ export function TemplateGallery({
               {t.description}
             </p>
             <button className="btn-primary mt-3 w-full !py-1.5 text-xs">
-              <Sparkles className="h-3.5 w-3.5" /> Use template
+              <LayoutTemplate className="h-3.5 w-3.5" /> Use template
             </button>
           </div>
         ))}

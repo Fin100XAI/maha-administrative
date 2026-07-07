@@ -5,7 +5,7 @@ import { StatusBadge, SourceBadge } from '@/components/ui/Badges'
 
 export function IntegrationCard({ i }: { i: Integration }) {
   return (
-    <article className="card card-hover flex h-full flex-col gap-4 p-5">
+    <article className="card card-hover flex h-full flex-col gap-4 p-4 sm:p-5">
       {/* Header — title/category shrinks, status stays on its own line if needed */}
       <header className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">

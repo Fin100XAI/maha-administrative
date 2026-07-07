@@ -68,7 +68,7 @@ export function DataTable<T extends Record<string, any>>({
             />
           </div>
         ) : <div />}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {actions}
         </div>
       </div>
@@ -116,7 +116,7 @@ export function DataTable<T extends Record<string, any>>({
           </tbody>
         </table>
       </div>
-      <div className="flex items-center justify-between border-t border-ink-100 px-4 py-2 text-xs text-ink-500">
+      <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 border-t border-ink-100 px-4 py-2 text-xs text-ink-500">
         <div>{filtered.length} of {rows.length} records</div>
         <div>Data category badge shown per row where applicable</div>
       </div>

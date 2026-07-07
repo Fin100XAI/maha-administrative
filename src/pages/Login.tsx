@@ -10,13 +10,13 @@ import {
   KeyRound,
   ArrowRight,
   Building2,
-  Sparkles,
   BadgeCheck,
   Cpu,
   Radio,
 } from 'lucide-react'
 import { ROLES } from '@/data/departments'
 import { DEPARTMENTS } from '@/data/departments'
+import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'
 
 export function Login() {
   const nav = useNavigate()
@@ -149,7 +149,7 @@ export function Login() {
                 MAII · Sovereign AI Infrastructure
               </div>
               <div className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-widest text-white/90 backdrop-blur">
-                <Sparkles className="h-3 w-3" /> v0.1 · Sovereign Build
+                <BadgeCheck className="h-3 w-3" /> v0.1 · Sovereign Build
               </div>
             </div>
           </div>
@@ -234,7 +234,7 @@ export function Login() {
         </motion.div>
 
         {/* Right — form */}
-        <div className="relative flex items-center justify-center p-8">
+        <div className="relative flex items-center justify-center p-4 py-8 sm:p-8">
           {/* Soft ambient glow behind card */}
           <div
             aria-hidden
@@ -251,8 +251,13 @@ export function Login() {
             transition={{ duration: 0.4 }}
             className="relative w-full max-w-md"
           >
+            {/* Language switcher */}
+            <div className="mb-3 flex justify-end">
+              <LanguageSwitcher />
+            </div>
+
             {/* System status */}
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
               <div className="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50/80 px-2.5 py-1 text-[11px] font-medium text-emerald-700 backdrop-blur">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
@@ -321,7 +326,7 @@ export function Login() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <div>
                   <label className="label">Department</label>
                   <select

@@ -54,7 +54,7 @@ export function ConsentDashboard() {
         source="Demo"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Active consents" value="1.24 L" icon={<Cookie className="h-5 w-5" />} delta={5.2} source="Demo" confidence={86} />
         <MetricCard label="Withdrawn (24h)" value={42} icon={<XCircle className="h-5 w-5" />} delta={-8} source="Demo" confidence={90} />
         <MetricCard label="Expiring in 30 days" value={318} icon={<Clock className="h-5 w-5" />} delta={0} source="Demo" confidence={86} />
@@ -122,7 +122,7 @@ export function ConsentDashboard() {
         />
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,1.2fr)_1fr]">
           <div className="rounded-xl border border-ink-100 bg-white p-4">
-            <div className="flex items-center justify-between border-b border-dashed border-ink-200 pb-2">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-dashed border-ink-200 pb-2">
               <div>
                 <div className="text-xs uppercase tracking-widest text-ink-500">Consent Notice</div>
                 <div className="text-sm font-semibold text-ink-900">PMAY-U 2.0 - Beneficiary verification</div>
@@ -137,7 +137,7 @@ export function ConsentDashboard() {
               <p><span className="font-semibold">Your rights:</span> Access, correction, erasure, grievance redressal via Aaple Sarkar or dpo-cell***@maharashtra.gov.in.</p>
               <p className="text-xs text-ink-500">You may withdraw this consent at any time. Withdrawal will not affect processing done before withdrawal.</p>
             </div>
-            <div className="mt-3 flex items-center justify-between border-t border-dashed border-ink-200 pt-2 text-xs text-ink-500">
+            <div className="mt-3 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 border-t border-dashed border-ink-200 pt-2 text-xs text-ink-500">
               <span>Language: Marathi + English</span>
               <span>Version: CN-TMPL-14</span>
             </div>

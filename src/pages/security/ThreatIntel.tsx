@@ -1,3 +1,4 @@
+import { useMemo, useState } from 'react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { SeverityBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
@@ -21,7 +22,14 @@ const PATTERNS = [
   'PDF hidden instructions (invisible text)',
 ]
 
+const SEV_FILTERS = ['All', 'High', 'Medium', 'Low'] as const
+
 export function ThreatIntel() {
+  const [sev, setSev] = useState<(typeof SEV_FILTERS)[number]>('All')
+  const threats = useMemo(
+    () => (sev === 'All' ? THREATS : THREATS.filter((t) => t.sev === sev)),
+    [sev],
+  )
   return (
     <div>
       <PageHeader
@@ -33,9 +41,17 @@ export function ThreatIntel() {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.4fr)_1fr]">
         <Card>
-          <CardHeader title="Emerging threats" right={<SourceBadge source="Public-source linked" />} />
+          <CardHeader
+            title="Emerging threats"
+            right={<div className="flex items-center gap-2">
+              <select className="input h-8 w-auto py-1 text-xs" value={sev} onChange={(e) => setSev(e.target.value as any)} aria-label="Filter by severity">
+                {SEV_FILTERS.map((s) => <option key={s}>{s === 'All' ? 'All severities' : s}</option>)}
+              </select>
+              <SourceBadge source="Public-source linked" />
+            </div>}
+          />
           <ul className="space-y-2">
-            {THREATS.map((t) => (
+            {threats.map((t) => (
               <li key={t.id} className="rounded-xl border border-ink-100 p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
@@ -50,6 +66,11 @@ export function ThreatIntel() {
                 </div>
               </li>
             ))}
+            {threats.length === 0 && (
+              <li className="rounded-xl border border-dashed border-ink-200 p-4 text-center text-xs text-ink-500">
+                No {sev.toLowerCase()}-severity threats currently tracked.
+              </li>
+            )}
           </ul>
         </Card>
 

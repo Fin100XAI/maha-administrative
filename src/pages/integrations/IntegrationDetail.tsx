@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -42,6 +43,16 @@ export function IntegrationDetail() {
   const steps = testStepsFor(i.slug)
   const passCount = steps.filter((s) => s.status === 'Pass').length
 
+  const TABS = [
+    { id: 'config', label: 'Configuration' },
+    { id: 'test', label: 'Test connection' },
+    { id: 'api', label: 'API samples' },
+    { id: 'metrics', label: 'Per-endpoint metrics' },
+    { id: 'approvals', label: 'Approvals & flow' },
+  ] as const
+  type TabId = typeof TABS[number]['id']
+  const [tab, setTab] = useState<TabId>('config')
+
   return (
     <div>
       <PageHeader
@@ -56,6 +67,28 @@ export function IntegrationDetail() {
       />
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.4fr)_1fr]">
         <div className="space-y-4">
+          <div className="-mx-1 flex flex-wrap gap-2">
+            {TABS.map((t) => {
+              const active = t.id === tab
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  onClick={() => setTab(t.id)}
+                  className={
+                    'chip border transition-all ' +
+                    (active
+                      ? 'bg-brand-gradient text-white border-transparent shadow'
+                      : 'bg-white text-ink-700 border-ink-200 hover:border-brand-300 hover:text-brand-700')
+                  }
+                >
+                  {t.label}
+                </button>
+              )
+            })}
+          </div>
+
+          {tab === 'config' && (
           <Card>
             <CardHeader title="Connector configuration" right={<StatusBadge status={i.status} />} />
             <dl className="grid grid-cols-2 gap-3 text-sm">
@@ -67,7 +100,9 @@ export function IntegrationDetail() {
               <Info k="API health" v={i.apiHealth ? `${i.apiHealth}%` : '—'} />
             </dl>
           </Card>
+          )}
 
+          {tab === 'test' && (
           <Card>
             <CardHeader
               title="Test connection"
@@ -101,7 +136,9 @@ export function IntegrationDetail() {
               ))}
             </ol>
           </Card>
+          )}
 
+          {tab === 'api' && (
           <Card>
             <CardHeader
               title="Sample request / response"
@@ -123,7 +160,9 @@ export function IntegrationDetail() {
               </div>
             </div>
           </Card>
+          )}
 
+          {tab === 'metrics' && (
           <Card>
             <CardHeader
               title="Per-endpoint metrics"
@@ -155,7 +194,9 @@ export function IntegrationDetail() {
               </table>
             </div>
           </Card>
+          )}
 
+          {tab === 'approvals' && (<>
           <Card>
             <CardHeader title="Required approvals" />
             <ul className="space-y-2 text-sm">
@@ -175,6 +216,7 @@ export function IntegrationDetail() {
               <li>5. Audit log written with hash of request/response</li>
             </ol>
           </Card>
+          </>)}
         </div>
         <div className="space-y-4">
           <Card>
@@ -187,7 +229,7 @@ export function IntegrationDetail() {
             <CardHeader title="Public-source status" />
             <div className="flex flex-col gap-2 text-sm">
               <SourceBadge source={i.status === 'Connected' ? 'Live' : i.status === 'Public-source linked' ? 'Public-source linked' : 'Department API required'} />
-              {i.url && <a href={i.url} target="_blank" rel="noreferrer" className="text-brand-600 hover:underline">{i.url}</a>}
+              {i.url && <a href={i.url} target="_blank" rel="noreferrer" className="break-all text-brand-600 hover:underline">{i.url}</a>}
             </div>
           </Card>
           <Card>

@@ -10,6 +10,7 @@ import {
   Tooltip as ReTooltip,
   Legend,
 } from 'recharts'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
@@ -51,7 +52,14 @@ const STATE_STYLES: Record<string, { dot: string; text: string; badge: string }>
   Red:   { dot: 'bg-red-500',     text: 'text-red-700',     badge: 'bg-red-50 border-red-200' },
 }
 
+const STATE_FILTERS = ['All', 'Green', 'Amber', 'Red'] as const
+
 export function SystemHealth() {
+  const [state, setState] = useState<(typeof STATE_FILTERS)[number]>('All')
+  const services = useMemo(
+    () => (state === 'All' ? SERVICE_BOARD : SERVICE_BOARD.filter((s) => s.state === state)),
+    [state],
+  )
   return (
     <div>
       <PageHeader
@@ -63,7 +71,7 @@ export function SystemHealth() {
         icon={<HeartPulse className="h-5 w-5" />}
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard label="Application uptime (30d)" value="99.987%" icon={<HeartPulse className="h-5 w-5" />} delta={0.02} source="Demo" confidence={98} />
         <MetricCard label="API p95 latency" value="620ms" icon={<Activity className="h-5 w-5" />} delta={-8} source="Demo" confidence={92} />
         <MetricCard label="Model p95 latency" value="720ms" icon={<Cpu className="h-5 w-5" />} delta={-4} source="Demo" confidence={90} />
@@ -79,10 +87,16 @@ export function SystemHealth() {
         <CardHeader
           title="Component-level status board"
           subtitle="12 core services · green / amber / red."
-          right={<div className="flex items-center gap-2"><Layers className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
+          right={<div className="flex items-center gap-2">
+            <Layers className="h-4 w-4 text-brand-500" />
+            <select className="input h-8 w-auto py-1 text-xs" value={state} onChange={(e) => setState(e.target.value as any)} aria-label="Filter by state">
+              {STATE_FILTERS.map((s) => <option key={s}>{s === 'All' ? 'All states' : s}</option>)}
+            </select>
+            <SourceBadge source="Demo" />
+          </div>}
         />
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-          {SERVICE_BOARD.map((s, idx) => {
+          {services.map((s, idx) => {
             const st = STATE_STYLES[s.state]
             return (
               <motion.div
@@ -103,6 +117,11 @@ export function SystemHealth() {
               </motion.div>
             )
           })}
+          {services.length === 0 && (
+            <div className="rounded-xl border border-dashed border-ink-200 p-4 text-center text-xs text-ink-500 md:col-span-2 xl:col-span-3">
+              No services in the {state} state.
+            </div>
+          )}
         </div>
       </Card>
 

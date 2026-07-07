@@ -9,7 +9,22 @@ import { SourceBadge, StatusBadge } from '@/components/ui/Badges'
 import { ChipStrip } from './_components/ChipStrip'
 import { CIRCULAR_CATEGORIES, ACKNOWLEDGEMENT_QUEUE, CIRCULAR_SOP_LINKS } from '@/data/knowledgeSamples'
 
-const CATEGORIES = ['All', 'Operational', 'Advisory', 'Directive', 'Clarificatory']
+const CATEGORIES = ['All', 'Operational', 'Advisory', 'Directive', 'Clarificatory'] as const
+type CircularCategory = Exclude<(typeof CATEGORIES)[number], 'All'>
+
+// KnowledgeItem carries no category field, so MAII's inferred intent is derived
+// deterministically from the circular's title/id — keyword-first, hashed fallback.
+const CATEGORY_ORDER: CircularCategory[] = ['Operational', 'Advisory', 'Directive', 'Clarificatory']
+function inferCircularCategory(k: { id: string; title: string }): CircularCategory {
+  const t = k.title.toLowerCase()
+  if (t.includes('advisory') || t.includes('roll-out') || t.includes('rollout')) return 'Advisory'
+  if (t.includes('directive') || t.includes('standard') || t.includes('mandatory') || t.includes('shall')) return 'Directive'
+  if (t.includes('clarif') || t.includes('faq') || t.includes('guidance')) return 'Clarificatory'
+  if (t.includes('operational') || t.includes('sop') || t.includes('procedure') || t.includes('workflow')) return 'Operational'
+  let h = 0
+  for (let i = 0; i < k.id.length; i++) h = (h * 31 + k.id.charCodeAt(i)) >>> 0
+  return CATEGORY_ORDER[h % CATEGORY_ORDER.length]
+}
 
 export function CircularRepository() {
   const [category, setCategory] = useState('All')
@@ -17,7 +32,11 @@ export function CircularRepository() {
   const [freq, setFreq] = useState('daily')
   const [subscribed, setSubscribed] = useState(false)
 
-  const items = useMemo(() => KNOWLEDGE.filter((k) => k.type === 'Circular'), [])
+  const circulars = useMemo(() => KNOWLEDGE.filter((k) => k.type === 'Circular'), [])
+  const items = useMemo(
+    () => circulars.filter((k) => category === 'All' || inferCircularCategory(k) === category),
+    [circulars, category],
+  )
 
   const catOptions = CATEGORIES.map((c) => ({
     value: c,
@@ -50,8 +69,21 @@ export function CircularRepository() {
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1.4fr)_1fr]">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          {items.map((k) => <KnowledgeResultCard key={k.id} item={k} />)}
-          {items.length === 0 && <div className="col-span-full rounded-xl border border-dashed border-ink-200 p-8 text-center text-sm text-ink-500">No circulars indexed yet.</div>}
+          {items.map((k) => (
+            <div key={k.id} className="relative">
+              <div className="absolute right-3 top-3 z-10">
+                <span className="chip border border-brand-100 bg-brand-soft text-[10px] text-brand-700">{inferCircularCategory(k)}</span>
+              </div>
+              <KnowledgeResultCard item={k} />
+            </div>
+          ))}
+          {items.length === 0 && (
+            <div className="col-span-full rounded-xl border border-dashed border-ink-200 p-8 text-center text-sm text-ink-500">
+              {category === 'All'
+                ? 'No circulars indexed yet.'
+                : `No ${category} circulars match this filter — clear it to see all circulars.`}
+            </div>
+          )}
         </div>
 
         <div className="space-y-4">

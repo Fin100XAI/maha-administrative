@@ -18,18 +18,18 @@ export function ChartCard({
   children: ReactNode
 }) {
   return (
-    <div className="card p-5">
+    <div className="card p-4 sm:p-5">
       <CardHeader
         title={title}
         subtitle={subtitle}
         right={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <SourceBadge source={source} />
             {right}
           </div>
         }
       />
-      <div style={{ height }} className="w-full">
+      <div style={{ height }} className="w-full max-w-full">
         {children}
       </div>
     </div>

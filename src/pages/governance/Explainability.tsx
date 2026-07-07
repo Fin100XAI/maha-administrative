@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
-import { GaugeCircle, User, ClipboardCheck, Route, ChevronDown, Sparkles, Layers } from 'lucide-react'
+import { GaugeCircle, User, ClipboardCheck, Route, ChevronDown, Layers } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { ConfidenceBadge, SourceBadge, StatusBadge, ClassificationBadge } from '@/components/ui/Badges'
@@ -53,7 +53,7 @@ export function Explainability() {
             <CardHeader
               title="Feature importance"
               subtitle="Which inputs shaped this output"
-              right={<div className="flex items-center gap-2"><Sparkles className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
+              right={<div className="flex items-center gap-2"><SourceBadge source="Demo" /></div>}
             />
             <div style={{ height: 220 }} className="w-full">
               <ResponsiveContainer>
@@ -180,9 +180,33 @@ export function Explainability() {
               ))}
             </ol>
           </Card>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <button className="btn-outline flex-1"><ClipboardCheck className="h-4 w-4" /> Send for approval</button>
-            <button className="btn-primary flex-1">Download trace (JSON)</button>
+            <button
+              onClick={() => {
+                const trace = {
+                  output: 'Note draft for GR-2026-URD-118',
+                  confidence: 91,
+                  classification: 'Internal',
+                  featureImportance: FEATURES,
+                  similarDecisions: SIMILAR,
+                  reasoningSteps: REASONING,
+                  generatedAt: new Date().toISOString(),
+                }
+                const blob = new Blob([JSON.stringify(trace, null, 2)], { type: 'application/json' })
+                const url = URL.createObjectURL(blob)
+                const a = document.createElement('a')
+                a.href = url
+                a.download = 'explainability-trace.json'
+                document.body.appendChild(a)
+                a.click()
+                a.remove()
+                URL.revokeObjectURL(url)
+              }}
+              className="btn-primary flex-1"
+            >
+              Download trace (JSON)
+            </button>
           </div>
         </div>
       </div>

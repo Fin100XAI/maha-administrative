@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Download, ClipboardCheck, Sparkles, ShieldAlert, IndianRupee, Scale, FileText, Send, Save, Link2 } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { Download, ClipboardCheck, ShieldAlert, IndianRupee, Scale, FileText, Send, Save, Link2 } from 'lucide-react'
+import { exportDoc, exportPagePdf } from '@/lib/exportUtils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, ClassificationBadge, RiskBadge } from '@/components/ui/Badges'
@@ -20,6 +21,7 @@ export function NoteDrafting() {
   const [reco, setReco] = useState('Approve production roll-out to GAD, Home, Revenue and UDD with 30-day pilot review at day 45.')
 
   const [decision, setDecision] = useState<'A' | 'B' | 'C'>('A')
+  const previewRef = useRef<HTMLDivElement>(null)
 
   return (
     <div>
@@ -35,7 +37,7 @@ export function NoteDrafting() {
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_1fr]">
         <Card>
           <CardHeader title="Note inputs" subtitle="Structured fields for a note sheet" />
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Field label="File No.">
               <input className="input" value={fileNo} onChange={(e) => setFileNo(e.target.value)} />
             </Field>
@@ -61,9 +63,9 @@ export function NoteDrafting() {
             </Field>
           </div>
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <button className="btn-primary"><Sparkles className="h-4 w-4" /> Generate note sheet</button>
-            <button className="btn-outline"><Download className="h-4 w-4" /> DOCX</button>
-            <button className="btn-outline"><Download className="h-4 w-4" /> PDF</button>
+            <button className="btn-primary"><FileText className="h-4 w-4" /> Generate note sheet</button>
+            <button onClick={() => exportDoc('Office-Note', previewRef.current?.innerHTML ?? '')} className="btn-outline"><Download className="h-4 w-4" /> DOCX</button>
+            <button onClick={() => exportPagePdf('Note Drafting')} className="btn-outline"><Download className="h-4 w-4" /> PDF</button>
             <div className="ml-auto flex items-center gap-2">
               <ClassificationBadge level="Internal" />
               <SourceBadge source="Demo" />
@@ -74,8 +76,8 @@ export function NoteDrafting() {
         <div className="space-y-4">
           <Card>
             <CardHeader title="Note Sheet — Preview" subtitle={`File ${fileNo}`} right={<StatusBadge status="Draft" />} />
-            <div className="rounded-xl border border-ink-100 bg-white p-6 font-serif text-[13px] leading-relaxed text-ink-800">
-              <div className="mb-2 flex justify-between text-xs text-ink-500">
+            <div ref={previewRef} className="rounded-xl border border-ink-100 bg-white p-4 font-serif text-[13px] leading-relaxed text-ink-800 sm:p-6">
+              <div className="mb-2 flex flex-wrap justify-between gap-x-2 text-xs text-ink-500">
                 <span>Government of Maharashtra · {DEPARTMENTS.find((d) => d.code === dept)?.name}</span>
                 <span>File No. {fileNo}</span>
               </div>
@@ -177,7 +179,7 @@ export function NoteDrafting() {
 
 function Field({ label, full, children }: { label: string; full?: boolean; children: any }) {
   return (
-    <div className={full ? 'col-span-2' : ''}>
+    <div className={full ? 'sm:col-span-2' : ''}>
       <label className="label">{label}</label>
       <div className="mt-1">{children}</div>
     </div>

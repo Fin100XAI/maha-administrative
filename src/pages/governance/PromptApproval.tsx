@@ -1,9 +1,20 @@
+import { useMemo, useState } from 'react'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
-import { CheckCircle2, XCircle, FileSearch, User, Clock, ListChecks, CircleCheck } from 'lucide-react'
+import { CheckCircle2, XCircle, FileSearch, User, Clock, ListChecks, CircleCheck, Undo2, Inbox } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { RiskBadge, SourceBadge, StatusBadge } from '@/components/ui/Badges'
 import { REVIEWERS } from '@/data/governanceSamples'
+
+type QueueStatus = 'Pending' | 'Assigned' | 'Approved' | 'Rejected'
+interface QueueItem {
+  name: string
+  dept: string
+  by: string
+  risk: string
+  at: string
+  status: QueueStatus
+}
 
 const stages = [
   { s: 'Draft submitted', icon: FileSearch, desc: 'Prompt submitted with test cases' },
@@ -15,11 +26,11 @@ const stages = [
 
 function RiskIcon() { return <FileSearch className="h-4 w-4" /> }
 
-const QUEUE = [
-  { name: 'Marathi note tone strict-formal', dept: 'GAD', by: 'A. Deshmukh', risk: 'Medium', at: '2h ago' },
-  { name: 'FIR sensitive redaction', dept: 'HOME', by: 'K. Rao', risk: 'High', at: '5h ago' },
-  { name: 'Beneficiary shortlist explanation', dept: 'WCD', by: 'S. Mahale', risk: 'High', at: '1d ago' },
-  { name: 'Talathi mutation query', dept: 'REV', by: 'M. Kore', risk: 'Medium', at: '1d ago' },
+const QUEUE: QueueItem[] = [
+  { name: 'Marathi note tone strict-formal', dept: 'GAD', by: 'A. Deshmukh', risk: 'Medium', at: '2h ago', status: 'Pending' },
+  { name: 'FIR sensitive redaction', dept: 'HOME', by: 'K. Rao', risk: 'High', at: '5h ago', status: 'Pending' },
+  { name: 'Beneficiary shortlist explanation', dept: 'WCD', by: 'S. Mahale', risk: 'High', at: '1d ago', status: 'Pending' },
+  { name: 'Talathi mutation query', dept: 'REV', by: 'M. Kore', risk: 'Medium', at: '1d ago', status: 'Pending' },
 ]
 
 const SLA_BUCKETS = [
@@ -42,6 +53,15 @@ const CHECKLIST = [
 ]
 
 export function PromptApproval() {
+  const [queue, setQueue] = useState<QueueItem[]>(QUEUE)
+
+  const setStatus = (name: string, status: QueueStatus) =>
+    setQueue((q) => q.map((it) => (it.name === name ? { ...it, status } : it)))
+
+  const active = useMemo(() => queue.filter((q) => q.status === 'Pending' || q.status === 'Assigned'), [queue])
+  const resolved = useMemo(() => queue.filter((q) => q.status === 'Approved' || q.status === 'Rejected'), [queue])
+  const pendingCount = active.length
+
   return (
     <div>
       <PageHeader
@@ -86,9 +106,13 @@ export function PromptApproval() {
           </ol>
         </Card>
         <Card>
-          <CardHeader title="Approval queue" right={<StatusBadge status="Under Review" />} />
+          <CardHeader
+            title="Approval queue"
+            subtitle={`${pendingCount} awaiting decision · ${resolved.length} resolved`}
+            right={<StatusBadge status={pendingCount > 0 ? 'Under Review' : 'Approved'} />}
+          />
           <ul className="space-y-2">
-            {QUEUE.map((q) => (
+            {active.map((q) => (
               <li key={q.name} className="flex flex-col gap-2 rounded-xl border border-ink-100 p-3 md:flex-row md:items-center md:justify-between">
                 <div className="min-w-0">
                   <div className="text-sm font-medium text-ink-800">{q.name}</div>
@@ -96,13 +120,45 @@ export function PromptApproval() {
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   <RiskBadge level={q.risk as any} />
-                  <button className="btn-outline"><Clock className="h-4 w-4" /> Assign</button>
-                  <button className="btn-primary"><CheckCircle2 className="h-4 w-4" /> Approve</button>
-                  <button className="btn-outline text-red-600"><XCircle className="h-4 w-4" /> Reject</button>
+                  {q.status === 'Assigned' && <StatusBadge status="Under Review" />}
+                  <button
+                    className="btn-outline"
+                    onClick={() => setStatus(q.name, q.status === 'Assigned' ? 'Pending' : 'Assigned')}
+                  >
+                    <Clock className="h-4 w-4" /> {q.status === 'Assigned' ? 'Unassign' : 'Assign'}
+                  </button>
+                  <button className="btn-primary" onClick={() => setStatus(q.name, 'Approved')}><CheckCircle2 className="h-4 w-4" /> Approve</button>
+                  <button className="btn-outline text-red-600" onClick={() => setStatus(q.name, 'Rejected')}><XCircle className="h-4 w-4" /> Reject</button>
                 </div>
               </li>
             ))}
+            {active.length === 0 && (
+              <li className="flex flex-col items-center gap-1 rounded-xl border border-dashed border-ink-200 bg-ink-50/40 p-6 text-center text-sm text-ink-500">
+                <Inbox className="h-5 w-5 text-ink-400" />
+                Queue clear — no prompts awaiting a decision.
+              </li>
+            )}
           </ul>
+
+          {resolved.length > 0 && (
+            <div className="mt-4">
+              <div className="mb-2 text-[11px] font-semibold uppercase tracking-wider text-ink-500">Resolved</div>
+              <ul className="space-y-2">
+                {resolved.map((q) => (
+                  <li key={q.name} className="flex flex-col gap-2 rounded-xl border border-ink-100 bg-ink-50/40 p-3 md:flex-row md:items-center md:justify-between">
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-medium text-ink-700">{q.name}</div>
+                      <div className="text-xs text-ink-500">{q.dept} · submitted by {q.by} · {q.at}</div>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <StatusBadge status={q.status} />
+                      <button className="btn-outline" onClick={() => setStatus(q.name, 'Pending')}><Undo2 className="h-4 w-4" /> Undo</button>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </Card>
       </div>
 

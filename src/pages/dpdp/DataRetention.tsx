@@ -64,7 +64,7 @@ export function DataRetention() {
         source="Demo"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard label="Policies enforced" value={12} icon={<ShieldCheck className="h-5 w-5" />} delta={0} source="Demo" confidence={92} />
         <MetricCard label="Expiring in 30 days" value="1,022" icon={<Timer className="h-5 w-5" />} delta={0} source="Demo" confidence={88} />
         <MetricCard label="Archived (all-time)" value="5.58 L" icon={<Archive className="h-5 w-5" />} delta={5.1} source="Demo" confidence={90} />
@@ -82,7 +82,7 @@ export function DataRetention() {
             subtitle="Records reaching end-of-retention, grouped by week"
             right={<div className="flex items-center gap-2"><CalendarDays className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
           />
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
             {buckets.map((wk) => {
               const items = RETENTION_CALENDAR.filter((r) => calendarWeek(r.day) === wk)
               const total = items.reduce((s, i) => s + i.count, 0)
@@ -200,11 +200,11 @@ export function DataRetention() {
       <Card className="mt-6">
         <CardHeader title="Violations & required actions" />
         <ul className="space-y-2 text-sm">
-          <li className="rounded-md border border-ink-100 px-3 py-2 flex items-center justify-between">
+          <li className="rounded-md border border-ink-100 px-3 py-2 flex items-center justify-between gap-3">
             <span>Beneficiary records retained 3 months beyond 5-year policy in Rural Development</span>
             <RiskBadge level="Medium" />
           </li>
-          <li className="rounded-md border border-ink-100 px-3 py-2 flex items-center justify-between">
+          <li className="rounded-md border border-ink-100 px-3 py-2 flex items-center justify-between gap-3">
             <span>2 note sheets flagged for deletion but held by DPO decision - awaiting review</span>
             <RiskBadge level="Low" />
           </li>

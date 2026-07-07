@@ -1,5 +1,5 @@
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip, RadarChart, PolarGrid, PolarAngleAxis, Radar, BarChart, Bar } from 'recharts'
-import { Sparkles, Boxes, ClipboardCheck, AlertTriangle, Eye, Bug, Cpu, GaugeCircle, Flag, GitCommit, Users2 } from 'lucide-react'
+import { Boxes, ClipboardCheck, AlertTriangle, Eye, Bug, Cpu, GaugeCircle, Flag, GitCommit, Users2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { MetricCard } from '@/components/ui/MetricCard'
 import { ChartCard } from '@/components/ui/ChartCard'
@@ -58,7 +58,7 @@ export function AIGovernance() {
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
         <MetricCard label="Registered Models" value={7} icon={<Boxes className="h-5 w-5" />} delta={16.6} source="Demo" confidence={92} />
-        <MetricCard label="Active Prompts" value={214} icon={<Sparkles className="h-5 w-5" />} delta={8.2} source="Demo" confidence={90} />
+        <MetricCard label="Active Prompts" value={214} icon={<ClipboardCheck className="h-5 w-5" />} delta={8.2} source="Demo" confidence={90} />
         <MetricCard label="Approved Prompts" value={182} icon={<ClipboardCheck className="h-5 w-5" />} delta={12.4} source="Demo" confidence={88} />
         <MetricCard label="High-Risk Use Cases" value={11} icon={<AlertTriangle className="h-5 w-5" />} delta={-4.3} source="Demo" confidence={86} />
         <MetricCard label="Human Reviews Pending" value={148} icon={<Eye className="h-5 w-5" />} delta={-3.4} source="Demo" confidence={92} />

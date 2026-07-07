@@ -7,6 +7,7 @@ import {
   CartesianGrid,
   Tooltip as ReTooltip,
 } from 'recharts'
+import { useMemo, useState } from 'react'
 import { motion } from 'framer-motion'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
@@ -48,6 +49,30 @@ const grid: Record<string, string[]> = {
 
 export function RBAC() {
   const campaignPct = 68
+
+  // Permission matrix is editable — toggling a cell updates state and the rendered grant.
+  const [matrix, setMatrix] = useState<Record<string, string[]>>(grid)
+  const [roleFilter, setRoleFilter] = useState<string>('All roles')
+
+  const toggle = (role: string, module: string) => {
+    setMatrix((prev) => {
+      const current = prev[role] ?? []
+      const next = current.includes(module)
+        ? current.filter((m) => m !== module)
+        : [...current, module]
+      return { ...prev, [role]: next }
+    })
+  }
+
+  const visibleRoles = useMemo(
+    () => (roleFilter === 'All roles' ? ROLES : ROLES.filter((r) => r === roleFilter)),
+    [roleFilter],
+  )
+  const grantCount = useMemo(
+    () => Object.values(matrix).reduce((n, mods) => n + mods.length, 0),
+    [matrix],
+  )
+
   return (
     <div>
       <PageHeader
@@ -60,7 +85,18 @@ export function RBAC() {
       />
 
       <Card>
-        <CardHeader title="Role x Module matrix" right={<SourceBadge source="Demo" />} />
+        <CardHeader
+          title="Role x Module matrix"
+          subtitle="Click a cell to grant or revoke module access."
+          right={<div className="flex items-center gap-2">
+            <span className="chip border border-ink-200 bg-white text-ink-600">{grantCount} grants</span>
+            <select className="input h-9 w-auto py-1.5 text-xs" value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} aria-label="Filter matrix by role">
+              <option>All roles</option>
+              {ROLES.map((r) => <option key={r}>{r}</option>)}
+            </select>
+            <SourceBadge source="Demo" />
+          </div>}
+        />
         <div className="-mx-5 overflow-x-auto px-5">
           <table className="min-w-max text-xs">
             <thead>
@@ -72,18 +108,32 @@ export function RBAC() {
               </tr>
             </thead>
             <tbody>
-              {ROLES.map((r) => (
+              {visibleRoles.map((r) => (
                 <tr key={r}>
                   <td className="table-td sticky left-0 z-10 bg-white whitespace-nowrap font-medium text-ink-800">
                     {r}
                   </td>
-                  {MODULES.map((m) => (
-                    <td key={m} className="table-td text-center">
-                      {grid[r]?.includes(m)
-                        ? <span className="text-emerald-600">*</span>
-                        : <span className="text-ink-300">o</span>}
-                    </td>
-                  ))}
+                  {MODULES.map((m) => {
+                    const granted = matrix[r]?.includes(m)
+                    return (
+                      <td key={m} className="table-td text-center">
+                        <button
+                          type="button"
+                          onClick={() => toggle(r, m)}
+                          aria-pressed={granted}
+                          title={`${granted ? 'Revoke' : 'Grant'} ${m} for ${r}`}
+                          className={
+                            'inline-flex h-6 w-6 items-center justify-center rounded-md transition ' +
+                            (granted
+                              ? 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'
+                              : 'text-ink-300 hover:bg-ink-100 hover:text-ink-500')
+                          }
+                        >
+                          {granted ? '*' : 'o'}
+                        </button>
+                      </td>
+                    )
+                  })}
                 </tr>
               ))}
             </tbody>
@@ -98,7 +148,7 @@ export function RBAC() {
           subtitle="Request -> Review -> Approve -> Provision -> Certify"
           right={<div className="flex items-center gap-2"><Workflow className="h-4 w-4 text-brand-500" /><SourceBadge source="Demo" /></div>}
         />
-        <ol className="grid grid-cols-1 gap-3 md:grid-cols-5">
+        <ol className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
           {RBAC_WORKFLOW.map((step, idx) => (
             <motion.li
               key={step.step}
@@ -207,7 +257,7 @@ export function RBAC() {
         </Card>
       </div>
 
-      <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="mt-6 grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader title="Data access rules" right={<ShieldQuestion className="h-4 w-4 text-brand-500" />} />
           <ul className="space-y-2 text-sm text-ink-700">

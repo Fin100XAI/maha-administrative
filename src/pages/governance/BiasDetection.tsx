@@ -90,7 +90,7 @@ export function BiasDetection() {
         source="Demo"
       />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <MetricCard label="Fairness score" value="82 / 100" icon={<Scale className="h-5 w-5" />} delta={2.1} source="Demo" confidence={86} />
         <MetricCard label="Datasets under test" value={18} icon={<Users className="h-5 w-5" />} delta={5.5} source="Demo" confidence={90} />
         <MetricCard label="Open bias alerts" value={3} icon={<Eye className="h-5 w-5" />} delta={-1} source="Demo" confidence={88} />
@@ -165,7 +165,7 @@ export function BiasDetection() {
                 <div className="text-sm font-medium text-ink-800">{a.title}</div>
                 <div className="text-xs text-ink-500">{a.dept} · delta {a.delta}</div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <RiskBadge level={a.severity} />
                 <StatusBadge status="Under Review" />
                 <button className="btn-outline">Recommend fix</button>

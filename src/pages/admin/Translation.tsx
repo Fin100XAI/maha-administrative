@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Languages, ArrowLeftRight, Copy, Download, Sparkles, Save, Send, Link2 } from 'lucide-react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Languages, ArrowLeftRight, Copy, Check, Download, Loader2, Save, Send, Link2 } from 'lucide-react'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { LANGUAGES } from '@/data/departments'
@@ -11,6 +11,46 @@ import { RecentActivity } from './_components/RecentActivity'
 
 const SHORT_LANGS = ['English', 'Marathi', 'Hindi'] as const
 
+const SAMPLE_INPUT =
+  'Under the revised guidelines, District Collectors shall constitute a grievance redressal committee within seven days of the publication of this Government Resolution.'
+
+// Map the display language to an ISO code the translation engines understand.
+const LANG_CODE: Record<string, string> = {
+  English: 'en',
+  'मराठी (Marathi)': 'mr',
+  'हिंदी (Hindi)': 'hi',
+}
+
+// Live translation of arbitrary text. Google's gtx engine first (best formal
+// register), MyMemory as a fallback. Both are no-key, CORS-enabled.
+async function translateText(text: string, from: string, to: string, signal: AbortSignal): Promise<string> {
+  const sl = LANG_CODE[from] ?? 'en'
+  const tl = LANG_CODE[to] ?? 'en'
+  if (sl === tl) return text
+
+  // Primary: Google gtx
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
+    const res = await fetch(url, { signal })
+    if (res.ok) {
+      const data = await res.json()
+      const out = (data?.[0] as any[] | undefined)?.map((seg) => seg?.[0]).filter(Boolean).join('')
+      if (out) return out
+    }
+  } catch (e) {
+    if ((e as any)?.name === 'AbortError') throw e
+  }
+
+  // Fallback: MyMemory
+  const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sl}|${tl}`
+  const res = await fetch(url, { signal })
+  if (!res.ok) throw new Error(`Translation service unavailable (${res.status})`)
+  const data = await res.json()
+  const out = data?.responseData?.translatedText
+  if (!out || data?.responseStatus >= 400) throw new Error(data?.responseDetails || 'Translation failed')
+  return out
+}
+
 function scoreCls(score: number): string {
   if (score >= 95) return 'bg-emerald-50 text-emerald-700 border-emerald-200'
   if (score >= 90) return 'bg-emerald-50 text-emerald-700 border-emerald-200'
@@ -21,7 +61,63 @@ function scoreCls(score: number): string {
 export function Translation() {
   const [from, setFrom] = useState<typeof LANGUAGES[number]>('English')
   const [to, setTo] = useState<typeof LANGUAGES[number]>('मराठी (Marathi)')
-  const [input, setInput] = useState('Under the revised guidelines, District Collectors shall constitute a grievance redressal committee within seven days of the publication of this Government Resolution.')
+  const [input, setInput] = useState(SAMPLE_INPUT)
+  const [output, setOutput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [copied, setCopied] = useState(false)
+  const abortRef = useRef<AbortController | null>(null)
+
+  const trimmed = input.trim()
+
+  const runTranslate = useCallback(async () => {
+    abortRef.current?.abort()
+    const text = input.trim()
+    if (text === '') { setOutput(''); setError(''); setLoading(false); return }
+    if (from === to) { setOutput(input); setError(''); setLoading(false); return }
+    const ctrl = new AbortController()
+    abortRef.current = ctrl
+    setLoading(true)
+    setError('')
+    try {
+      const result = await translateText(input, from, to, ctrl.signal)
+      if (!ctrl.signal.aborted) setOutput(result)
+    } catch (e) {
+      if ((e as any)?.name !== 'AbortError') {
+        setError((e as Error).message || 'Translation failed. Please try again.')
+        setOutput('')
+      }
+    } finally {
+      if (!ctrl.signal.aborted) setLoading(false)
+    }
+  }, [input, from, to])
+
+  // Auto-translate any text (debounced) whenever input or languages change.
+  useEffect(() => {
+    const id = setTimeout(runTranslate, 600)
+    return () => clearTimeout(id)
+  }, [runTranslate])
+
+  async function copyOutput() {
+    if (!output) return
+    try {
+      await navigator.clipboard.writeText(output)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 1500)
+    } catch { /* clipboard unavailable */ }
+  }
+
+  function downloadDocx() {
+    if (!output) return
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="font-family:'Mangal','Nirmala UI',serif;font-size:12pt;line-height:1.6;">${output.replace(/\n/g, '<br/>')}</body></html>`
+    const blob = new Blob(['﻿', html], { type: 'application/msword' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `translation-${LANG_CODE[to] ?? 'out'}.doc`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
 
   return (
     <div>
@@ -63,14 +159,29 @@ export function Translation() {
             <div className="mt-1 text-xs text-ink-500">{input.length} characters</div>
           </div>
           <div>
-            <div className="label mb-1">Translation ({to})</div>
-            <div className="min-h-[220px] rounded-lg border border-ink-200 bg-ink-50/50 p-3 font-serif text-sm leading-relaxed text-ink-800">
-              सुधारित मार्गदर्शक तत्त्वांनुसार, संबंधित शासन निर्णय प्रसिद्ध झाल्यापासून सात दिवसांच्या आत जिल्हाधिकाऱ्यांनी तक्रार निवारण समितीची स्थापना करावी.
+            <div className="label mb-1 flex items-center gap-2">
+              Translation ({to})
+              {loading && <Loader2 className="h-3.5 w-3.5 animate-spin text-brand-500" />}
             </div>
-            <div className="mt-2 flex items-center gap-2">
-              <button className="btn-outline"><Copy className="h-4 w-4" /> Copy</button>
-              <button className="btn-outline"><Download className="h-4 w-4" /> DOCX</button>
-              <button className="btn-primary"><Sparkles className="h-4 w-4" /> Regenerate (formal)</button>
+            <div className="min-h-[220px] whitespace-pre-wrap rounded-lg border border-ink-200 bg-ink-50/50 p-3 font-serif text-sm leading-relaxed text-ink-800">
+              {output
+                ? output
+                : error
+                  ? <span className="not-italic font-sans text-red-600">{error}</span>
+                  : loading
+                    ? <span className="not-italic font-sans text-ink-400">Translating…</span>
+                    : trimmed === ''
+                      ? <span className="not-italic font-sans text-ink-400">Enter source text to translate.</span>
+                      : <span className="not-italic font-sans text-ink-400">Translating…</span>}
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <button onClick={copyOutput} disabled={!output} className="btn-outline disabled:opacity-50">
+                {copied ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />} {copied ? 'Copied' : 'Copy'}
+              </button>
+              <button onClick={downloadDocx} disabled={!output} className="btn-outline disabled:opacity-50"><Download className="h-4 w-4" /> DOCX</button>
+              <button onClick={runTranslate} disabled={loading || trimmed === ''} className="btn-primary disabled:opacity-60">
+                {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Languages className="h-4 w-4" />} {loading ? 'Translating…' : 'Regenerate (formal)'}
+              </button>
             </div>
           </div>
         </div>
@@ -143,7 +254,7 @@ export function Translation() {
             actions={[
               { label: 'Save translation', icon: <Save className="h-4 w-4" /> },
               { label: 'Send to Language Lab', icon: <Send className="h-4 w-4" />, primary: true },
-              { label: 'Copy Marathi text', icon: <Copy className="h-4 w-4" /> },
+              { label: 'Copy translated text', icon: <Copy className="h-4 w-4" />, onClick: copyOutput },
               { label: 'Copy link', icon: <Link2 className="h-4 w-4" /> },
             ]}
           />

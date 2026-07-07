@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ScrollText, Sparkles, AlertTriangle, ArrowRight, Newspaper } from 'lucide-react'
+import { ScrollText, AlertTriangle, ArrowRight, Newspaper } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as ReTooltip } from 'recharts'
 import { KNOWLEDGE } from '@/data/knowledge'
@@ -89,7 +89,7 @@ export function GRRepository() {
             <CardHeader
               title="Impact analysis — latest GR"
               subtitle={latest.id}
-              right={<Sparkles className="h-4 w-4 text-brand-500" />}
+              right={<ScrollText className="h-4 w-4 text-brand-500" />}
             />
             <div className="text-sm font-semibold text-ink-900">{latest.title}</div>
             <div className="mt-1 text-xs text-ink-500">Effective {latest.date} · Owner: {latest.dept}</div>

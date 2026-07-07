@@ -28,7 +28,7 @@ export function MetricCard({
   return (
     <div
       className={cn(
-        'group card card-hover relative overflow-hidden p-5 transition-all duration-300',
+        'group card card-hover relative overflow-hidden p-4 transition-all duration-300 sm:p-5',
         accent === 'brand' && 'bg-brand-soft',
       )}
     >

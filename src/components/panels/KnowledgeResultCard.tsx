@@ -1,10 +1,10 @@
-import { Sparkles, GitCompare, FileText } from 'lucide-react'
+import { GitCompare, FileText } from 'lucide-react'
 import { KnowledgeItem } from '@/data/knowledge'
 import { ConfidenceBadge, SourceBadge } from '@/components/ui/Badges'
 
 export function KnowledgeResultCard({ item }: { item: KnowledgeItem }) {
   return (
-    <article className="card card-hover flex h-full flex-col gap-3 p-5">
+    <article className="card card-hover flex h-full flex-col gap-3 p-4 sm:p-5">
       {/* Meta row */}
       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-ink-500">
         <span className="chip border border-ink-200 bg-ink-50 text-ink-700">{item.type}</span>
@@ -47,7 +47,7 @@ export function KnowledgeResultCard({ item }: { item: KnowledgeItem }) {
           <FileText className="h-4 w-4" /> Open
         </button>
         <button className="btn-outline !px-2 whitespace-nowrap text-xs" title="Summarize">
-          <Sparkles className="h-4 w-4" /> Summary
+          <FileText className="h-4 w-4" /> Summary
         </button>
         <button className="btn-outline !px-2 whitespace-nowrap text-xs" title="Compare">
           <GitCompare className="h-4 w-4" /> Compare

@@ -11,21 +11,25 @@ import { EXTRA_MODELS } from '@/data/governanceSamples'
 const ALL_MODELS: ModelEntry[] = [...MODELS, ...EXTRA_MODELS]
 
 export function ModelRegistry() {
+  const [models, setModels] = useState<ModelEntry[]>(ALL_MODELS)
   const [hosting, setHosting] = useState<string>('All')
   const [risk, setRisk] = useState<string>('All')
   const [status, setStatus] = useState<string>('All')
   const [compareOpen, setCompareOpen] = useState(true)
 
-  const filtered = useMemo(() => ALL_MODELS.filter((m) => (
+  const setModelStatus = (id: string, s: ModelEntry['status']) =>
+    setModels((prev) => prev.map((m) => (m.id === id ? { ...m, status: s } : m)))
+
+  const filtered = useMemo(() => models.filter((m) => (
     (hosting === 'All' || m.hosting === hosting) &&
     (risk === 'All' || m.riskClass === risk) &&
     (status === 'All' || m.status === status)
-  )), [hosting, risk, status])
+  )), [models, hosting, risk, status])
 
   // Pick three models for radar comparison
   const compareSet = ['bharat-gpt-1', 'sarvam-m', 'claude-opus']
   const comparison = compareSet
-    .map((id) => ALL_MODELS.find((m) => m.id === id))
+    .map((id) => models.find((m) => m.id === id))
     .filter((m): m is ModelEntry => Boolean(m))
 
   const radarData = [
@@ -55,13 +59,13 @@ export function ModelRegistry() {
     { key: 'lastEvaluation', header: 'Last eval', sortable: true },
     { key: 'owner', header: 'Owner' },
     { key: 'status', header: 'Status', sortable: true, render: (r) => <StatusBadge status={r.status} /> },
-    { key: 'actions', header: 'Actions', render: () => (
+    { key: 'actions', header: 'Actions', render: (r) => (
       <div className="flex items-center gap-1">
-        <button className="btn-ghost !p-1.5" title="View"><Eye className="h-4 w-4" /></button>
-        <button className="btn-ghost !p-1.5" title="Compare"><GitCompare className="h-4 w-4" /></button>
-        <button className="btn-ghost !p-1.5" title="Approve"><ClipboardCheck className="h-4 w-4 text-emerald-600" /></button>
-        <button className="btn-ghost !p-1.5" title="Rollback"><Undo2 className="h-4 w-4 text-amber-600" /></button>
-        <button className="btn-ghost !p-1.5" title="Retire"><XOctagon className="h-4 w-4 text-red-500" /></button>
+        <button className="btn-ghost !p-1.5" title="View" onClick={() => setCompareOpen(true)}><Eye className="h-4 w-4" /></button>
+        <button className="btn-ghost !p-1.5" title="Compare" onClick={() => setCompareOpen(true)}><GitCompare className="h-4 w-4" /></button>
+        <button className="btn-ghost !p-1.5" title="Approve" disabled={r.status === 'Approved'} onClick={() => setModelStatus(r.id, 'Approved')}><ClipboardCheck className="h-4 w-4 text-emerald-600" /></button>
+        <button className="btn-ghost !p-1.5" title="Rollback" disabled={r.status === 'Rolled Back'} onClick={() => setModelStatus(r.id, 'Rolled Back')}><Undo2 className="h-4 w-4 text-amber-600" /></button>
+        <button className="btn-ghost !p-1.5" title="Retire" disabled={r.status === 'Retired'} onClick={() => setModelStatus(r.id, 'Retired')}><XOctagon className="h-4 w-4 text-red-500" /></button>
       </div>
     )},
   ]

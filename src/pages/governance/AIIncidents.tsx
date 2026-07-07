@@ -156,7 +156,7 @@ export function AIIncidents() {
             title={`${openIncident.id} · ${openIncident.type}`}
             subtitle={`${openIncident.department} · reported by ${openIncident.reportedBy} · ${openIncident.at}`}
             right={
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <SeverityBadge level={openIncident.severity} />
                 <StatusBadge status={openIncident.status} />
                 <button className="btn-outline !py-1" onClick={() => setOpenId(null)}>Close</button>

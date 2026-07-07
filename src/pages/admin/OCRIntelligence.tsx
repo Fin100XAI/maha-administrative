@@ -3,6 +3,7 @@ import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, ConfidenceBadge } from '@/components/ui/Badges'
 import { OCR_UPLOADS, OCR_BATCH, OCR_VOLUME_7D } from '@/data/adminSamples'
+import { exportPagePdf } from '@/lib/exportUtils'
 import { UploadsTable } from './_components/UploadsTable'
 import { BatchQueue } from './_components/BatchQueue'
 import { VolumeInsights } from './_components/VolumeInsights'
@@ -48,8 +49,8 @@ export function OCRIntelligence() {
             <p className="mt-2"><b>विषय:</b> पीएमएवाय-यू 2.0 अंतर्गत लाभार्थ्यांच्या पडताळणीसाठी सुधारित कार्यपद्धती</p>
             <p className="mt-2 text-ink-700">या शासन निर्णयान्वये...</p>
           </div>
-          <div className="mt-3 flex items-center gap-2">
-            <button className="btn-outline"><FileText className="h-4 w-4" /> Searchable PDF</button>
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <button onClick={() => exportPagePdf('OCR Intelligence')} className="btn-outline"><FileText className="h-4 w-4" /> Searchable PDF</button>
             <button className="btn-outline"><Languages className="h-4 w-4" /> Translate</button>
             <button className="btn-primary"><ScanText className="h-4 w-4" /> Send to Workspace</button>
             <div className="ml-auto"><SourceBadge source="Demo" /></div>
@@ -67,7 +68,7 @@ export function OCRIntelligence() {
               { s: 'Table on page 3', c: 84 },
             ].map((r) => (
               <li key={r.s} className="flex items-center gap-3">
-                <span className="w-56 shrink-0 truncate text-sm text-ink-700">{r.s}</span>
+                <span className="w-36 shrink-0 truncate text-sm text-ink-700 sm:w-56">{r.s}</span>
                 <div className="flex-1"><div className="h-2 rounded bg-ink-100"><div className="h-full rounded bg-brand-gradient" style={{ width: `${r.c}%` }} /></div></div>
                 <span className="w-10 text-right text-sm font-medium text-ink-800">{r.c}%</span>
               </li>

@@ -58,7 +58,7 @@ export function PDFIntelligence() {
             <input type="file" className="hidden" />
           </label>
 
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <button className="btn-outline"><FileText className="h-4 w-4" /> Ask PDF</button>
             <button className="btn-outline"><GitCompare className="h-4 w-4" /> Compare PDFs</button>
             <button className="btn-outline"><Table2 className="h-4 w-4" /> Extract tables</button>
@@ -74,7 +74,7 @@ export function PDFIntelligence() {
           <div className="mt-3 rounded-xl border border-ink-100 bg-white p-3 text-sm text-ink-800">
             <b>A:</b> Seven days from GR publication (04-Jul-2026 → deadline 11-Jul-2026). <span className="text-xs text-ink-500">Cited from Clause 5.1, page 4.</span>
           </div>
-          <div className="mt-3 flex items-center gap-2">
+          <div className="mt-3 flex flex-wrap items-center gap-2">
             <button className="btn-outline">Follow-up: financial impact</button>
             <button className="btn-outline">Follow-up: signatories</button>
           </div>
