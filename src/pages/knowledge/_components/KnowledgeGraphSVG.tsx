@@ -1,10 +1,10 @@
 import { KNOWLEDGE_GRAPH } from '@/data/knowledgeSamples'
 
 const KIND_STYLE: Record<string, { fill: string; stroke: string }> = {
-  GR: { fill: '#FCE4EC', stroke: '#D81B60' },
-  SOP: { fill: '#F3E5F5', stroke: '#6A1B9A' },
-  Circular: { fill: '#EDE7F6', stroke: '#4A148C' },
-  Policy: { fill: '#FFF1F5', stroke: '#EC407A' },
+  GR: { fill: '#EEF3FC', stroke: '#0B57D0' },
+  SOP: { fill: '#EBF2FE', stroke: '#4285F4' },
+  Circular: { fill: '#E7F4EA', stroke: '#34A853' },
+  Policy: { fill: '#FDEBEA', stroke: '#EA4335' },
 }
 
 export function KnowledgeGraphSVG() {
@@ -15,11 +15,11 @@ export function KnowledgeGraphSVG() {
       <svg viewBox="0 0 640 300" className="h-[280px] w-full min-w-[560px]" role="img" aria-label="Knowledge graph — 6 related documents">
         <defs>
           <linearGradient id="kg-edge" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stopColor="#D81B60" stopOpacity="0.55" />
-            <stop offset="100%" stopColor="#4A148C" stopOpacity="0.55" />
+            <stop offset="0%" stopColor="#0B57D0" stopOpacity="0.55" />
+            <stop offset="100%" stopColor="#062868" stopOpacity="0.55" />
           </linearGradient>
           <marker id="kg-arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-            <path d="M0,0 L8,4 L0,8 z" fill="#6A1B9A" />
+            <path d="M0,0 L8,4 L0,8 z" fill="#4285F4" />
           </marker>
         </defs>
 

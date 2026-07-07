@@ -62,7 +62,7 @@ export function Explainability() {
                   <XAxis type="number" domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                   <YAxis type="category" dataKey="name" width={180} tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                   <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-                  <Bar dataKey="v" radius={[0, 8, 8, 0]} fill="#D81B60" />
+                  <Bar dataKey="v" radius={[0, 8, 8, 0]} fill="#0B57D0" />
                 </BarChart>
               </ResponsiveContainer>
             </div>

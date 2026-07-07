@@ -15,7 +15,7 @@ function FreshnessBadge({ score }: { score: number }) {
       ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
       : score >= 65
       ? 'bg-amber-50 text-amber-700 border-amber-200'
-      : 'bg-rose-50 text-rose-700 border-rose-200'
+      : 'bg-red-50 text-red-700 border-red-200'
   return (
     <span className={`chip border ${cls}`}>
       <Clock className="h-3 w-3" /> {label} · {score}
@@ -160,7 +160,7 @@ export function SOPRepository() {
                     </div>
                     <div className="flex shrink-0 items-center gap-2 text-xs text-ink-500">
                       <span className="tabular-nums">{s.views.toLocaleString()}</span>
-                      <span className={s.delta >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
+                      <span className={s.delta >= 0 ? 'text-emerald-600' : 'text-red-600'}>
                         {s.delta >= 0 ? '▲' : '▼'} {Math.abs(s.delta).toFixed(1)}%
                       </span>
                     </div>

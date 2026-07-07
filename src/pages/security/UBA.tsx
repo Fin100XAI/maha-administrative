@@ -45,12 +45,12 @@ export function UBA() {
         <ChartCard title="Activity distribution across day" subtitle="Normal window highlighted 08–18h" source="Demo">
           <ResponsiveContainer>
             <AreaChart data={heat}>
-              <defs><linearGradient id="gU" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#4A148C" stopOpacity={0.45}/><stop offset="100%" stopColor="#4A148C" stopOpacity={0.02}/></linearGradient></defs>
+              <defs><linearGradient id="gU" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#062868" stopOpacity={0.45}/><stop offset="100%" stopColor="#062868" stopOpacity={0.02}/></linearGradient></defs>
               <CartesianGrid vertical={false} stroke="#eef2f7" />
               <XAxis dataKey="h" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Area type="monotone" dataKey="v" stroke="#4A148C" fill="url(#gU)" />
+              <Area type="monotone" dataKey="v" stroke="#062868" fill="url(#gU)" />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -90,7 +90,7 @@ export function UBA() {
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="officer" name="Officer" fill="#D81B60" radius={[6,6,0,0]} />
+              <Bar dataKey="officer" name="Officer" fill="#0B57D0" radius={[6,6,0,0]} />
               <Bar dataKey="peer"    name="Peer baseline" fill="#94a3b8" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>

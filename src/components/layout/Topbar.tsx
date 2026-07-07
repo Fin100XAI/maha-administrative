@@ -19,7 +19,7 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         <div
           className={`relative rounded-lg transition-all duration-300 ${
             searchFocused
-              ? 'shadow-[0_0_0_3px_rgba(216,27,96,0.12),0_8px_24px_-8px_rgba(74,20,140,0.35)]'
+              ? 'shadow-[0_0_0_3px_rgba(11,87,208,0.12),0_8px_24px_-8px_rgba(6,40,104,0.35)]'
               : ''
           }`}
         >
@@ -31,7 +31,7 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
             }`}
             style={{
               padding: '1px',
-              background: 'linear-gradient(135deg, #D81B60 0%, #4A148C 100%)',
+              background: 'linear-gradient(135deg, #0B57D0 0%, #062868 100%)',
               WebkitMask:
                 'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
               WebkitMaskComposite: 'xor',
@@ -94,7 +94,7 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         </button>
 
         {/* User chip with verified checkmark */}
-        <div className="ml-1 flex items-center gap-2 rounded-full border border-ink-100 bg-white px-2 py-1 shadow-sm transition-shadow hover:shadow-[0_4px_16px_-6px_rgba(216,27,96,0.25)]">
+        <div className="ml-1 flex items-center gap-2 rounded-full border border-ink-100 bg-white px-2 py-1 shadow-sm transition-shadow hover:shadow-[0_4px_16px_-6px_rgba(11,87,208,0.25)]">
           <div className="grid h-7 w-7 place-items-center rounded-full bg-brand-gradient text-xs font-semibold text-white ring-1 ring-white/40">
             RM
           </div>
@@ -122,7 +122,7 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         className="pointer-events-none absolute inset-x-0 -bottom-px h-px"
         style={{
           background:
-            'linear-gradient(90deg, rgba(216,27,96,0) 0%, rgba(216,27,96,0.35) 30%, rgba(74,20,140,0.35) 70%, rgba(74,20,140,0) 100%)',
+            'linear-gradient(90deg, rgba(11,87,208,0) 0%, rgba(11,87,208,0.35) 30%, rgba(6,40,104,0.35) 70%, rgba(6,40,104,0) 100%)',
         }}
       />
     </header>

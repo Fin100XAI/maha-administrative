@@ -131,7 +131,7 @@ export function RBAC() {
               <XAxis type="number" tick={{ fill: '#64748b', fontSize: 11 }} />
               <YAxis type="category" dataKey="role" width={160} tick={{ fill: '#64748b', fontSize: 11 }} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="activeMonthly" name="Active/mo" fill="#D81B60" radius={[0, 6, 6, 0]} />
+              <Bar dataKey="activeMonthly" name="Active/mo" fill="#0B57D0" radius={[0, 6, 6, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

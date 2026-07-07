@@ -82,7 +82,7 @@ export function ZeroTrust() {
 
         <ChartCard title="Zero Trust Score" subtitle="Composite index" source="Demo">
           <ResponsiveContainer>
-            <RadialBarChart innerRadius="65%" outerRadius="100%" data={[{ v: 88, fill: '#D81B60' }]} startAngle={90} endAngle={-270}>
+            <RadialBarChart innerRadius="65%" outerRadius="100%" data={[{ v: 88, fill: '#0B57D0' }]} startAngle={90} endAngle={-270}>
               <RadialBar background dataKey="v" cornerRadius={30} />
             </RadialBarChart>
           </ResponsiveContainer>
@@ -121,7 +121,7 @@ export function ZeroTrust() {
               <XAxis dataKey="bucket" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="n" name="Sessions" fill="#6A1B9A" radius={[6,6,0,0]} />
+              <Bar dataKey="n" name="Sessions" fill="#4285F4" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

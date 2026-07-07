@@ -137,21 +137,21 @@ export function RiskRegister() {
             <ResponsiveContainer>
               <AreaChart data={CLOSURE_TREND}>
                 <defs>
-                  <linearGradient id="rOpen" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#D81B60" stopOpacity={0.45}/><stop offset="100%" stopColor="#D81B60" stopOpacity={0.02}/></linearGradient>
-                  <linearGradient id="rClosed" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#4A148C" stopOpacity={0.45}/><stop offset="100%" stopColor="#4A148C" stopOpacity={0.02}/></linearGradient>
+                  <linearGradient id="rOpen" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#0B57D0" stopOpacity={0.45}/><stop offset="100%" stopColor="#0B57D0" stopOpacity={0.02}/></linearGradient>
+                  <linearGradient id="rClosed" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#4285F4" stopOpacity={0.45}/><stop offset="100%" stopColor="#4285F4" stopOpacity={0.02}/></linearGradient>
                 </defs>
                 <CartesianGrid vertical={false} stroke="#eef2f7" />
                 <XAxis dataKey="m" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-                <Area type="monotone" dataKey="open" stroke="#D81B60" fill="url(#rOpen)" />
-                <Area type="monotone" dataKey="closed" stroke="#4A148C" fill="url(#rClosed)" />
+                <Area type="monotone" dataKey="open" stroke="#0B57D0" fill="url(#rOpen)" />
+                <Area type="monotone" dataKey="closed" stroke="#4285F4" fill="url(#rClosed)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>
           <div className="mt-2 flex items-center gap-4 text-[11px] text-ink-600">
-            <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-[#D81B60]" /> Open</span>
-            <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-[#4A148C]" /> Closed</span>
+            <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-[#0B57D0]" /> Open</span>
+            <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-full bg-[#4285F4]" /> Closed</span>
           </div>
         </Card>
       </div>

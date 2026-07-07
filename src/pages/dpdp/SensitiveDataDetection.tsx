@@ -18,7 +18,7 @@ const detections = [
 
 const DEPT_KEYS = ['HFW', 'HOME', 'REV', 'UDD', 'GAD'] as const
 const DEPT_COLORS: Record<(typeof DEPT_KEYS)[number], string> = {
-  HFW: '#ec4899', HOME: '#a855f7', REV: '#8b5cf6', UDD: '#f59e0b', GAD: '#10b981',
+  HFW: '#0B57D0', HOME: '#4285F4', REV: '#EA4335', UDD: '#FBBC05', GAD: '#34A853',
 }
 
 export function SensitiveDataDetection() {
@@ -80,7 +80,7 @@ export function SensitiveDataDetection() {
                 <div className="mt-2 flex items-center gap-3">
                   <div className="flex-1">
                     <div className="h-2 overflow-hidden rounded bg-ink-100">
-                      <div className="h-full rounded bg-gradient-to-r from-pink-500 to-brand-600" style={{ width: `${e.sensitivity}%` }} />
+                      <div className="h-full rounded bg-gradient-to-r from-brand-500 to-brand-700" style={{ width: `${e.sensitivity}%` }} />
                     </div>
                   </div>
                   <span className="w-14 shrink-0 text-right text-xs font-mono text-ink-700">{e.sensitivity}%</span>

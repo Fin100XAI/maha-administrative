@@ -168,10 +168,10 @@ export interface CircularCategoryRow {
 }
 
 export const CIRCULAR_CATEGORIES: CircularCategoryRow[] = [
-  { category: 'Operational', count: 46, color: '#D81B60' },
-  { category: 'Advisory', count: 32, color: '#EC407A' },
-  { category: 'Directive', count: 21, color: '#6A1B9A' },
-  { category: 'Clarificatory', count: 18, color: '#4A148C' },
+  { category: 'Operational', count: 46, color: '#0B57D0' },
+  { category: 'Advisory', count: 32, color: '#EA4335' },
+  { category: 'Directive', count: 21, color: '#4285F4' },
+  { category: 'Clarificatory', count: 18, color: '#062868' },
 ]
 
 export interface AckItem {

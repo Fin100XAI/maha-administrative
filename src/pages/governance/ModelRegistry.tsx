@@ -66,7 +66,7 @@ export function ModelRegistry() {
     )},
   ]
 
-  const COLORS = ['#D81B60', '#6A1B9A', '#4A148C']
+  const COLORS = ['#0B57D0', '#4285F4', '#EA4335']
 
   return (
     <div>

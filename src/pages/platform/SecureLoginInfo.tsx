@@ -71,9 +71,9 @@ export function SecureLoginInfo() {
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="success"    name="Success"    fill="#10B981" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="failed"     name="Failed"     fill="#F59E0B" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="mfaBlocked" name="MFA-blocked" fill="#D81B60" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="success"    name="Success"    fill="#0B57D0" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="failed"     name="Failed"     fill="#4285F4" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="mfaBlocked" name="MFA-blocked" fill="#EA4335" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

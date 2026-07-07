@@ -83,12 +83,12 @@ export function SecurityOps() {
           <ChartCard title="Threats over time" subtitle="Rolling 24h" source="Demo">
             <ResponsiveContainer>
               <AreaChart data={thr}>
-                <defs><linearGradient id="g0" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#D81B60" stopOpacity={0.5}/><stop offset="100%" stopColor="#D81B60" stopOpacity={0.02}/></linearGradient></defs>
+                <defs><linearGradient id="g0" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#0B57D0" stopOpacity={0.5}/><stop offset="100%" stopColor="#0B57D0" stopOpacity={0.02}/></linearGradient></defs>
                 <CartesianGrid vertical={false} stroke="#eef2f7" />
                 <XAxis dataKey="t" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-                <Area type="monotone" dataKey="v" stroke="#D81B60" fill="url(#g0)" />
+                <Area type="monotone" dataKey="v" stroke="#0B57D0" fill="url(#g0)" />
               </AreaChart>
             </ResponsiveContainer>
           </ChartCard>
@@ -116,8 +116,8 @@ export function SecurityOps() {
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="threats" name="Threats" fill="#D81B60" radius={[6,6,0,0]} />
-              <Bar dataKey="blocks"  name="Blocks"  fill="#6A1B9A" radius={[6,6,0,0]} />
+              <Bar dataKey="threats" name="Threats" fill="#0B57D0" radius={[6,6,0,0]} />
+              <Bar dataKey="blocks"  name="Blocks"  fill="#4285F4" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -129,7 +129,7 @@ export function SecurityOps() {
               <XAxis dataKey="s" tick={{ fill: '#64748b', fontSize: 10 }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="v" fill="#6A1B9A" radius={[6,6,0,0]} />
+              <Bar dataKey="v" fill="#4285F4" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -141,7 +141,7 @@ export function SecurityOps() {
               <XAxis dataKey="t" tick={{ fill: '#64748b', fontSize: 11 }} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="v" fill="#D81B60" radius={[6,6,0,0]} />
+              <Bar dataKey="v" fill="#0B57D0" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -164,7 +164,7 @@ export function SecurityOps() {
             <span>Levels:</span>
             {[0,1,2,3,4].map((l) => (
               <span key={l} className="inline-flex items-center gap-1">
-                <span className={`inline-block h-3 w-3 rounded-sm ${l===0?'bg-ink-100':l===1?'bg-fuchsia-100':l===2?'bg-fuchsia-200':l===3?'bg-fuchsia-300':'bg-brand-gradient'}`}/> {l}
+                <span className={`inline-block h-3 w-3 rounded-sm ${l===0?'bg-ink-100':l===1?'bg-brand-100':l===2?'bg-brand-200':l===3?'bg-brand-300':'bg-brand-gradient'}`}/> {l}
               </span>
             ))}
           </div>
@@ -204,7 +204,7 @@ export function SecurityOps() {
               <XAxis dataKey="t" tick={{ fill: '#64748b', fontSize: 11 }} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="v" fill="#4A148C" radius={[6,6,0,0]} />
+              <Bar dataKey="v" fill="#062868" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

@@ -105,14 +105,14 @@ export function BiasDetection() {
               <XAxis type="number" domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis type="category" dataKey="g" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="v" radius={[0,8,8,0]} fill="#D81B60" />
+              <Bar dataKey="v" radius={[0,8,8,0]} fill="#0B57D0" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
 
         <ChartCard title="Fairness score" subtitle="Overall composite" source="Demo">
           <ResponsiveContainer>
-            <RadialBarChart innerRadius="65%" outerRadius="100%" data={[{ v: 82, fill: '#D81B60' }]} startAngle={90} endAngle={-270}>
+            <RadialBarChart innerRadius="65%" outerRadius="100%" data={[{ v: 82, fill: '#0B57D0' }]} startAngle={90} endAngle={-270}>
               <RadialBar background dataKey="v" cornerRadius={30} />
             </RadialBarChart>
           </ResponsiveContainer>
@@ -127,7 +127,7 @@ export function BiasDetection() {
               <XAxis dataKey="d" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="v" radius={[6, 6, 0, 0]} fill="#6A1B9A" />
+              <Bar dataKey="v" radius={[6, 6, 0, 0]} fill="#4285F4" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

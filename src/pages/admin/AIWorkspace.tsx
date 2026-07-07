@@ -326,7 +326,7 @@ export function AIWorkspace() {
                 { t: '09:15', e: 'Response cited public source' },
               ].map((s, i) => (
                 <li key={i} className="relative">
-                  <span className="absolute -left-[22px] top-1 grid h-3 w-3 place-items-center rounded-full bg-brand-gradient shadow-[0_0_0_2px_#fff,0_0_0_3px_rgba(216,27,96,0.25)]">
+                  <span className="absolute -left-[22px] top-1 grid h-3 w-3 place-items-center rounded-full bg-brand-gradient shadow-[0_0_0_2px_#fff,0_0_0_3px_rgba(11,87,208,0.25)]">
                     <span className="h-1 w-1 rounded-full bg-white/90 animate-pulse-slow" />
                   </span>
                   <div className="text-ink-500">{s.t}</div>

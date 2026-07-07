@@ -97,7 +97,7 @@ export function ModelVersioning() {
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-[160px_minmax(0,1fr)]">
               <div style={{ height: 160 }} className="w-full">
                 <ResponsiveContainer>
-                  <RadialBarChart innerRadius="65%" outerRadius="100%" data={[{ v: 82, fill: '#D81B60' }]} startAngle={90} endAngle={-270}>
+                  <RadialBarChart innerRadius="65%" outerRadius="100%" data={[{ v: 82, fill: '#0B57D0' }]} startAngle={90} endAngle={-270}>
                     <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
                     <RadialBar background dataKey="v" cornerRadius={30} />
                   </RadialBarChart>

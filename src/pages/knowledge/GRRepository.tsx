@@ -64,8 +64,8 @@ export function GRRepository() {
               <BarChart data={GR_TOP_DEPTS} margin={{ top: 8, right: 12, left: -8, bottom: 0 }}>
                 <defs>
                   <linearGradient id="gr-bar" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#D81B60" stopOpacity={0.95} />
-                    <stop offset="100%" stopColor="#4A148C" stopOpacity={0.95} />
+                    <stop offset="0%" stopColor="#0B57D0" stopOpacity={0.95} />
+                    <stop offset="100%" stopColor="#062868" stopOpacity={0.95} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid vertical={false} stroke="#eef2f7" />
@@ -154,7 +154,7 @@ export function GRRepository() {
                     <span
                       className={`chip border ${
                         a.status === 'Supersedes'
-                          ? 'bg-rose-50 text-rose-700 border-rose-200'
+                          ? 'bg-orange-50 text-orange-700 border-orange-200'
                           : a.status === 'Amends'
                           ? 'bg-amber-50 text-amber-700 border-amber-200'
                           : a.status === 'Withdrawn'

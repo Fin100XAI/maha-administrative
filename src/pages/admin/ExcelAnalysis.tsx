@@ -77,8 +77,8 @@ export function ExcelAnalysis() {
                   <XAxis dataKey="m" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                   <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                   <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-                  <Line type="monotone" dataKey="budget" stroke="#4A148C" strokeWidth={2} />
-                  <Line type="monotone" dataKey="actual" stroke="#D81B60" strokeWidth={2} />
+                  <Line type="monotone" dataKey="budget" stroke="#4285F4" strokeWidth={2} />
+                  <Line type="monotone" dataKey="actual" stroke="#0B57D0" strokeWidth={2} />
                 </LineChart>
               </ResponsiveContainer>
             </div>

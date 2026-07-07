@@ -120,7 +120,7 @@ export function PromptApproval() {
                 <XAxis dataKey="b" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
                 <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-                <Bar dataKey="v" radius={[6, 6, 0, 0]} fill="#6A1B9A" />
+                <Bar dataKey="v" radius={[6, 6, 0, 0]} fill="#4285F4" />
               </BarChart>
             </ResponsiveContainer>
           </div>

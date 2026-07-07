@@ -95,7 +95,7 @@ export function PromptRegistry() {
                     <LineChart data={p.series} margin={{ top: 4, right: 0, left: 0, bottom: 0 }}>
                       <YAxis domain={[70, 100]} hide />
                       <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 11 }} />
-                      <Line type="monotone" dataKey="v" stroke="#D81B60" strokeWidth={2} dot={false} />
+                      <Line type="monotone" dataKey="v" stroke="#0B57D0" strokeWidth={2} dot={false} />
                     </LineChart>
                   </ResponsiveContainer>
                 </div>

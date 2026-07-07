@@ -20,7 +20,7 @@ const PIA = [
   { name: 'e-HRMS transfer optimiser', dept: 'GAD', officer: 'A. Deshmukh - US', risk: 'Medium' as const, mitigation: 'Purpose limitation prompt + audit', status: 'Under Review' as const },
 ]
 
-const PET_COLORS = ['from-pink-500 to-brand-500', 'from-brand-500 to-brand-700', 'from-purple-500 to-brand-700', 'from-emerald-500 to-emerald-700']
+const PET_COLORS = ['from-brand-500 to-brand-600', 'from-google-blue-500 to-google-blue-600', 'from-google-red-500 to-google-red-600', 'from-emerald-500 to-emerald-700']
 
 export function PrivacyRisk() {
   const dprTotal = DPR_SUMMARY.reduce((s, r) => s + r.thisQ, 0)

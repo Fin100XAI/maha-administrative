@@ -38,8 +38,8 @@ export function StatusBadge({
     'Public-source linked': 'bg-sky-50 text-sky-700 border-sky-200',
     'Pending API': 'bg-amber-50 text-amber-700 border-amber-200',
     'API pending': 'bg-amber-50 text-amber-700 border-amber-200',
-    'Requires Government Access': 'bg-purple-50 text-purple-700 border-purple-200',
-    'Department access required': 'bg-purple-50 text-purple-700 border-purple-200',
+    'Requires Government Access': 'bg-brand-50 text-brand-700 border-brand-200',
+    'Department access required': 'bg-brand-50 text-brand-700 border-brand-200',
     'In development': 'bg-ink-100 text-ink-700 border-ink-200',
     Approved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     'Under Review': 'bg-amber-50 text-amber-700 border-amber-200',
@@ -61,7 +61,7 @@ export function StatusBadge({
         'bg-emerald-500': /Live|Connected|Approved|Active|Resolved/.test(status),
         'bg-sky-500': /Linked|Open/.test(status),
         'bg-amber-500': /Pending|Under Review|Investigating/.test(status),
-        'bg-purple-500': /Requires|Department access/.test(status),
+        'bg-brand-500': /Requires|Department access/.test(status),
         'bg-red-500': /Rejected|Rolled Back|Blocked/.test(status),
         'bg-rose-500': /Escalated/.test(status),
         'bg-ink-400': /In development|Retired|Draft|Closed/.test(status),
@@ -129,7 +129,7 @@ export function SourceBadge({
     Live: 'bg-emerald-50 text-emerald-700 border-emerald-200',
     'Public-source linked': 'bg-sky-50 text-sky-700 border-sky-200',
     Demo: 'bg-ink-100 text-ink-600 border-ink-200',
-    'Department API required': 'bg-purple-50 text-purple-700 border-purple-200',
+    'Department API required': 'bg-brand-50 text-brand-700 border-brand-200',
   }
   return (
     <span className={cn('chip border', cls[source] || 'bg-ink-100 text-ink-700 border-ink-200', className)}>

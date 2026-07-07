@@ -21,7 +21,7 @@ import {
 } from '@/data/mockData'
 import { PUBLIC_SOURCES } from '@/data/publicSources'
 
-const BRAND = ['#D81B60', '#6A1B9A', '#4A148C', '#8E24AA', '#EC407A', '#AB47BC']
+const BRAND = ['#0B57D0', '#4285F4', '#EA4335', '#FBBC05', '#34A853', '#062868']
 
 // Synthetic 12-slot sparkline for "AI Requests Today"
 const AI_REQ_SPARK = [
@@ -45,7 +45,7 @@ function HeroTile({ eyebrow, label, value, sublabel, icon, accent, children, pul
   return (
     <motion.div
       variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }}
-      className="group relative overflow-hidden rounded-2xl border border-brand-100/70 bg-gradient-to-br from-white via-brand-50/50 to-purple-50/50 p-5 shadow-sm transition-all duration-300 hover:shadow-md"
+      className="group relative overflow-hidden rounded-2xl border border-brand-100/70 bg-gradient-to-br from-white via-brand-50/50 to-brand-100/40 p-5 shadow-sm transition-all duration-300 hover:shadow-md"
     >
       {/* Colored left accent bar */}
       <div className={`pointer-events-none absolute inset-y-0 left-0 w-1.5 ${accent}`} />
@@ -53,7 +53,7 @@ function HeroTile({ eyebrow, label, value, sublabel, icon, accent, children, pul
       <div className="pointer-events-none absolute -right-16 -top-16 h-40 w-40 rounded-full bg-brand-gradient opacity-[0.10] blur-3xl transition-opacity duration-500 group-hover:opacity-25" />
       {/* Subtle grid */}
       <div className="pointer-events-none absolute inset-0 opacity-[0.04]" style={{
-        backgroundImage: 'radial-gradient(circle at 1px 1px, #4A148C 1px, transparent 0)',
+        backgroundImage: 'radial-gradient(circle at 1px 1px, #062868 1px, transparent 0)',
         backgroundSize: '16px 16px',
       }} />
 
@@ -96,7 +96,7 @@ function CompactGauge({ score }: { score: number }) {
           initial={{ width: 0 }}
           animate={{ width: `${score}%` }}
           transition={{ duration: 1.1, ease: 'easeOut', delay: 0.25 }}
-          className="h-full rounded-full bg-gradient-to-r from-[#D81B60] via-[#8E24AA] to-[#4A148C]"
+          className="h-full rounded-full bg-gradient-to-r from-[#0B57D0] via-[#34A853] to-[#062868]"
         />
       </div>
       <div className="mt-1.5 flex items-center justify-between text-[10px] text-ink-500">
@@ -116,8 +116,8 @@ function RingProgress({ value }: { value: number }) {
         <RadialBarChart innerRadius="72%" outerRadius="100%" data={[{ v: value, fill: 'url(#heroRing)' }]} startAngle={90} endAngle={-270}>
           <defs>
             <linearGradient id="heroRing" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="#D81B60" />
-              <stop offset="100%" stopColor="#4A148C" />
+              <stop offset="0%" stopColor="#0B57D0" />
+              <stop offset="100%" stopColor="#062868" />
             </linearGradient>
           </defs>
           <RadialBar background dataKey="v" cornerRadius={30} />
@@ -152,7 +152,7 @@ const sourceStatusStyle = (s: string) => {
     case 'Live': return 'bg-emerald-500'
     case 'Linked': return 'bg-sky-500'
     case 'Pending API': return 'bg-amber-500'
-    case 'Requires Government Access': return 'bg-purple-500'
+    case 'Requires Government Access': return 'bg-google-blue-500'
     default: return 'bg-ink-400'
   }
 }
@@ -189,7 +189,7 @@ export function Dashboard() {
           value="82/100"
           sublabel="Ready for tier-2 department roll-out"
           icon={<Gauge className="h-5 w-5" />}
-          accent="bg-gradient-to-b from-[#D81B60] to-[#8E24AA]"
+          accent="bg-gradient-to-b from-[#0B57D0] to-[#34A853]"
         >
           <div className="flex items-center gap-3">
             <RingProgress value={82} />
@@ -208,7 +208,7 @@ export function Dashboard() {
           value="1.28M"
           sublabel="+12.1% vs. yesterday · peak at 14:00"
           icon={<Activity className="h-5 w-5" />}
-          accent="bg-gradient-to-b from-[#EC407A] to-[#6A1B9A]"
+          accent="bg-gradient-to-b from-[#EA4335] to-[#4285F4]"
           pulse
         >
           <div className="h-12">
@@ -216,11 +216,11 @@ export function Dashboard() {
               <AreaChart data={AI_REQ_SPARK} margin={{ top: 2, right: 0, bottom: 0, left: 0 }}>
                 <defs>
                   <linearGradient id="gSpark" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#D81B60" stopOpacity={0.55} />
-                    <stop offset="100%" stopColor="#D81B60" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#0B57D0" stopOpacity={0.55} />
+                    <stop offset="100%" stopColor="#0B57D0" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <Area type="monotone" dataKey="v" stroke="#D81B60" strokeWidth={2} fill="url(#gSpark)" isAnimationActive />
+                <Area type="monotone" dataKey="v" stroke="#0B57D0" strokeWidth={2} fill="url(#gSpark)" isAnimationActive />
               </AreaChart>
             </ResponsiveContainer>
           </div>
@@ -232,7 +232,7 @@ export function Dashboard() {
           value="87/100"
           sublabel="+2.1 pts vs. last quarter · 41 depts audited"
           icon={<ShieldCheck className="h-5 w-5" />}
-          accent="bg-gradient-to-b from-[#8E24AA] to-[#4A148C]"
+          accent="bg-gradient-to-b from-[#34A853] to-[#062868]"
         >
           <CompactGauge score={87} />
         </HeroTile>
@@ -243,7 +243,7 @@ export function Dashboard() {
           value="12"
           sublabel="2 critical · 4 high · SOC on watch"
           icon={<Siren className="h-5 w-5" />}
-          accent="bg-gradient-to-b from-[#D81B60] to-[#4A148C]"
+          accent="bg-gradient-to-b from-[#0B57D0] to-[#062868]"
           pulse
         >
           <div className="flex items-center gap-1.5">
@@ -308,8 +308,8 @@ export function Dashboard() {
             <BarChart data={AI_USAGE_BY_DEPT} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
               <defs>
                 <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#D81B60" stopOpacity={0.9} />
-                  <stop offset="100%" stopColor="#4A148C" stopOpacity={0.9} />
+                  <stop offset="0%" stopColor="#0B57D0" stopOpacity={0.9} />
+                  <stop offset="100%" stopColor="#062868" stopOpacity={0.9} />
                 </linearGradient>
               </defs>
               <CartesianGrid vertical={false} stroke="#eef2f7" />
@@ -325,20 +325,20 @@ export function Dashboard() {
           <ResponsiveContainer>
             <AreaChart data={DOCUMENT_INTELLIGENCE_VOLUME} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
               <defs>
-                <linearGradient id="gGR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#D81B60" stopOpacity={0.5}/><stop offset="100%" stopColor="#D81B60" stopOpacity={0.02}/></linearGradient>
-                <linearGradient id="gCR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6A1B9A" stopOpacity={0.45}/><stop offset="100%" stopColor="#6A1B9A" stopOpacity={0.02}/></linearGradient>
-                <linearGradient id="gFI" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#EC407A" stopOpacity={0.4}/><stop offset="100%" stopColor="#EC407A" stopOpacity={0.02}/></linearGradient>
-                <linearGradient id="gRT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4A148C" stopOpacity={0.4}/><stop offset="100%" stopColor="#4A148C" stopOpacity={0.02}/></linearGradient>
+                <linearGradient id="gGR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#0B57D0" stopOpacity={0.5}/><stop offset="100%" stopColor="#0B57D0" stopOpacity={0.02}/></linearGradient>
+                <linearGradient id="gCR" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#4285F4" stopOpacity={0.45}/><stop offset="100%" stopColor="#4285F4" stopOpacity={0.02}/></linearGradient>
+                <linearGradient id="gFI" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#EA4335" stopOpacity={0.4}/><stop offset="100%" stopColor="#EA4335" stopOpacity={0.02}/></linearGradient>
+                <linearGradient id="gRT" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#062868" stopOpacity={0.4}/><stop offset="100%" stopColor="#062868" stopOpacity={0.02}/></linearGradient>
               </defs>
               <CartesianGrid vertical={false} stroke="#eef2f7" />
               <XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Area type="monotone" dataKey="GR" stroke="#D81B60" fill="url(#gGR)" />
-              <Area type="monotone" dataKey="Circular" stroke="#6A1B9A" fill="url(#gCR)" />
-              <Area type="monotone" dataKey="File" stroke="#EC407A" fill="url(#gFI)" />
-              <Area type="monotone" dataKey="RTI" stroke="#4A148C" fill="url(#gRT)" />
+              <Area type="monotone" dataKey="GR" stroke="#0B57D0" fill="url(#gGR)" />
+              <Area type="monotone" dataKey="Circular" stroke="#4285F4" fill="url(#gCR)" />
+              <Area type="monotone" dataKey="File" stroke="#EA4335" fill="url(#gFI)" />
+              <Area type="monotone" dataKey="RTI" stroke="#062868" fill="url(#gRT)" />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -373,8 +373,8 @@ export function Dashboard() {
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Line type="monotone" dataKey="risk" stroke="#D81B60" strokeWidth={2.5} dot={{ r: 3 }} />
-              <Line type="monotone" dataKey="incidents" stroke="#4A148C" strokeWidth={2.5} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="risk" stroke="#0B57D0" strokeWidth={2.5} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="incidents" stroke="#062868" strokeWidth={2.5} dot={{ r: 3 }} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -537,8 +537,8 @@ export function Dashboard() {
                 <RadialBarChart innerRadius="70%" outerRadius="100%" data={[{ v: 82, fill: 'url(#gRad)' }]} startAngle={90} endAngle={-270}>
                   <defs>
                     <linearGradient id="gRad" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#D81B60" />
-                      <stop offset="100%" stopColor="#4A148C" />
+                      <stop offset="0%" stopColor="#0B57D0" />
+                      <stop offset="100%" stopColor="#062868" />
                     </linearGradient>
                   </defs>
                   <RadialBar background dataKey="v" cornerRadius={30} />
@@ -553,10 +553,10 @@ export function Dashboard() {
               <div className="text-xs font-medium text-emerald-700">Ready for tier-2 roll-out</div>
               <ul className="mt-3 space-y-2 text-xs">
                 {[
-                  { k: 'Governance', v: 86, color: 'from-[#D81B60] to-[#8E24AA]' },
-                  { k: 'Security', v: 84, color: 'from-[#EC407A] to-[#6A1B9A]' },
-                  { k: 'DPDP', v: 87, color: 'from-[#8E24AA] to-[#4A148C]' },
-                  { k: 'Operations', v: 72, color: 'from-[#AB47BC] to-[#4A148C]' },
+                  { k: 'Governance', v: 86, color: 'from-[#0B57D0] to-[#34A853]' },
+                  { k: 'Security', v: 84, color: 'from-[#EA4335] to-[#4285F4]' },
+                  { k: 'DPDP', v: 87, color: 'from-[#34A853] to-[#062868]' },
+                  { k: 'Operations', v: 72, color: 'from-[#FBBC05] to-[#062868]' },
                 ].map((r) => (
                   <li key={r.k}>
                     <div className="mb-1 flex items-center justify-between">
@@ -630,7 +630,7 @@ export function Dashboard() {
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.15 }}
-        className="mt-6 overflow-hidden rounded-2xl border border-brand-100 bg-gradient-to-r from-brand-50/70 via-white to-purple-50/60 p-4 shadow-sm"
+        className="mt-6 overflow-hidden rounded-2xl border border-brand-100 bg-gradient-to-r from-brand-50/70 via-white to-brand-100/50 p-4 shadow-sm"
       >
         <div className="mb-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">

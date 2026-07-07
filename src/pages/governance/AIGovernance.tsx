@@ -77,9 +77,9 @@ export function AIGovernance() {
               <XAxis dataKey="m" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis domain={[80, 95]} tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Line type="monotone" dataKey="BharatGPT" stroke="#D81B60" strokeWidth={2.5} />
-              <Line type="monotone" dataKey="Sarvam" stroke="#6A1B9A" strokeWidth={2.5} />
-              <Line type="monotone" dataKey="Llama" stroke="#4A148C" strokeWidth={2.5} />
+              <Line type="monotone" dataKey="BharatGPT" stroke="#0B57D0" strokeWidth={2.5} />
+              <Line type="monotone" dataKey="Sarvam" stroke="#4285F4" strokeWidth={2.5} />
+              <Line type="monotone" dataKey="Llama" stroke="#EA4335" strokeWidth={2.5} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -89,7 +89,7 @@ export function AIGovernance() {
             <RadarChart data={risk}>
               <PolarGrid stroke="#eef2f7" />
               <PolarAngleAxis dataKey="dept" tick={{ fill: '#64748b', fontSize: 11 }} />
-              <Radar dataKey="value" stroke="#D81B60" fill="#D81B60" fillOpacity={0.35} />
+              <Radar dataKey="value" stroke="#0B57D0" fill="#0B57D0" fillOpacity={0.35} />
             </RadarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -101,7 +101,7 @@ export function AIGovernance() {
               <XAxis dataKey="d" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="v" radius={[6,6,0,0]} fill="#D81B60" />
+              <Bar dataKey="v" radius={[6,6,0,0]} fill="#0B57D0" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -115,7 +115,7 @@ export function AIGovernance() {
               <XAxis type="number" domain={[0, 100]} tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis type="category" dataKey="s" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="v" radius={[0,8,8,0]} fill="#6A1B9A" />
+              <Bar dataKey="v" radius={[0,8,8,0]} fill="#4285F4" />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

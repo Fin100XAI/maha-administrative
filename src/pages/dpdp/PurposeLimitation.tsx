@@ -95,8 +95,8 @@ export function PurposeLimitation() {
               <YAxis tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 8, fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Bar dataKey="registered" fill="#a855f7" radius={[6, 6, 0, 0]} />
-              <Bar dataKey="actual" fill="#ec4899" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="registered" fill="#0B57D0" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="actual" fill="#4285F4" radius={[6, 6, 0, 0]} />
               <Line type="monotone" dataKey="drift" stroke="#f59e0b" strokeWidth={2} dot />
             </ComposedChart>
           </ResponsiveContainer>

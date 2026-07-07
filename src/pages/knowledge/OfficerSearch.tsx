@@ -74,15 +74,15 @@ function OrgChartMini({ head }: { head: OfficerRow }) {
       <svg viewBox="0 0 720 300" className="h-[280px] w-full min-w-[640px]">
         <defs>
           <linearGradient id="org-line" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#D81B60" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="#4A148C" stopOpacity="0.7" />
+            <stop offset="0%" stopColor="#0B57D0" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="#062868" stopOpacity="0.7" />
           </linearGradient>
         </defs>
 
         {/* Head node */}
         <g transform="translate(360,30)">
-          <rect x={-90} y={-20} width={180} height={44} rx={12} fill="#FCE4EC" stroke="#D81B60" strokeWidth={1.6} />
-          <text x={0} y={-3} textAnchor="middle" fontSize="10" fontWeight="700" fill="#D81B60" className="uppercase tracking-wider">Level 1</text>
+          <rect x={-90} y={-20} width={180} height={44} rx={12} fill="#EEF3FC" stroke="#0B57D0" strokeWidth={1.6} />
+          <text x={0} y={-3} textAnchor="middle" fontSize="10" fontWeight="700" fill="#0B57D0" className="uppercase tracking-wider">Level 1</text>
           <text x={0} y={12} textAnchor="middle" fontSize="11" fontWeight="600" fill="#0f172a">{head.name}</text>
         </g>
 
@@ -96,8 +96,8 @@ function OrgChartMini({ head }: { head: OfficerRow }) {
             <g key={l2.name}>
               <line x1={360} y1={54} x2={x} y2={y - 22} stroke="url(#org-line)" strokeWidth={1.4} />
               <g transform={`translate(${x},${y})`}>
-                <rect x={-80} y={-20} width={160} height={40} rx={10} fill="#F3E5F5" stroke="#6A1B9A" strokeWidth={1.3} />
-                <text x={0} y={-4} textAnchor="middle" fontSize="9" fontWeight="700" fill="#6A1B9A" className="uppercase tracking-wider">Level 2</text>
+                <rect x={-80} y={-20} width={160} height={40} rx={10} fill="#EBF2FE" stroke="#4285F4" strokeWidth={1.3} />
+                <text x={0} y={-4} textAnchor="middle" fontSize="9" fontWeight="700" fill="#4285F4" className="uppercase tracking-wider">Level 2</text>
                 <text x={0} y={10} textAnchor="middle" fontSize="10" fill="#0f172a">
                   {l2.name.length > 22 ? l2.name.slice(0, 22) + '…' : l2.name}
                 </text>
@@ -109,8 +109,8 @@ function OrgChartMini({ head }: { head: OfficerRow }) {
                   <g key={c.name}>
                     <line x1={x} y1={y + 20} x2={cx} y2={cy - 18} stroke="url(#org-line)" strokeWidth={1.2} />
                     <g transform={`translate(${cx},${cy})`}>
-                      <rect x={-72} y={-18} width={144} height={36} rx={8} fill="#EDE7F6" stroke="#4A148C" strokeWidth={1.2} />
-                      <text x={0} y={-3} textAnchor="middle" fontSize="8" fontWeight="700" fill="#4A148C" className="uppercase tracking-wider">Level 3</text>
+                      <rect x={-72} y={-18} width={144} height={36} rx={8} fill="#E8EEF9" stroke="#062868" strokeWidth={1.2} />
+                      <text x={0} y={-3} textAnchor="middle" fontSize="8" fontWeight="700" fill="#062868" className="uppercase tracking-wider">Level 3</text>
                       <text x={0} y={10} textAnchor="middle" fontSize="9" fill="#0f172a">
                         {c.name.length > 22 ? c.name.slice(0, 22) + '…' : c.name}
                       </text>
@@ -242,9 +242,9 @@ export function OfficerSearch() {
             />
             <OrgChartMini head={topWithReports} />
             <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px] text-ink-500">
-              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#D81B60' }} /> L1 · Head</span>
-              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#6A1B9A' }} /> L2 · Direct reports</span>
-              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#4A148C' }} /> L3 · Downstream</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#0B57D0' }} /> L1 · Head</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#4285F4' }} /> L2 · Direct reports</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#062868' }} /> L3 · Downstream</span>
               <SourceBadge source="Department API required" />
             </div>
           </Card>

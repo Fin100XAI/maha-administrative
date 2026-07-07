@@ -114,8 +114,8 @@ export function SystemHealth() {
               <XAxis dataKey="t" tick={{ fill: '#64748b', fontSize: 11 }} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Line dataKey="api" stroke="#D81B60" strokeWidth={2.5} />
-              <Line dataKey="model" stroke="#4A148C" strokeWidth={2.5} />
+              <Line dataKey="api" stroke="#0B57D0" strokeWidth={2.5} />
+              <Line dataKey="model" stroke="#4285F4" strokeWidth={2.5} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -211,10 +211,10 @@ export function SystemHealth() {
             <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
             <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Area type="monotone" dataKey="ingest" name="Ingest" stackId="1" stroke="#D81B60" fill="#D81B60" fillOpacity={0.3} />
-            <Area type="monotone" dataKey="dlp"    name="DLP"    stackId="1" stroke="#4A148C" fill="#4A148C" fillOpacity={0.3} />
-            <Area type="monotone" dataKey="embed"  name="Embed"  stackId="1" stroke="#0EA5E9" fill="#0EA5E9" fillOpacity={0.3} />
-            <Area type="monotone" dataKey="audit"  name="Audit"  stackId="1" stroke="#10B981" fill="#10B981" fillOpacity={0.3} />
+            <Area type="monotone" dataKey="ingest" name="Ingest" stackId="1" stroke="#0B57D0" fill="#0B57D0" fillOpacity={0.3} />
+            <Area type="monotone" dataKey="dlp"    name="DLP"    stackId="1" stroke="#4285F4" fill="#4285F4" fillOpacity={0.3} />
+            <Area type="monotone" dataKey="embed"  name="Embed"  stackId="1" stroke="#EA4335" fill="#EA4335" fillOpacity={0.3} />
+            <Area type="monotone" dataKey="audit"  name="Audit"  stackId="1" stroke="#FBBC05" fill="#FBBC05" fillOpacity={0.3} />
           </AreaChart>
         </ResponsiveContainer>
       </ChartCard>

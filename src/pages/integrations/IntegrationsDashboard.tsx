@@ -38,7 +38,7 @@ const STAGE_ORDER: Record<string, number> = {
 }
 const STAGE_COLORS: Record<string, string> = {
   Discovery: 'bg-ink-100 text-ink-700',
-  MoU: 'bg-purple-50 text-purple-700',
+  MoU: 'bg-brand-50 text-brand-700',
   Build: 'bg-sky-50 text-sky-700',
   VAPT: 'bg-amber-50 text-amber-700',
   Pilot: 'bg-orange-50 text-orange-700',
@@ -188,12 +188,12 @@ export function IntegrationsDashboard() {
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
               <Legend wrapperStyle={{ fontSize: 11 }} />
-              <Line dataKey="gateway" name="API Gateway" stroke="#4A148C" strokeWidth={2.5} dot={false} />
-              <Line dataKey="sms"     name="SMS"          stroke="#D81B60" strokeWidth={2} dot={false} />
-              <Line dataKey="email"   name="Email"        stroke="#F59E0B" strokeWidth={2} dot={false} />
-              <Line dataKey="dms"     name="DMS"          stroke="#0EA5E9" strokeWidth={2} dot={false} />
-              <Line dataKey="eOffice" name="e-Office"     stroke="#10B981" strokeWidth={2} dot={false} />
-              <Line dataKey="rti"     name="RTI"          stroke="#8B5CF6" strokeWidth={2} dot={false} />
+              <Line dataKey="gateway" name="API Gateway" stroke="#0B57D0" strokeWidth={2.5} dot={false} />
+              <Line dataKey="sms"     name="SMS"          stroke="#4285F4" strokeWidth={2} dot={false} />
+              <Line dataKey="email"   name="Email"        stroke="#EA4335" strokeWidth={2} dot={false} />
+              <Line dataKey="dms"     name="DMS"          stroke="#FBBC05" strokeWidth={2} dot={false} />
+              <Line dataKey="eOffice" name="e-Office"     stroke="#34A853" strokeWidth={2} dot={false} />
+              <Line dataKey="rti"     name="RTI"          stroke="#062868" strokeWidth={2} dot={false} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>

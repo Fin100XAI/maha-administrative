@@ -115,14 +115,14 @@ export const NAV: NavGroup[] = [
   },
 ]
 
-// Group theme colors — a small dot before each group title
+// Group theme colors — a small dot before each group title (Google multi-color palette)
 const GROUP_DOT: Record<string, string> = {
   'Administrative AI': 'bg-brand-500',
-  'Governance & Responsible AI': 'bg-purple-500',
-  'Security & AI SOC': 'bg-red-500',
-  'DPDP & Data Governance': 'bg-amber-500',
-  'Knowledge Brain': 'bg-sky-500',
-  'Integrations': 'bg-emerald-500',
+  'Governance & Responsible AI': 'bg-google-blue-500',
+  'Security & AI SOC': 'bg-google-red-500',
+  'DPDP & Data Governance': 'bg-google-yellow-500',
+  'Knowledge Brain': 'bg-google-green-500',
+  'Integrations': 'bg-sky-500',
   'Platform Admin': 'bg-ink-700',
 }
 
@@ -174,8 +174,8 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
             cn(
               'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200',
               isActive
-                ? 'bg-brand-soft text-brand-700 font-medium shadow-[0_2px_10px_-4px_rgba(216,27,96,0.25)]'
-                : 'text-ink-700 hover:bg-ink-50 hover:shadow-[0_2px_8px_-4px_rgba(216,27,96,0.15)]'
+                ? 'bg-brand-soft text-brand-700 font-medium shadow-[0_2px_10px_-4px_rgba(11,87,208,0.25)]'
+                : 'text-ink-700 hover:bg-ink-50 hover:shadow-[0_2px_8px_-4px_rgba(11,87,208,0.15)]'
             )
           }
         >
@@ -216,7 +216,7 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
                     className="mt-1 h-[2px] w-[60%] rounded-full"
                     style={{
                       background:
-                        'linear-gradient(90deg, #D81B60 0%, #4A148C 100%)',
+                        'linear-gradient(90deg, #0B57D0 0%, #062868 100%)',
                       opacity: 0.65,
                     }}
                   />
@@ -233,8 +233,8 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
                       cn(
                         'group relative flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200',
                         isActive
-                          ? 'bg-brand-soft text-brand-700 font-medium shadow-[0_2px_10px_-4px_rgba(216,27,96,0.25)]'
-                          : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900 hover:shadow-[0_2px_8px_-4px_rgba(216,27,96,0.15)]'
+                          ? 'bg-brand-soft text-brand-700 font-medium shadow-[0_2px_10px_-4px_rgba(11,87,208,0.25)]'
+                          : 'text-ink-600 hover:bg-ink-50 hover:text-ink-900 hover:shadow-[0_2px_8px_-4px_rgba(11,87,208,0.15)]'
                       )
                     }
                   >
@@ -268,7 +268,7 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
               className="absolute inset-0 rounded-xl"
               style={{
                 background:
-                  'conic-gradient(from 0deg, #D81B60, #4A148C, #D81B60, #4A148C, #D81B60)',
+                  'conic-gradient(from 0deg, #0B57D0, #062868, #0B57D0, #062868, #0B57D0)',
                 filter: 'blur(0.5px)',
               }}
               animate={{ rotate: 360 }}
@@ -288,7 +288,7 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
                 <div className="text-xs font-medium text-ink-400">/ 100</div>
               </div>
               <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-ink-100">
-                <div className="h-full w-[82%] rounded-full bg-brand-gradient shadow-[0_0_8px_rgba(216,27,96,0.5)]" />
+                <div className="h-full w-[82%] rounded-full bg-brand-gradient shadow-[0_0_8px_rgba(11,87,208,0.5)]" />
               </div>
               {/* Mini sparkline */}
               <svg
@@ -299,12 +299,12 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
               >
                 <defs>
                   <linearGradient id="sparkStroke" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="#D81B60" />
-                    <stop offset="100%" stopColor="#4A148C" />
+                    <stop offset="0%" stopColor="#0B57D0" />
+                    <stop offset="100%" stopColor="#062868" />
                   </linearGradient>
                   <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#D81B60" stopOpacity="0.25" />
-                    <stop offset="100%" stopColor="#4A148C" stopOpacity="0" />
+                    <stop offset="0%" stopColor="#0B57D0" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="#062868" stopOpacity="0" />
                   </linearGradient>
                 </defs>
                 {/* 6 fake data points: 64, 68, 72, 70, 78, 82 (normalized to 24px) */}
@@ -320,7 +320,7 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 />
-                <circle cx="100" cy="5" r="1.8" fill="#D81B60" />
+                <circle cx="100" cy="5" r="1.8" fill="#0B57D0" />
               </svg>
               <div className="mt-1.5 flex items-center justify-between text-[10px] text-ink-500">
                 <span>Public-source · Demo</span>

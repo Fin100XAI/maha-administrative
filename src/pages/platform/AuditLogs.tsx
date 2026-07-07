@@ -147,7 +147,7 @@ export function AuditLogs() {
               <XAxis type="number" tick={{ fill: '#64748b', fontSize: 11 }} />
               <YAxis type="category" dataKey="action" width={170} tick={{ fill: '#64748b', fontSize: 11 }} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="count" fill="#4A148C" radius={[0, 6, 6, 0]} />
+              <Bar dataKey="count" fill="#062868" radius={[0, 6, 6, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

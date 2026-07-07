@@ -5,9 +5,9 @@ import { cn } from '@/lib/utils'
 export function CoverageCell({ level, label }: { level: number; label: string }) {
   const bg =
     level >= 4 ? 'bg-brand-gradient text-white' :
-    level === 3 ? 'bg-fuchsia-300 text-fuchsia-900' :
-    level === 2 ? 'bg-fuchsia-200 text-fuchsia-800' :
-    level === 1 ? 'bg-fuchsia-100 text-fuchsia-700' :
+    level === 3 ? 'bg-brand-300 text-brand-900' :
+    level === 2 ? 'bg-brand-200 text-brand-800' :
+    level === 1 ? 'bg-brand-100 text-brand-700' :
                   'bg-ink-100 text-ink-500'
   return (
     <div
@@ -28,7 +28,7 @@ export function HourCell({ v }: { v: number }) {
   return (
     <div
       className="h-6 rounded-sm"
-      style={{ backgroundColor: `rgba(216, 27, 96, ${opacity.toFixed(2)})` }}
+      style={{ backgroundColor: `rgba(11, 87, 208, ${opacity.toFixed(2)})` }}
       title={`${v}`}
     />
   )

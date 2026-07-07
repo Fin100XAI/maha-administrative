@@ -41,7 +41,7 @@ export function Login() {
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                'radial-gradient(60% 40% at 20% 20%, rgba(255,255,255,0.18) 0%, transparent 60%), radial-gradient(50% 40% at 80% 30%, rgba(255,180,220,0.20) 0%, transparent 60%), radial-gradient(60% 50% at 60% 90%, rgba(180,140,255,0.20) 0%, transparent 60%)',
+                'radial-gradient(60% 40% at 20% 20%, rgba(255,255,255,0.18) 0%, transparent 60%), radial-gradient(50% 40% at 80% 30%, rgba(66,133,244,0.22) 0%, transparent 60%), radial-gradient(60% 50% at 60% 90%, rgba(11,87,208,0.22) 0%, transparent 60%)',
             }}
             animate={{ opacity: [0.65, 0.9, 0.65] }}
             transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
@@ -123,12 +123,12 @@ export function Login() {
             transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.div
-            className="pointer-events-none absolute -bottom-24 -left-8 h-80 w-80 rounded-full bg-fuchsia-300/20 blur-3xl"
+            className="pointer-events-none absolute -bottom-24 -left-8 h-80 w-80 rounded-full bg-google-blue-500/25 blur-3xl"
             animate={{ y: [0, -18, 0], x: [0, 12, 0] }}
             transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
           />
           <motion.div
-            className="pointer-events-none absolute right-24 top-1/3 h-40 w-40 rounded-full bg-purple-200/25 blur-2xl"
+            className="pointer-events-none absolute right-24 top-1/3 h-40 w-40 rounded-full bg-brand-200/30 blur-2xl"
             animate={{ y: [0, 22, 0] }}
             transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
           />
@@ -163,7 +163,7 @@ export function Login() {
               <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight">
                 India's Sovereign AI
                 <br />
-                <span className="bg-gradient-to-r from-white via-pink-100 to-purple-200 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-white via-brand-100 to-brand-200 bg-clip-text text-transparent">
                   Administrative Intelligence.
                 </span>
               </h1>
@@ -200,6 +200,11 @@ export function Login() {
 
             {/* Trust badge row */}
             <div className="pt-2">
+              {/* Google multi-color arc — subtle "Google-adjacent" accent */}
+              <div
+                aria-hidden
+                className="mb-3 h-[2px] w-40 rounded-full bg-google-arc opacity-80"
+              />
               <div className="mb-2 text-[10px] uppercase tracking-[0.25em] text-white/60">
                 Credentials & Alignment
               </div>
@@ -236,7 +241,7 @@ export function Login() {
             className="pointer-events-none absolute inset-0"
             style={{
               background:
-                'radial-gradient(50% 40% at 50% 30%, rgba(216,27,96,0.08) 0%, transparent 70%), radial-gradient(40% 40% at 60% 90%, rgba(74,20,140,0.08) 0%, transparent 70%)',
+                'radial-gradient(50% 40% at 50% 30%, rgba(11,87,208,0.08) 0%, transparent 70%), radial-gradient(40% 40% at 60% 90%, rgba(6,40,104,0.08) 0%, transparent 70%)',
             }}
           />
 
@@ -266,7 +271,7 @@ export function Login() {
               </div>
               <h2 className="mt-1.5 text-3xl font-semibold leading-tight tracking-tight text-ink-900">
                 Sign in to{' '}
-                <span className="bg-gradient-to-r from-[#D81B60] to-[#4A148C] bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-[#0B57D0] to-[#062868] bg-clip-text text-transparent">
                   MAII
                 </span>
               </h2>
@@ -281,7 +286,7 @@ export function Login() {
                 e.preventDefault()
                 nav('/')
               }}
-              className="card space-y-4 bg-white/85 p-6 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(74,20,140,0.25)]"
+              className="card space-y-4 bg-white/85 p-6 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(6,40,104,0.25)]"
             >
               <div>
                 <label className="label">Officer ID</label>
@@ -359,7 +364,7 @@ export function Login() {
 
               <button
                 type="submit"
-                className="group relative w-full overflow-hidden rounded-lg bg-brand-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition-all duration-200 hover:shadow-[0_18px_50px_-12px_rgba(216,27,96,0.55)] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
+                className="group relative w-full overflow-hidden rounded-lg bg-brand-gradient px-4 py-2.5 text-sm font-semibold text-white shadow-glow transition-all duration-200 hover:shadow-[0_18px_50px_-12px_rgba(11,87,208,0.55)] hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2"
               >
                 <span
                   aria-hidden

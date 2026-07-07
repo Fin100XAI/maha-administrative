@@ -33,7 +33,7 @@ const rows: Row[] = [
 
 // Max value for funnel width normalisation.
 const FUNNEL_MAX = Math.max(...CONSENT_FUNNEL.map((s) => s.value))
-const FUNNEL_COLORS = ['from-pink-500 to-brand-500', 'from-brand-500 to-brand-600', 'from-brand-600 to-brand-700', 'from-emerald-500 to-emerald-600', 'from-red-400 to-red-500']
+const FUNNEL_COLORS = ['from-google-blue-500 to-google-blue-600', 'from-brand-500 to-brand-600', 'from-brand-600 to-brand-700', 'from-emerald-500 to-emerald-600', 'from-red-400 to-red-500']
 
 export function ConsentDashboard() {
   const columns: Column<Row>[] = [

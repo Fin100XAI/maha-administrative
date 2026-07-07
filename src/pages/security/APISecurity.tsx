@@ -69,8 +69,8 @@ export function APISecurity() {
               <XAxis dataKey="m" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Line type="monotone" dataKey="calls" stroke="#4A148C" strokeWidth={2.5} />
-              <Line type="monotone" dataKey="fail" stroke="#D81B60" strokeWidth={2.5} />
+              <Line type="monotone" dataKey="calls" stroke="#062868" strokeWidth={2.5} />
+              <Line type="monotone" dataKey="fail" stroke="#0B57D0" strokeWidth={2.5} />
             </LineChart>
           </ResponsiveContainer>
         </ChartCard>
@@ -125,7 +125,7 @@ export function APISecurity() {
               <XAxis type="number" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis type="category" dataKey="ep" tick={{ fill: '#64748b', fontSize: 10 }} width={180} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="hits" fill="#D81B60" radius={[0,6,6,0]} />
+              <Bar dataKey="hits" fill="#0B57D0" radius={[0,6,6,0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

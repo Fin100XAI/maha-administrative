@@ -6,9 +6,9 @@ import { ASSET_TREE, LINEAGE_IMPACT, QUALITY_GATES, AssetNode } from '@/data/dpd
 
 const NODES = [
   { name: 'Source', icon: Upload, desc: 'MahaDBT - e-Office - Aaple Sarkar - Manual upload', color: 'from-sky-500 to-sky-700' },
-  { name: 'Ingestion', icon: Database, desc: 'DLP scan - classification - consent check', color: 'from-purple-500 to-purple-700' },
+  { name: 'Ingestion', icon: Database, desc: 'DLP scan - classification - consent check', color: 'from-google-blue-500 to-google-blue-700' },
   { name: 'Processing', icon: Cpu, desc: 'OCR - extraction - normalisation - vectorisation', color: 'from-brand-500 to-brand-900' },
-  { name: 'AI Use', icon: Sparkles, desc: 'Retrieval - reasoning - drafting - translation', color: 'from-pink-500 to-brand-700' },
+  { name: 'AI Use', icon: Sparkles, desc: 'Retrieval - reasoning - drafting - translation', color: 'from-google-red-500 to-google-red-700' },
   { name: 'Output', icon: ClipboardCheck, desc: 'Draft note - summary - advisory - reply', color: 'from-amber-500 to-orange-600' },
   { name: 'Approval', icon: ClipboardCheck, desc: 'HITL - SO to US to DS to PS to CS', color: 'from-emerald-500 to-emerald-700' },
   { name: 'Archive', icon: Archive, desc: 'Immutable log - retention - legal hold', color: 'from-ink-500 to-ink-800' },
@@ -16,9 +16,9 @@ const NODES = [
 
 const KIND_COLOR: Record<AssetNode['kind'], string> = {
   source:    'bg-sky-50 text-sky-700 border-sky-200',
-  ingest:    'bg-purple-50 text-purple-700 border-purple-200',
+  ingest:    'bg-google-blue-50 text-google-blue-700 border-google-blue-100',
   processed: 'bg-brand-soft text-brand-700 border-brand-100',
-  model:     'bg-pink-50 text-pink-700 border-pink-200',
+  model:     'bg-google-red-50 text-google-red-700 border-google-red-100',
   output:    'bg-amber-50 text-amber-700 border-amber-200',
 }
 

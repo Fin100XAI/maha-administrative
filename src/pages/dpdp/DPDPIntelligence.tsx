@@ -134,15 +134,15 @@ export function DPDPIntelligence() {
             <AreaChart data={DPDP_QUARTERLY_SCORE} margin={{ top: 8, right: 12, bottom: 0, left: -12 }}>
               <defs>
                 <linearGradient id="dpdpScoreGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#ec4899" stopOpacity={0.55} />
-                  <stop offset="100%" stopColor="#a855f7" stopOpacity={0.05} />
+                  <stop offset="0%" stopColor="#0B57D0" stopOpacity={0.55} />
+                  <stop offset="100%" stopColor="#0B57D0" stopOpacity={0.05} />
                 </linearGradient>
               </defs>
               <CartesianGrid vertical={false} stroke="#f1f5f9" />
               <XAxis dataKey="q" tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
               <YAxis domain={[50, 100]} tick={{ fontSize: 11 }} axisLine={false} tickLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 8, fontSize: 12 }} />
-              <Area type="monotone" dataKey="score" stroke="#a855f7" strokeWidth={2} fill="url(#dpdpScoreGrad)" />
+              <Area type="monotone" dataKey="score" stroke="#0B57D0" strokeWidth={2} fill="url(#dpdpScoreGrad)" />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>

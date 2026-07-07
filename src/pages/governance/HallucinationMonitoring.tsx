@@ -93,13 +93,13 @@ export function HallucinationMonitoring() {
           <ResponsiveContainer>
             <AreaChart data={dist}>
               <defs>
-                <linearGradient id="gConf" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#D81B60" stopOpacity={0.5}/><stop offset="100%" stopColor="#D81B60" stopOpacity={0.02}/></linearGradient>
+                <linearGradient id="gConf" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stopColor="#0B57D0" stopOpacity={0.5}/><stop offset="100%" stopColor="#0B57D0" stopOpacity={0.02}/></linearGradient>
               </defs>
               <CartesianGrid vertical={false} stroke="#eef2f7" />
               <XAxis dataKey="c" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Area type="monotone" dataKey="v" stroke="#D81B60" fill="url(#gConf)" />
+              <Area type="monotone" dataKey="v" stroke="#0B57D0" fill="url(#gConf)" />
             </AreaChart>
           </ResponsiveContainer>
         </ChartCard>

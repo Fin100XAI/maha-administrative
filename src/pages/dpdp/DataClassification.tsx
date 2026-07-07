@@ -17,7 +17,7 @@ const CATEGORIES = [
 // Colour ramp for coverage bar based on percentage.
 function coverageColor(v: number): string {
   if (v >= 92) return '#10b981'
-  if (v >= 85) return '#a855f7'
+  if (v >= 85) return '#0B57D0'
   if (v >= 80) return '#f59e0b'
   return '#ef4444'
 }

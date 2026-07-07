@@ -62,7 +62,7 @@ export function DataLeakage() {
               <XAxis dataKey="d" tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <YAxis tick={{ fill: '#64748b', fontSize: 11 }} tickLine={false} axisLine={false} />
               <ReTooltip contentStyle={{ borderRadius: 12, border: '1px solid #e2e8f0', fontSize: 12 }} />
-              <Bar dataKey="redact" name="Redacted" fill="#D81B60" radius={[6,6,0,0]} />
+              <Bar dataKey="redact" name="Redacted" fill="#0B57D0" radius={[6,6,0,0]} />
             </BarChart>
           </ResponsiveContainer>
         </ChartCard>

@@ -11,6 +11,7 @@ export function AppLayout() {
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         <div className="absolute -left-40 top-0 h-[520px] w-[520px] rounded-full bg-brand-500/10 blur-3xl" />
         <div className="absolute -right-40 top-60 h-[520px] w-[520px] rounded-full bg-brand-900/10 blur-3xl" />
+        <div className="absolute -right-20 bottom-40 h-[380px] w-[380px] rounded-full bg-google-yellow-500/[0.06] blur-3xl" />
         <div className="absolute inset-0 opacity-[0.035]" style={{
           backgroundImage:
             'linear-gradient(to right, #0f172a 1px, transparent 1px), linear-gradient(to bottom, #0f172a 1px, transparent 1px)',

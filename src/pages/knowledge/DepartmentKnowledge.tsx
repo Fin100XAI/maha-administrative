@@ -100,10 +100,10 @@ export function DepartmentKnowledge() {
             />
             <KnowledgeGraphSVG />
             <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-ink-500">
-              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#D81B60' }} /> GR</span>
-              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#6A1B9A' }} /> SOP</span>
-              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#4A148C' }} /> Circular</span>
-              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#EC407A' }} /> Policy</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#0B57D0' }} /> GR</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#4285F4' }} /> SOP</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#062868' }} /> Circular</span>
+              <span className="inline-flex items-center gap-1.5"><span className="h-2 w-2 rounded-full" style={{ background: '#EA4335' }} /> Policy</span>
               <SourceBadge source="Demo" />
             </div>
           </Card>
@@ -171,7 +171,7 @@ export function DepartmentKnowledge() {
                   </div>
                   <div className="flex shrink-0 items-center gap-2 text-xs text-ink-500">
                     <span>{t.count}</span>
-                    <span className={t.delta >= 0 ? 'text-emerald-600' : 'text-rose-600'}>
+                    <span className={t.delta >= 0 ? 'text-emerald-600' : 'text-red-600'}>
                       {t.delta >= 0 ? '▲' : '▼'} {Math.abs(t.delta).toFixed(1)}%
                     </span>
                   </div>
