@@ -125,14 +125,15 @@ export function SourceBadge({
     source === 'Public-source linked' ? <Info className="h-3 w-3" /> :
     source === 'Department API required' ? <ServerCog className="h-3 w-3" /> :
     <Database className="h-3 w-3" />
+  // Informative provenance pill — rendered in the Google multi-colour palette.
   const cls: Record<string, string> = {
-    Live: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    'Public-source linked': 'bg-sky-50 text-sky-700 border-sky-200',
-    Demo: 'bg-ink-100 text-ink-600 border-ink-200',
-    'Department API required': 'bg-brand-50 text-brand-700 border-brand-200',
+    Live: 'bg-google-green-50 text-google-green-700 border-google-green-100',
+    'Public-source linked': 'bg-google-blue-50 text-google-blue-700 border-google-blue-100',
+    Demo: 'bg-google-yellow-50 text-google-yellow-700 border-google-yellow-100',
+    'Department API required': 'bg-google-red-50 text-google-red-700 border-google-red-100',
   }
   return (
-    <span className={cn('chip border', cls[source] || 'bg-ink-100 text-ink-700 border-ink-200', className)}>
+    <span className={cn('chip border', cls[source] || 'bg-google-blue-50 text-google-blue-700 border-google-blue-100', className)}>
       {icon} {source}
     </span>
   )

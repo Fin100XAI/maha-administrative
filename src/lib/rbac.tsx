@@ -10,15 +10,29 @@ import { ROLES, RoleOption } from '@/data/departments'
 const STORAGE_KEY = 'maii-role'
 const DEFAULT_ROLE: RoleOption = 'Principal Secretary'
 
-/** Sidebar group titles each role may see. 'all' = unrestricted. */
+/**
+ * Sidebar group titles each role may see — the "access layer" per designation.
+ * 'all' = unrestricted. Ordered apex → specialist.
+ */
 export const GROUP_ACCESS: Record<RoleOption, 'all' | string[]> = {
+  // Apex leadership — full platform
   'Chief Secretary': 'all',
   'Additional Chief Secretary': 'all',
+  // Secretariat — narrowing by rank
   'Principal Secretary': 'all',
+  'Secretary': ['Administrative AI', 'Administrative Intelligence', 'Knowledge Brain', 'Governance & Responsible AI', 'DPDP & Data Governance', 'Integrations'],
+  'Deputy Secretary': ['Administrative AI', 'Administrative Intelligence', 'Knowledge Brain', 'Governance & Responsible AI', 'DPDP & Data Governance'],
+  'Under Secretary': ['Administrative AI', 'Administrative Intelligence', 'Knowledge Brain'],
+  // Field administration
+  'Divisional Commissioner': ['Administrative AI', 'Administrative Intelligence', 'Knowledge Brain', 'DPDP & Data Governance', 'Integrations'],
   'District Collector': ['Administrative AI', 'Administrative Intelligence', 'Knowledge Brain', 'Governance & Responsible AI', 'DPDP & Data Governance', 'Integrations'],
   'Municipal Commissioner': ['Administrative AI', 'Administrative Intelligence', 'Knowledge Brain', 'Governance & Responsible AI', 'DPDP & Data Governance', 'Integrations'],
+  'CEO, Zilla Parishad': ['Administrative AI', 'Administrative Intelligence', 'Knowledge Brain', 'Integrations'],
+  // Operational — tools only
   'Department Officer': ['Administrative AI', 'Knowledge Brain'],
   'Section Officer': ['Administrative AI', 'Knowledge Brain'],
+  'Desk Officer': ['Administrative AI', 'Knowledge Brain'],
+  // Specialist — scoped to their function
   'IT Admin': ['Administrative AI', 'Knowledge Brain', 'Security & AI SOC', 'Integrations', 'Platform Admin'],
   'AI Governance Officer': ['Administrative AI', 'Administrative Intelligence', 'Knowledge Brain', 'Governance & Responsible AI', 'DPDP & Data Governance'],
   'Security Officer': ['Administrative AI', 'Knowledge Brain', 'Security & AI SOC', 'Integrations', 'Platform Admin'],
@@ -29,13 +43,17 @@ export const GROUP_ACCESS: Record<RoleOption, 'all' | string[]> = {
 const UNIVERSAL_PATHS = ['/', '/workspace', '/settings', '/login']
 
 /** Per-role path grants that cut across hidden groups. */
+const OFFICER_WS = ['/administrative-intelligence/officer-workspace']
 export const EXTRA_PATHS: Partial<Record<RoleOption, string[]>> = {
-  'Department Officer': ['/administrative-intelligence/officer-workspace'],
-  'Section Officer': ['/administrative-intelligence/officer-workspace'],
-  'IT Admin': ['/administrative-intelligence/officer-workspace'],
-  'Data Protection Officer': ['/administrative-intelligence/officer-workspace'],
-  'Security Officer': ['/administrative-intelligence/officer-workspace'],
-  'AI Governance Officer': ['/administrative-intelligence/officer-workspace'],
+  'Deputy Secretary': OFFICER_WS,
+  'Under Secretary': OFFICER_WS,
+  'Department Officer': OFFICER_WS,
+  'Section Officer': OFFICER_WS,
+  'Desk Officer': OFFICER_WS,
+  'IT Admin': OFFICER_WS,
+  'Data Protection Officer': OFFICER_WS,
+  'Security Officer': OFFICER_WS,
+  'AI Governance Officer': OFFICER_WS,
 }
 
 export function groupAllowed(role: RoleOption, groupTitle: string): boolean {

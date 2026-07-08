@@ -39,13 +39,24 @@ export const LANGUAGES = ['English', 'मराठी (Marathi)', 'हिंद�
 export type LanguageOption = typeof LANGUAGES[number]
 
 export const ROLES = [
+  // Apex leadership
   'Chief Secretary',
   'Additional Chief Secretary',
+  // Secretariat
   'Principal Secretary',
+  'Secretary',
+  'Deputy Secretary',
+  'Under Secretary',
+  // Field administration
+  'Divisional Commissioner',
   'District Collector',
   'Municipal Commissioner',
+  'CEO, Zilla Parishad',
+  // Operational
   'Department Officer',
   'Section Officer',
+  'Desk Officer',
+  // Specialist
   'IT Admin',
   'AI Governance Officer',
   'Security Officer',
@@ -53,6 +64,20 @@ export const ROLES = [
 ] as const
 
 export type RoleOption = typeof ROLES[number]
+
+/** Roles grouped by administrative tier — drives the grouped designation picker. */
+export const ROLE_TIERS: { tier: string; roles: RoleOption[] }[] = [
+  { tier: 'Apex Leadership', roles: ['Chief Secretary', 'Additional Chief Secretary'] },
+  { tier: 'Secretariat', roles: ['Principal Secretary', 'Secretary', 'Deputy Secretary', 'Under Secretary'] },
+  { tier: 'Field Administration', roles: ['Divisional Commissioner', 'District Collector', 'Municipal Commissioner', 'CEO, Zilla Parishad'] },
+  { tier: 'Operational', roles: ['Department Officer', 'Section Officer', 'Desk Officer'] },
+  { tier: 'Specialist', roles: ['IT Admin', 'AI Governance Officer', 'Security Officer', 'Data Protection Officer'] },
+]
+
+/** Tier label for a role (for badges / access-layer hints). */
+export function tierOf(role: RoleOption): string {
+  return ROLE_TIERS.find((t) => t.roles.includes(role))?.tier ?? 'Officer'
+}
 
 export const SECURITY_CLASSES = ['Public', 'Internal', 'Confidential', 'Secret'] as const
 export type SecurityClass = typeof SECURITY_CLASSES[number]
