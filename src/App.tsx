@@ -100,6 +100,7 @@ import { AuditLogs } from '@/pages/platform/AuditLogs'
 import { Encryption } from '@/pages/platform/Encryption'
 import { OnPrem } from '@/pages/platform/OnPrem'
 import { SystemHealth } from '@/pages/platform/SystemHealth'
+import { SettingsPage } from '@/pages/platform/SettingsPage'
 
 export default function App() {
   return (
@@ -196,6 +197,7 @@ export default function App() {
         <Route path="/encryption" element={<Encryption />} />
         <Route path="/on-prem" element={<OnPrem />} />
         <Route path="/system-health" element={<SystemHealth />} />
+        <Route path="/settings" element={<SettingsPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>

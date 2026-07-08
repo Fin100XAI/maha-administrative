@@ -1,8 +1,9 @@
-import { Bell, ChevronDown, Command, Menu, Search, ShieldCheck, LogOut, BadgeCheck } from 'lucide-react'
+import { Bell, ChevronDown, Command, Menu, Search, LogOut, BadgeCheck } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState, type FormEvent } from 'react'
 import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'
+import { useRole } from '@/lib/rbac'
 
 export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const location = useLocation()
@@ -10,6 +11,7 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
   const [searchFocused, setSearchFocused] = useState(false)
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false)
   const [query, setQuery] = useState('')
+  const { role } = useRole()
 
   const askCopilot = (e: FormEvent) => {
     e.preventDefault()
@@ -83,28 +85,6 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         {/* Language switcher — EN / हिं / मरा */}
         <LanguageSwitcher />
 
-        {/* Encryption/session chip with animated shimmer border */}
-        <div className="relative hidden xl:block">
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-lg"
-            style={{
-              padding: '1px',
-              backgroundImage:
-                'linear-gradient(110deg, rgba(16,185,129,0.6), rgba(16,185,129,0) 25%, rgba(16,185,129,0) 60%, rgba(16,185,129,0.6) 85%)',
-              backgroundSize: '200% 100%',
-              animation: 'shimmer 2.4s linear infinite',
-              WebkitMask:
-                'linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0)',
-              WebkitMaskComposite: 'xor',
-              maskComposite: 'exclude',
-            }}
-          />
-          <div className="relative flex items-center gap-1 rounded-lg border border-emerald-200 bg-emerald-50 px-2.5 py-1.5 text-xs font-medium text-emerald-700">
-            <ShieldCheck className="h-3.5 w-3.5" /> Encryption: AES-256 · Session: MFA
-          </div>
-        </div>
-
         {/* Notification bell with pulsing dot */}
         <button className="btn-ghost relative !p-2" aria-label="Notifications">
           <Bell className="h-5 w-5" />
@@ -131,7 +111,7 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
                 aria-label="Verified officer"
               />
             </div>
-            <div className="mt-0.5 text-[10px] text-ink-500">Principal Secretary, DIT · GoM</div>
+            <div className="mt-0.5 text-[10px] text-ink-500">{role} · GoM</div>
           </div>
           <ChevronDown className="h-4 w-4 text-ink-400" />
         </div>

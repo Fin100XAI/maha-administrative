@@ -1,14 +1,18 @@
 import { useEffect, useState } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Sidebar } from './Sidebar'
+import { Lock, Settings } from 'lucide-react'
+import { NAV, Sidebar } from './Sidebar'
 import { Topbar } from './Topbar'
 import { CopilotDock } from '@/components/copilot/CopilotDock'
+import { canAccessPath, useRole } from '@/lib/rbac'
 
 export function AppLayout() {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const location = useLocation()
+  const { role } = useRole()
+  const allowed = canAccessPath(role, location.pathname, NAV)
 
   // Close the mobile drawer on navigation and lock body scroll while it is open
   useEffect(() => setMobileOpen(false), [location.pathname])
@@ -77,7 +81,7 @@ export function AppLayout() {
         <div className="min-w-0 flex-1">
           <Topbar onToggleSidebar={handleToggleSidebar} />
           <main className="mx-auto max-w-[1600px] p-4 sm:p-5 lg:p-6">
-            <Outlet />
+            {allowed ? <Outlet /> : <AccessDenied role={role} />}
           </main>
           <footer className="border-t border-ink-100 bg-white/50 px-4 py-4 text-center text-[11px] text-ink-500 backdrop-blur sm:px-6">
             MAII · Maha Administrative Intelligence Infrastructure · Government of Maharashtra · Sovereign AI Platform · Demo build 0.1
@@ -87,6 +91,25 @@ export function AppLayout() {
 
       {/* Global copilot — floating on every page (⌘J) */}
       <CopilotDock />
+    </div>
+  )
+}
+
+function AccessDenied({ role }: { role: string }) {
+  return (
+    <div className="card mx-auto max-w-xl p-8 text-center">
+      <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-red-50 text-red-500 ring-1 ring-red-100">
+        <Lock className="h-6 w-6" />
+      </div>
+      <h2 className="mt-4 text-xl font-semibold text-ink-900">Access restricted</h2>
+      <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-ink-500">
+        Your current role — <span className="font-semibold text-ink-800">{role}</span> — does not have
+        permission to open this module. Access is enforced per RBAC policy and this attempt has been audit-logged.
+      </p>
+      <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+        <Link to="/" className="btn-outline">Back to dashboard</Link>
+        <Link to="/settings" className="btn-primary"><Settings className="h-4 w-4" /> Switch role in Settings</Link>
+      </div>
     </div>
   )
 }

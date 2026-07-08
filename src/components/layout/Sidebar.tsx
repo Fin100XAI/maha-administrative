@@ -5,10 +5,11 @@ import {
   Eye, GaugeCircle, ShieldCheck, UserCheck, Bug, Radar, Radio, ShieldAlert, Cpu, Activity, Fingerprint, KeyRound,
   Lock, Cookie, EyeOff, Layers, Route, Timer, Target, Waves, Database, Building2, Library as LibIcon, Scroll,
   BookText, MessagesSquare, SearchCode, Mail, Send, Network, Users, KeyRound as Auth, ShieldQuestion,
-  ClipboardList, Server, HeartPulse, Landmark, ChevronRight, BadgeCheck, Gauge, Bot,
+  ClipboardList, Server, HeartPulse, Landmark, ChevronRight, BadgeCheck, Gauge, Bot, Settings,
 } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
+import { itemAllowed, useRole } from '@/lib/rbac'
 
 interface NavItem { to: string; label: string; icon: any }
 interface NavGroup { title: string; items: NavItem[] }
@@ -36,6 +37,7 @@ export const NAV: NavGroup[] = [
   {
     title: 'Administrative Intelligence',
     items: [
+      { to: '/administrative-intelligence/officer-workspace', label: 'Officer Workspace', icon: UserCheck },
       { to: '/administrative-intelligence/executive-cockpit', label: 'Executive Cockpit', icon: Gauge },
       { to: '/administrative-intelligence/index', label: 'Intelligence Index', icon: GaugeCircle },
       { to: '/administrative-intelligence/file-movement', label: 'File Movement', icon: FileStack },
@@ -51,7 +53,17 @@ export const NAV: NavGroup[] = [
       { to: '/administrative-intelligence/citizen-grievance', label: 'Citizen Grievance', icon: Users },
       { to: '/administrative-intelligence/outcome-intelligence', label: 'Outcome Intelligence', icon: Target },
       { to: '/administrative-intelligence/ai-workforce', label: 'Government AI Workforce', icon: Bot },
-      { to: '/administrative-intelligence/officer-workspace', label: 'Officer Workspace', icon: UserCheck },
+    ],
+  },
+  {
+    title: 'Knowledge Brain',
+    items: [
+      { to: '/knowledge', label: 'Department Knowledge', icon: Database },
+      { to: '/gr-repo', label: 'GR Repository', icon: LibIcon },
+      { to: '/circular-repo', label: 'Circular Repository', icon: Scroll },
+      { to: '/sop-repo', label: 'SOP Repository', icon: BookText },
+      { to: '/faq', label: 'FAQ', icon: MessagesSquare },
+      { to: '/officer-search', label: 'Officer Knowledge Search', icon: SearchCode },
     ],
   },
   {
@@ -99,17 +111,6 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
-    title: 'Knowledge Brain',
-    items: [
-      { to: '/knowledge', label: 'Department Knowledge', icon: Database },
-      { to: '/gr-repo', label: 'GR Repository', icon: LibIcon },
-      { to: '/circular-repo', label: 'Circular Repository', icon: Scroll },
-      { to: '/sop-repo', label: 'SOP Repository', icon: BookText },
-      { to: '/faq', label: 'FAQ', icon: MessagesSquare },
-      { to: '/officer-search', label: 'Officer Knowledge Search', icon: SearchCode },
-    ],
-  },
-  {
     title: 'Integrations',
     items: [
       { to: '/integrations', label: 'Integrations Dashboard', icon: Network },
@@ -133,6 +134,7 @@ export const NAV: NavGroup[] = [
       { to: '/encryption', label: 'Encryption', icon: Lock },
       { to: '/on-prem', label: 'On-Prem Deployment', icon: Server },
       { to: '/system-health', label: 'System Health', icon: HeartPulse },
+      { to: '/settings', label: 'Settings', icon: Settings },
     ],
   },
 ]
@@ -150,6 +152,10 @@ const GROUP_DOT: Record<string, string> = {
 }
 
 export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavigate?: () => void }) {
+  const { role } = useRole()
+  const visibleNav = NAV
+    .map((g) => ({ ...g, items: g.items.filter((i) => itemAllowed(role, g.title, i.to)) }))
+    .filter((g) => g.items.length > 0)
   return (
     <aside
       className={cn(
@@ -173,9 +179,9 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
         </div>
         {!collapsed && (
           <div className="min-w-0">
-            <div className="truncate text-sm font-semibold text-ink-900">MAII</div>
-            <div className="flex items-center gap-1 truncate text-[10px] leading-tight text-ink-500">
-              <span className="truncate">Sovereign · GoM</span>
+            <div className="truncate text-[13px] font-semibold leading-tight text-ink-900">Maha Administrative</div>
+            <div className="flex items-center gap-1 truncate text-[13px] font-semibold leading-tight text-ink-900">
+              <span className="truncate">Intelligence</span>
               <span
                 title="Government of Maharashtra verified"
                 className="inline-flex items-center gap-0.5 rounded-full bg-brand-soft px-1 py-[1px] text-[8px] font-semibold uppercase tracking-wider text-brand-700"
@@ -220,7 +226,7 @@ export function Sidebar({ collapsed, onNavigate }: { collapsed: boolean; onNavig
         </NavLink>
 
         <div className="mt-2 space-y-1">
-          {NAV.map((group) => (
+          {visibleNav.map((group) => (
             <div key={group.title} className="mt-3">
               {!collapsed && (
                 <div className="mb-1 px-3">

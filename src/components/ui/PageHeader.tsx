@@ -41,69 +41,73 @@ export function PageHeader({
       {/* Sheen line */}
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
 
-      <div className={cn('relative flex flex-col gap-4 px-4 py-5 sm:px-6 sm:py-6 md:flex-row md:items-start md:justify-between md:px-8 md:py-7', compact && 'py-4 md:py-5')}>
-        <div className="min-w-0 flex-1">
-          {/* Breadcrumb */}
-          {breadcrumb && breadcrumb.length > 0 && (
-            <div className="mb-2 flex flex-wrap items-center gap-1 text-[11px] font-medium uppercase tracking-widest text-white/70">
-              {breadcrumb.map((b, i) => (
-                <span key={i} className="flex items-center gap-1">
-                  {i > 0 && <ChevronRight className="h-3 w-3 text-white/40" />}
-                  <span>{b}</span>
-                </span>
-              ))}
-            </div>
-          )}
-
-          {/* Eyebrow chip */}
-          {eyebrow && (
-            <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur">
-              {eyebrow}
-            </div>
-          )}
-
-          {/* Title with optional icon */}
-          <div className="flex items-start gap-3">
-            {icon && (
-              <div className="mt-1 hidden h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/25 bg-white/10 text-white shadow-inner backdrop-blur md:grid">
-                {icon}
+      <div className={cn('relative flex flex-col gap-3 px-4 py-5 sm:px-6 sm:py-6 md:px-8 md:py-7', compact && 'py-4 md:py-5')}>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+          <div className="min-w-0 flex-1">
+            {/* Breadcrumb */}
+            {breadcrumb && breadcrumb.length > 0 && (
+              <div className="mb-2 flex flex-wrap items-center gap-1 text-[11px] font-medium uppercase tracking-widest text-white/70">
+                {breadcrumb.map((b, i) => (
+                  <span key={i} className="flex items-center gap-1">
+                    {i > 0 && <ChevronRight className="h-3 w-3 text-white/40" />}
+                    <span>{b}</span>
+                  </span>
+                ))}
               </div>
             )}
-            <div className="min-w-0">
-              <h1 className={cn('font-semibold leading-tight text-white', compact ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl')}>
-                {title}
-              </h1>
-              {description && (
-                <p className="mt-1.5 max-w-3xl text-sm leading-relaxed text-white/85">
-                  {description}
-                </p>
+
+            {/* Eyebrow chip */}
+            {eyebrow && (
+              <div className="mb-2 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-widest text-white backdrop-blur">
+                {eyebrow}
+              </div>
+            )}
+
+            {/* Title with optional icon */}
+            <div className="flex items-start gap-3">
+              {icon && (
+                <div className="mt-1 hidden h-10 w-10 shrink-0 place-items-center rounded-xl border border-white/25 bg-white/10 text-white shadow-inner backdrop-blur md:grid">
+                  {icon}
+                </div>
               )}
+              <div className="min-w-0">
+                <h1 className={cn('font-semibold leading-tight text-white', compact ? 'text-xl md:text-2xl' : 'text-2xl md:text-3xl')}>
+                  {title}
+                </h1>
+              </div>
             </div>
           </div>
 
-          {source && (
-            <div className="mt-3 flex flex-wrap items-center gap-2">
-              <HeaderSourcePill source={source} />
-              <span className="text-[11px] text-white/75">Sovereign · On-prem ready · DPDP-aligned</span>
-            </div>
-          )}
+          {/* Actions — glass buttons override */}
+          <div className="flex flex-wrap items-center gap-2 md:justify-end">
+            <HeaderActionsProvider>
+              {actions ?? (
+                <>
+                  <button className="header-btn-outline" onClick={() => exportPagePdf(title)}>
+                    <Download className="h-4 w-4" /> Export
+                  </button>
+                  <button className="header-btn-primary" onClick={() => navigate('/workspace')}>
+                    <MessageSquare className="h-4 w-4" /> Ask Maha Copilot
+                  </button>
+                </>
+              )}
+            </HeaderActionsProvider>
+          </div>
         </div>
 
-        {/* Actions — glass buttons override */}
-        <div className="flex flex-wrap items-center gap-2 md:justify-end">
-          <HeaderActionsProvider>
-            {actions ?? (
-              <>
-                <button className="header-btn-outline" onClick={() => exportPagePdf(title)}>
-                  <Download className="h-4 w-4" /> Export
-                </button>
-                <button className="header-btn-primary" onClick={() => navigate('/workspace')}>
-                  <MessageSquare className="h-4 w-4" /> Ask Maha Copilot
-                </button>
-              </>
-            )}
-          </HeaderActionsProvider>
-        </div>
+        {/* Description — full banner width, its own line */}
+        {description && (
+          <p className="w-full text-sm leading-relaxed text-white/85">
+            {description}
+          </p>
+        )}
+
+        {source && (
+          <div className="flex flex-wrap items-center gap-2">
+            <HeaderSourcePill source={source} />
+            <span className="text-[11px] text-white/75">Sovereign · On-prem ready · DPDP-aligned</span>
+          </div>
+        )}
       </div>
     </div>
   )

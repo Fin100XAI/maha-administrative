@@ -17,6 +17,8 @@ import {
 import { ROLES } from '@/data/departments'
 import { DEPARTMENTS } from '@/data/departments'
 import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'
+import { useRole } from '@/lib/rbac'
+import type { RoleOption } from '@/data/departments'
 
 export function Login() {
   const nav = useNavigate()
@@ -25,6 +27,7 @@ export function Login() {
   const [otp, setOtp] = useState('')
   const [dept, setDept] = useState('DIT')
   const [role, setRole] = useState<string>('Principal Secretary')
+  const { setRole: setGlobalRole } = useRole()
 
   return (
     <div className="min-h-screen bg-mesh">
@@ -289,6 +292,7 @@ export function Login() {
             <form
               onSubmit={(e) => {
                 e.preventDefault()
+                setGlobalRole(role as RoleOption)
                 nav('/')
               }}
               className="card space-y-4 bg-white/85 p-6 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(6,40,104,0.25)]"

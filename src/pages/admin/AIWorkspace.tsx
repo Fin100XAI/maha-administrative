@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import {
-  Bot, ShieldCheck, X, History, FileText, Radio,
+  Bot, ShieldCheck, X, ClipboardList, FileText, Radio,
 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { PageHeader } from '@/components/ui/PageHeader'
@@ -44,7 +44,7 @@ export function AIWorkspace() {
     <div>
       <PageHeader
         compact
-        title="MAII Copilot"
+        title="Maha Copilot"
         description="Ask, draft, translate — under sovereign AI guardrails. Every prompt is classified, logged and routed per policy."
         breadcrumb={['Administrative AI', 'AI Workspace']}
         source="Demo"
@@ -82,7 +82,7 @@ export function AIWorkspace() {
             onClick={() => setDetails(true)}
             className="btn-ghost ml-auto !px-2.5 !py-1.5 !text-xs"
           >
-            <History className="h-3.5 w-3.5" /> Audit trail (this session)
+            <ClipboardList className="h-3.5 w-3.5" /> Audit trail (this session)
           </button>
         </div>
 

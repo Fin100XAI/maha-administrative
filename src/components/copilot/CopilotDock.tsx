@@ -9,11 +9,18 @@ import { CopilotChat } from './CopilotChat'
  * same chat core as the full AI Workspace. Toggle with the button or ⌘J / Ctrl+J.
  */
 export function CopilotDock() {
-  const [open, setOpen] = useState(false)
+  // Remember open/closed across navigations within the tab session.
+  const [open, setOpen] = useState(() => {
+    try { return sessionStorage.getItem('maii-copilot-open') === '1' } catch { return false }
+  })
   const location = useLocation()
 
   // The full workspace already IS the copilot — don't stack the dock on top of it
   const onWorkspace = location.pathname === '/workspace'
+
+  useEffect(() => {
+    try { sessionStorage.setItem('maii-copilot-open', open ? '1' : '0') } catch { /* private mode */ }
+  }, [open])
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -44,7 +51,7 @@ export function CopilotDock() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={() => setOpen(true)}
-            title="MAII Copilot (⌘J)"
+            title="Maha Copilot (⌘J)"
             className="fixed bottom-5 right-5 z-40 grid h-14 w-14 place-items-center rounded-2xl bg-brand-gradient text-white shadow-[0_12px_36px_-8px_rgba(11,87,208,0.55)] ring-1 ring-white/30 transition-transform hover:scale-105"
           >
             <Bot className="h-6 w-6" />
@@ -74,7 +81,7 @@ export function CopilotDock() {
                 <Bot className="h-5 w-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <div className="text-sm font-semibold leading-tight">MAII Copilot</div>
+                <div className="text-sm font-semibold leading-tight">Maha Copilot</div>
                 <div className="mt-0.5 flex items-center gap-1 text-[10px] text-white/80">
                   <ShieldCheck className="h-3 w-3" /> Sovereign · Audit-logged · DPDP-aligned
                 </div>
