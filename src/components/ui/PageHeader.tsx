@@ -28,8 +28,8 @@ export function PageHeader({
   const navigate = useNavigate()
   return (
     <div className={cn('relative mb-6 overflow-hidden rounded-2xl', compact && 'mb-4')}>
-      {/* Gradient base */}
-      <div className="absolute inset-0 bg-brand-gradient" />
+      {/* Solid brand-blue base */}
+      <div className="absolute inset-0" style={{ background: 'rgb(6 70 174)' }} />
       {/* Mesh / glow orbs */}
       <div className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-white/15 blur-3xl" />
       <div className="pointer-events-none absolute -bottom-32 left-10 h-64 w-64 rounded-full bg-white/10 blur-3xl" />

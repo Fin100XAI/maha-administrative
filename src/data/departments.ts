@@ -79,5 +79,37 @@ export function tierOf(role: RoleOption): string {
   return ROLE_TIERS.find((t) => t.roles.includes(role))?.tier ?? 'Officer'
 }
 
+/** A signed-in officer identity. Its `designation` is the RBAC role that the
+ *  session runs under, so signing in as a profile applies that role's access layer. */
+export interface OfficerProfile {
+  id: string
+  name: string
+  designation: RoleOption
+  posting: string
+  initials: string
+}
+
+/** Demo officer directory shown on the sign-in screen — one per designation so the
+ *  full role hierarchy is exercisable. All profiles share the demo password. */
+export const OFFICER_PROFILES: OfficerProfile[] = [
+  { id: 'off-cs', name: 'Sujata Saunik', designation: 'Chief Secretary', posting: 'General Administration', initials: 'SS' },
+  { id: 'off-acs', name: 'Rajesh Kumar', designation: 'Additional Chief Secretary', posting: 'Home Department', initials: 'RK' },
+  { id: 'off-ps', name: 'Anita Deshpande', designation: 'Principal Secretary', posting: 'Finance', initials: 'AD' },
+  { id: 'off-sec', name: 'Vikram Patil', designation: 'Secretary', posting: 'Urban Development', initials: 'VP' },
+  { id: 'off-ds', name: 'Meera Joshi', designation: 'Deputy Secretary', posting: 'Revenue & Forests', initials: 'MJ' },
+  { id: 'off-us', name: 'Sanjay More', designation: 'Under Secretary', posting: 'Rural Development', initials: 'SM' },
+  { id: 'off-divc', name: 'Prakash Gaikwad', designation: 'Divisional Commissioner', posting: 'Pune Division', initials: 'PG' },
+  { id: 'off-col', name: 'Nilesh Kulkarni', designation: 'District Collector', posting: 'Nashik District', initials: 'NK' },
+  { id: 'off-mc', name: 'Radhika Iyer', designation: 'Municipal Commissioner', posting: 'Pune Municipal Corporation', initials: 'RI' },
+  { id: 'off-ceo', name: 'Amol Shinde', designation: 'CEO, Zilla Parishad', posting: 'Nagpur Zilla Parishad', initials: 'AS' },
+  { id: 'off-do', name: 'Sunil Pawar', designation: 'Department Officer', posting: 'Agriculture', initials: 'SP' },
+  { id: 'off-so', name: 'Kavita Bhosale', designation: 'Section Officer', posting: 'School Education', initials: 'KB' },
+  { id: 'off-desk', name: 'Ganesh Jadhav', designation: 'Desk Officer', posting: 'Labour', initials: 'GJ' },
+  { id: 'off-it', name: 'Rohit Sharma', designation: 'IT Admin', posting: 'DIT — Directorate of IT', initials: 'RS' },
+  { id: 'off-aigo', name: 'Neha Kulkarni', designation: 'AI Governance Officer', posting: 'DIT — Directorate of IT', initials: 'NK' },
+  { id: 'off-seco', name: 'Arjun Naik', designation: 'Security Officer', posting: 'DIT — Directorate of IT', initials: 'AN' },
+  { id: 'off-dpo', name: 'Priya Menon', designation: 'Data Protection Officer', posting: 'DIT — Directorate of IT', initials: 'PM' },
+]
+
 export const SECURITY_CLASSES = ['Public', 'Internal', 'Confidential', 'Secret'] as const
 export type SecurityClass = typeof SECURITY_CLASSES[number]

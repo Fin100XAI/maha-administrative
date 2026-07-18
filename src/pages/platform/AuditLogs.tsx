@@ -61,15 +61,24 @@ export function AuditLogs() {
   const [status, setStatus] = useState<(typeof STATUS_OPTIONS)[number]>('All status')
   const [time, setTime] = useState<(typeof TIME_OPTIONS)[number]>('All time')
 
+  // Anchor "Today"/"Last 48h" to the most recent entry in the trail rather than
+  // hardcoded date strings, so the relative filters stay correct if the data changes.
+  const latestTs = useMemo(
+    () => Math.max(...LOGS.map((l) => Date.parse(l.ts.replace(' ', 'T')))),
+    [],
+  )
+
   const rows = useMemo(() => {
+    const latestDay = new Date(latestTs).toDateString()
     return LOGS.filter((l) => {
       if (risk !== 'All risk' && l.risk !== risk) return false
       if (status !== 'All status' && l.status !== status) return false
-      if (time === 'Today' && !l.ts.startsWith('2026-07-07')) return false
-      if (time === 'Last 48h' && !(l.ts.startsWith('2026-07-07') || l.ts.startsWith('2026-07-06'))) return false
+      const t = Date.parse(l.ts.replace(' ', 'T'))
+      if (time === 'Today' && new Date(t).toDateString() !== latestDay) return false
+      if (time === 'Last 48h' && latestTs - t > 48 * 60 * 60 * 1000) return false
       return true
     })
-  }, [risk, status, time])
+  }, [risk, status, time, latestTs])
 
   const columns: Column<Log>[] = [
     { key: 'ts', header: 'Timestamp', sortable: true },
@@ -94,7 +103,7 @@ export function AuditLogs() {
         actions={<>
           <SourceBadge source="Demo" />
           <button onClick={() => exportPageExcel('Audit Logs')} className="btn-outline"><Download className="h-4 w-4"/> Export CSV</button>
-          <button className="btn-primary"><ClipboardList className="h-4 w-4"/> Filter & report</button>
+          <button onClick={() => window.print()} className="btn-primary"><ClipboardList className="h-4 w-4"/> Filter & report</button>
         </>}
       />
 

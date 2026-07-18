@@ -13,21 +13,25 @@ import {
   BadgeCheck,
   Cpu,
   Radio,
+  AlertTriangle,
+  UserRound,
 } from 'lucide-react'
-import { ROLES } from '@/data/departments'
-import { DEPARTMENTS } from '@/data/departments'
+import { OFFICER_PROFILES, ROLE_TIERS, tierOf } from '@/data/departments'
 import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'
-import { useRole } from '@/lib/rbac'
-import type { RoleOption } from '@/data/departments'
+import { GROUP_ACCESS, useRole } from '@/lib/rbac'
 
 export function Login() {
   const nav = useNavigate()
-  const [officerId, setOfficerId] = useState('IAS-2011-MH-0182')
+  const [profileId, setProfileId] = useState('off-ps')
   const [password, setPassword] = useState('')
   const [otp, setOtp] = useState('')
-  const [dept, setDept] = useState('DIT')
-  const [role, setRole] = useState<string>('Principal Secretary')
-  const { setRole: setGlobalRole } = useRole()
+  const [error, setError] = useState('')
+  const { signIn } = useRole()
+
+  const DEMO_PASSWORD = 'MahaDev@2026'
+  const profile = OFFICER_PROFILES.find((p) => p.id === profileId) ?? OFFICER_PROFILES[0]
+  const access = GROUP_ACCESS[profile.designation]
+  const accessScope = access === 'all' ? 'Full platform access' : `${access.length} module groups`
 
   return (
     <div className="min-h-screen bg-mesh">
@@ -284,7 +288,7 @@ export function Login() {
                 </span>
               </h2>
               <p className="mt-1.5 text-sm leading-relaxed text-ink-500">
-                Use your government-issued Officer ID. Every session is authenticated,
+                Select your officer profile to sign in. Every session is authenticated,
                 attested and logged under Zero Trust policy.
               </p>
             </div>
@@ -292,19 +296,58 @@ export function Login() {
             <form
               onSubmit={(e) => {
                 e.preventDefault()
-                setGlobalRole(role as RoleOption)
+                if (password !== DEMO_PASSWORD) {
+                  setError('Incorrect password. Use the demo credential shown below.')
+                  return
+                }
+                setError('')
+                signIn(profile.designation)
                 nav('/')
               }}
               className="card space-y-4 bg-white/85 p-6 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(6,40,104,0.25)]"
             >
               <div>
-                <label className="label">Officer ID</label>
-                <input
-                  className="input mt-1"
-                  value={officerId}
-                  onChange={(e) => setOfficerId(e.target.value)}
-                  placeholder="IAS-YEAR-STATE-CODE"
-                />
+                <label className="label">Officer profile</label>
+                <div className="relative mt-1">
+                  <UserRound className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400" />
+                  <select
+                    className="input pl-9"
+                    value={profileId}
+                    onChange={(e) => { setProfileId(e.target.value); setError('') }}
+                    aria-label="Select officer profile"
+                  >
+                    {ROLE_TIERS.map((t) => {
+                      const inTier = OFFICER_PROFILES.filter((p) => t.roles.includes(p.designation))
+                      if (inTier.length === 0) return null
+                      return (
+                        <optgroup key={t.tier} label={t.tier}>
+                          {inTier.map((p) => (
+                            <option key={p.id} value={p.id}>
+                              {p.name} — {p.designation}
+                            </option>
+                          ))}
+                        </optgroup>
+                      )
+                    })}
+                  </select>
+                </div>
+
+                {/* Selected profile preview */}
+                <div className="mt-2 flex items-center gap-3 rounded-xl border border-ink-100 bg-gradient-to-br from-brand-50/60 to-white p-3">
+                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-gradient text-sm font-semibold text-white shadow-glow">
+                    {profile.initials}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="truncate text-sm font-semibold text-ink-900">{profile.name}</div>
+                    <div className="truncate text-[11px] text-ink-500">{profile.designation} · {profile.posting}</div>
+                  </div>
+                  <div className="shrink-0 text-right">
+                    <div className="rounded-full bg-brand-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-700">
+                      {tierOf(profile.designation)}
+                    </div>
+                    <div className="mt-1 text-[10px] font-medium text-ink-400">{accessScope}</div>
+                  </div>
+                </div>
               </div>
               <div>
                 <label className="label">Password</label>
@@ -312,9 +355,20 @@ export function Login() {
                   type="password"
                   className="input mt-1"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={(e) => { setPassword(e.target.value); setError('') }}
                   placeholder="Enter password"
+                  autoComplete="off"
                 />
+                {error ? (
+                  <div className="mt-1.5 flex items-center gap-1.5 text-[11px] font-medium text-red-600">
+                    <AlertTriangle className="h-3.5 w-3.5" /> {error}
+                  </div>
+                ) : (
+                  <div className="mt-1.5 text-[11px] text-ink-500">
+                    Demo credential — password for all profiles:{' '}
+                    <span className="font-semibold text-ink-700">MahaDev@2026</span>
+                  </div>
+                )}
               </div>
               <div>
                 <label className="label">MFA Code</label>
@@ -327,37 +381,6 @@ export function Login() {
                 />
                 <div className="mt-1 text-[11px] text-ink-500">
                   Sent to your registered device via NIC MFA.
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <div>
-                  <label className="label">Department</label>
-                  <select
-                    className="input mt-1"
-                    value={dept}
-                    onChange={(e) => setDept(e.target.value)}
-                  >
-                    {DEPARTMENTS.map((d) => (
-                      <option key={d.code} value={d.code}>
-                        {d.code} · {d.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="label">Role</label>
-                  <select
-                    className="input mt-1"
-                    value={role}
-                    onChange={(e) => setRole(e.target.value)}
-                  >
-                    {ROLES.map((r) => (
-                      <option key={r} value={r}>
-                        {r}
-                      </option>
-                    ))}
-                  </select>
                 </div>
               </div>
 

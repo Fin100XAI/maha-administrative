@@ -1,6 +1,11 @@
 // Shared sample data for Administrative AI section pages.
 // Demo dataset — replace with department API during deployment.
 
+export interface TemplateSection {
+  heading: string
+  body: string
+}
+
 export interface AdminTemplate {
   id: string
   title: string
@@ -8,15 +13,116 @@ export interface AdminTemplate {
   department: string
   category: string
   updated: string
+  // Optional fields let a template pre-fill the drafting form and render its own
+  // section layout in the preview. Present on letter templates.
+  subject?: string
+  recipient?: string
+  tone?: string
+  language?: 'English' | 'मराठी (Marathi)' | 'हिंदी (Hindi)'
+  structure?: TemplateSection[]
 }
 
 export const LETTER_TEMPLATES: AdminTemplate[] = [
-  { id: 'lt-1', title: 'Cabinet Note — Cover Letter', description: 'Formal cover for cabinet notes with pre-filled routing and enclosures block.', department: 'GAD', category: 'Cabinet', updated: '2026-06-28' },
-  { id: 'lt-2', title: 'RTS Grievance Response', department: 'GAD', description: 'Standard reply under the Right to Services Act citing the correct sub-section.', category: 'Citizen Services', updated: '2026-06-25' },
-  { id: 'lt-3', title: 'DPR Submission Cover', department: 'PLN', description: 'Cover letter for Detailed Project Report submission to Planning Department.', category: 'Planning', updated: '2026-06-22' },
-  { id: 'lt-4', title: 'Inter-Departmental Reference', department: 'DIT', description: 'Formal reference between departments seeking inputs on a policy matter.', category: 'Administration', updated: '2026-07-01' },
-  { id: 'lt-5', title: 'Divisional Commissioner Directive', department: 'REV', description: 'Directive template used by the Revenue Department to Divisional Commissioners.', category: 'Revenue', updated: '2026-06-18' },
-  { id: 'lt-6', title: 'Public Advisory (Marathi)', department: 'GAD', description: 'Plain-language citizen advisory template for release in vernacular.', category: 'Citizen Services', updated: '2026-06-15' },
+  {
+    id: 'lt-1',
+    title: 'Cabinet Note — Cover Letter',
+    description: 'Formal cover for cabinet notes with pre-filled routing and enclosures block.',
+    department: 'GAD',
+    category: 'Cabinet',
+    updated: '2026-06-28',
+    subject: 'Submission of Cabinet Note for consideration of the Council of Ministers',
+    recipient: 'The Principal Secretary, General Administration Department (Cabinet Cell)',
+    tone: 'Formal',
+    structure: [
+      { heading: 'Reference', body: 'The enclosed Cabinet Note is submitted for placement before the Council of Ministers in the ensuing cabinet meeting, in accordance with the Rules of Business of the Government of Maharashtra.' },
+      { heading: 'Subject matter', body: 'The Note seeks in-principle approval for the proposal described therein, along with the associated financial and administrative implications set out in the annexures.' },
+      { heading: 'Routing & concurrence', body: 'The proposal has been examined by the administrative department and vetted by the Finance and Law & Judiciary Departments. Their concurrence is placed at Annexure-II and Annexure-III respectively.' },
+      { heading: 'Approval sought', body: 'It is requested that the Note be included in the cabinet agenda and the decision of the Council of Ministers be communicated to this Department for further action.' },
+    ],
+  },
+  {
+    id: 'lt-2',
+    title: 'RTS Grievance Response',
+    department: 'GAD',
+    description: 'Standard reply under the Right to Services Act citing the correct sub-section.',
+    category: 'Citizen Services',
+    updated: '2026-06-25',
+    subject: 'Response to grievance under the Maharashtra Right to Public Services Act, 2015',
+    recipient: 'The Applicant (through the designated Public Service Centre)',
+    tone: 'Formal',
+    structure: [
+      { heading: 'Acknowledgement', body: 'This has reference to your application registered under the Maharashtra Right to Public Services Act, 2015. The matter has been examined by the Designated Officer within the notified time limit for the said service.' },
+      { heading: 'Applicable provision', body: 'The service applied for is a notified service under Section 3 of the Act, with the stipulated time limit prescribed in the notified schedule. Your application has been processed with reference to the relevant sub-section governing this service.' },
+      { heading: 'Decision / redressal', body: 'Based on the examination of records, the requested service is hereby granted / the deficiency noted has been rectified. The relevant document is enclosed for your records.' },
+      { heading: 'Right of appeal', body: 'If you are aggrieved by this decision, you may prefer a first appeal before the First Appellate Officer within thirty days, and thereafter a second appeal before the Maharashtra State Commission for Right to Service.' },
+    ],
+  },
+  {
+    id: 'lt-3',
+    title: 'DPR Submission Cover',
+    department: 'PLN',
+    description: 'Cover letter for Detailed Project Report submission to Planning Department.',
+    category: 'Planning',
+    updated: '2026-06-22',
+    subject: 'Submission of Detailed Project Report (DPR) for administrative approval',
+    recipient: 'The Secretary, Planning Department',
+    tone: 'Formal',
+    structure: [
+      { heading: 'Project reference', body: 'The Detailed Project Report for the captioned project, prepared by the executing agency, is submitted herewith for scrutiny and administrative approval of the Planning Department.' },
+      { heading: 'Enclosed components', body: 'The DPR comprises the project rationale, scope of works, technical design and drawings, cost estimates (Annexure-A), implementation schedule (Annexure-B) and the environmental & social safeguards note (Annexure-C).' },
+      { heading: 'Financial outlay', body: 'The total estimated project cost, along with the year-wise phasing of funds and the proposed source of financing, is detailed in the abstract of cost enclosed at Annexure-A.' },
+      { heading: 'Request for appraisal', body: 'It is requested that the DPR be appraised and administrative approval accorded, so that the tendering and implementation activities may commence within the current financial year.' },
+    ],
+  },
+  {
+    id: 'lt-4',
+    title: 'Inter-Departmental Reference',
+    department: 'DIT',
+    description: 'Formal reference between departments seeking inputs on a policy matter.',
+    category: 'Administration',
+    updated: '2026-07-01',
+    subject: 'Reference seeking departmental inputs on a policy matter under examination',
+    recipient: 'The Secretary of the concerned Administrative Department',
+    tone: 'Formal',
+    structure: [
+      { heading: 'Context', body: 'A policy matter having inter-departmental implications is under examination in this Department. To arrive at a considered view, the inputs of your Department are necessary.' },
+      { heading: 'Inputs sought', body: 'You are requested to furnish your Department’s specific views on the points enumerated in the enclosed statement, together with any precedent, rule position or financial implication that may have a bearing on the matter.' },
+      { heading: 'Timeline', body: 'As the proposal is time-bound, it would be appreciated if the inputs are communicated to this Department within fifteen days of receipt of this reference.' },
+    ],
+  },
+  {
+    id: 'lt-5',
+    title: 'Divisional Commissioner Directive',
+    department: 'REV',
+    description: 'Directive template used by the Revenue Department to Divisional Commissioners.',
+    category: 'Revenue',
+    updated: '2026-06-18',
+    subject: 'Directive regarding implementation of Revenue Department instructions',
+    recipient: 'The Divisional Commissioner (all Divisions)',
+    tone: 'Directive',
+    structure: [
+      { heading: 'Directive', body: 'In exercise of the powers vested in the Revenue Department, you are hereby directed to ensure implementation of the instructions detailed herein across all District Collectorates within your Division.' },
+      { heading: 'Action required', body: 'The Collectors under your jurisdiction shall be instructed to carry out the field-level action within the prescribed timeline and to designate a nodal officer for coordination and monitoring.' },
+      { heading: 'Reporting requirement', body: 'A consolidated compliance report, division-wise and district-wise, shall be furnished to this Department by the date indicated. Any difficulty in implementation may be brought to notice immediately.' },
+    ],
+  },
+  {
+    id: 'lt-6',
+    title: 'Public Advisory (Marathi)',
+    department: 'GAD',
+    description: 'Plain-language citizen advisory template for release in vernacular.',
+    category: 'Citizen Services',
+    updated: '2026-06-15',
+    subject: 'नागरिकांसाठी शासकीय जनजागृती सूचना',
+    recipient: 'सर्व संबंधित नागरिक (जिल्हा माहिती कार्यालयामार्फत प्रसिद्धीसाठी)',
+    tone: 'Advisory',
+    language: 'मराठी (Marathi)',
+    structure: [
+      { heading: 'सूचनेचा विषय', body: 'शासनाकडून नागरिकांच्या माहितीसाठी ही जनजागृती सूचना प्रसिद्ध करण्यात येत आहे. सदर सूचनेतील बाबी सर्व नागरिकांनी काळजीपूर्वक वाचाव्यात व त्यानुसार कार्यवाही करावी.' },
+      { heading: 'नागरिकांनी काय करावे', body: 'पात्र नागरिकांनी विहित मुदतीत आवश्यक कागदपत्रांसह जवळच्या सेवा केंद्रावर अथवा आपले सरकार पोर्टलवर अर्ज सादर करावा. कोणत्याही मध्यस्थास शुल्क देऊ नये.' },
+      { heading: 'मदत व संपर्क', body: 'अधिक माहितीसाठी अथवा तक्रारीसाठी नागरिकांनी शासनाच्या टोल-फ्री मदत क्रमांकावर अथवा संबंधित तहसील कार्यालयाशी संपर्क साधावा.' },
+    ],
+  },
 ]
 
 export const NOTE_TEMPLATES: AdminTemplate[] = [

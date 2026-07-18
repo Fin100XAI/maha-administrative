@@ -69,8 +69,8 @@ export function RBAC() {
     [roleFilter],
   )
   const grantCount = useMemo(
-    () => Object.values(matrix).reduce((n, mods) => n + mods.length, 0),
-    [matrix],
+    () => visibleRoles.reduce((n, r) => n + (matrix[r]?.length ?? 0), 0),
+    [matrix, visibleRoles],
   )
 
   return (

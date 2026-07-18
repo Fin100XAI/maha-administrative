@@ -314,6 +314,11 @@ export function AIWorkforce() {
             </div>
           </motion.div>
         ))}
+        {filtered.length === 0 && (
+          <div className="col-span-full rounded-xl border border-dashed border-ink-200 p-8 text-center text-sm text-ink-500">
+            No AI officers match the “{riskFilter}” risk filter.
+          </div>
+        )}
       </div>
 
       {/* Recommendations + risk alerts */}

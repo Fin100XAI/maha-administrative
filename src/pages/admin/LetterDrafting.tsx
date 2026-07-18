@@ -1,11 +1,11 @@
 import { useRef, useState } from 'react'
-import { Download, ClipboardCheck, FileText, Clock, History, Paperclip, ShieldCheck, PenLine, Save, Send, Link2, Printer } from 'lucide-react'
+import { Download, ClipboardCheck, FileText, Clock, History, Paperclip, ShieldCheck, PenLine, Save, Send, Link2, Printer, LayoutTemplate, X } from 'lucide-react'
 import { exportDoc, exportPagePdf } from '@/lib/exportUtils'
 import { PageHeader } from '@/components/ui/PageHeader'
 import { Card, CardHeader } from '@/components/ui/Card'
 import { StatusBadge, SourceBadge, ClassificationBadge } from '@/components/ui/Badges'
 import { DEPARTMENTS, LANGUAGES } from '@/data/departments'
-import { LETTER_TEMPLATES, RECENT_LETTERS } from '@/data/adminSamples'
+import { LETTER_TEMPLATES, RECENT_LETTERS, type AdminTemplate } from '@/data/adminSamples'
 import { TemplateGallery } from './_components/TemplateGallery'
 import { RecentActivity } from './_components/RecentActivity'
 import { QuickActions } from './_components/QuickActions'
@@ -118,11 +118,30 @@ export function LetterDrafting() {
   const [lang, setLang] = useState<typeof LANGUAGES[number]>('English')
   const [purpose, setPurpose] = useState('Convey the state-wide roll-out schedule of the MAII AI Workspace and request nomination of nodal officers by 20 July 2026.')
   const [showOutput, setShowOutput] = useState(true)
+  const [activeTemplate, setActiveTemplate] = useState<AdminTemplate | null>(null)
   const previewRef = useRef<HTMLDivElement>(null)
 
   const base = LETTER_I18N[lang] ?? LETTER_I18N.English
   const toneCopy = TONE_COPY[tone] ?? TONE_COPY.Formal
   const copy: LetterCopy = { ...base, ...toneCopy }
+
+  // Applying a template pre-fills the form fields and switches the preview body
+  // to that template's own section structure.
+  const useTemplate = (t: AdminTemplate) => {
+    if (DEPARTMENTS.some((d) => d.code === t.department)) setDept(t.department)
+    if (t.subject) setSubject(t.subject)
+    if (t.recipient) setRecipient(t.recipient)
+    if (t.tone && TONES.includes(t.tone)) setTone(t.tone)
+    if (t.language && (LANGUAGES as readonly string[]).includes(t.language)) {
+      setLang(t.language as typeof LANGUAGES[number])
+    }
+    setPurpose(t.description)
+    setActiveTemplate(t)
+    setShowOutput(true)
+    previewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+  }
+
+  const clearTemplate = () => setActiveTemplate(null)
 
   return (
     <div>
@@ -187,7 +206,20 @@ export function LetterDrafting() {
 
         <div className="space-y-4">
           <Card>
-            <CardHeader title="Editable draft preview" subtitle="Formal template · Government of Maharashtra" right={<ClassificationBadge level="Internal" />} />
+            <CardHeader
+              title="Editable draft preview"
+              subtitle={activeTemplate ? `${activeTemplate.title} · Government of Maharashtra` : 'Formal template · Government of Maharashtra'}
+              right={<ClassificationBadge level="Internal" />}
+            />
+            {activeTemplate && (
+              <div className="mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-brand-200 bg-brand-soft px-3 py-2 text-xs">
+                <LayoutTemplate className="h-3.5 w-3.5 text-brand-600" />
+                <span className="text-ink-700">Using template <b className="text-ink-900">{activeTemplate.title}</b></span>
+                <button onClick={clearTemplate} className="ml-auto inline-flex items-center gap-1 rounded-md border border-ink-200 bg-white px-2 py-0.5 font-medium text-ink-600 hover:border-brand-300 hover:text-brand-600">
+                  <X className="h-3 w-3" /> Clear template
+                </button>
+              </div>
+            )}
             {showOutput ? (
               <div ref={previewRef} className="rounded-xl border border-ink-100 bg-white p-4 font-serif text-[13px] leading-relaxed text-ink-800 sm:p-6">
                 <div className="mb-4 flex flex-wrap items-start justify-between gap-2">
@@ -205,10 +237,23 @@ export function LetterDrafting() {
                 <div className="mb-3"><span className="font-medium">{copy.subjectLabel}</span> {subject}</div>
                 <div className="mb-1 text-xs uppercase tracking-wide text-brand-500">{tone} · {lang}</div>
                 <div className="mb-3">{copy.salutation}</div>
-                <p className="mb-3">{copy.opening}</p>
-                {purpose.trim() && <p className="mb-3">{purpose}</p>}
-                <p className="mb-3">{copy.request}</p>
-                <p className="mb-3">{copy.enclosureLine}</p>
+                {activeTemplate?.structure?.length ? (
+                  <ol className="mb-3 space-y-3">
+                    {activeTemplate.structure.map((s, i) => (
+                      <li key={s.heading}>
+                        <span className="font-semibold">{i + 1}. {s.heading}. </span>
+                        {s.body}
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <>
+                    <p className="mb-3">{copy.opening}</p>
+                    {purpose.trim() && <p className="mb-3">{purpose}</p>}
+                    <p className="mb-3">{copy.request}</p>
+                    <p className="mb-3">{copy.enclosureLine}</p>
+                  </>
+                )}
                 <div className="mt-6">
                   {copy.closing}<br />
                   <div className="mt-8 font-medium">(Rajesh Mahajan)</div>
@@ -264,7 +309,9 @@ export function LetterDrafting() {
       <div className="mt-6">
         <TemplateGallery
           items={LETTER_TEMPLATES}
-          subtitle="Pick a pre-approved template as your starting point"
+          subtitle="Pick a pre-approved template — its structure loads into the draft preview"
+          onUse={useTemplate}
+          activeId={activeTemplate?.id ?? null}
         />
       </div>
 

@@ -15,6 +15,14 @@ import { KnowledgeGraphSVG } from './_components/KnowledgeGraphSVG'
 
 type SearchMode = 'semantic' | 'keyword'
 
+// KNOWLEDGE stores `dept` as a mix of short codes ('GAD', 'DIT', 'ALL') and full
+// names ('Urban Development'). Map codes to readable labels so the dropdown shows
+// friendly names while still filtering on the exact stored value.
+const DEPT_LABEL: Record<string, string> = {
+  ALL: 'All departments (cross-cutting)',
+  ...Object.fromEntries(DEPARTMENTS.map((d) => [d.code, d.name])),
+}
+
 export function DepartmentKnowledge() {
   const [q, setQ] = useState('')
   const [dept, setDept] = useState('All')
@@ -22,6 +30,15 @@ export function DepartmentKnowledge() {
   const [lang, setLang] = useState('All')
   const [mode, setMode] = useState<SearchMode>('semantic')
   const [askInput, setAskInput] = useState('')
+
+  // Options are the distinct dept values that actually appear in the data, so
+  // every choice matches at least one record (no dead options).
+  const deptOptions = useMemo(
+    () => Array.from(new Set(KNOWLEDGE.map((k) => k.dept))).sort((a, b) =>
+      (DEPT_LABEL[a] ?? a).localeCompare(DEPT_LABEL[b] ?? b),
+    ),
+    [],
+  )
 
   const filtered = useMemo(() => KNOWLEDGE.filter((k) =>
     (dept === 'All' || k.dept === dept) &&
@@ -47,10 +64,8 @@ export function DepartmentKnowledge() {
             <input className="input pl-9" placeholder="Search GRs, circulars, SOPs, FAQs, notes…" value={q} onChange={(e) => setQ(e.target.value)} />
           </div>
           <select className="input" value={dept} onChange={(e) => setDept(e.target.value)}>
-            <option>All</option>
-            {DEPARTMENTS.map((d) => <option key={d.name}>{d.name}</option>)}
-            <option>ALL</option>
-            <option>DIT</option>
+            <option value="All">All departments</option>
+            {deptOptions.map((d) => <option key={d} value={d}>{DEPT_LABEL[d] ?? d}</option>)}
           </select>
           <select className="input" value={type} onChange={(e) => setType(e.target.value)}>
             {['All','GR','Circular','SOP','FAQ','Note','Policy'].map((t) => <option key={t}>{t}</option>)}
