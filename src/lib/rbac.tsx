@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
-import { ROLES, RoleOption } from '@/data/departments'
+import { OFFICER_PROFILES, OfficerProfile, ROLES, RoleOption } from '@/data/departments'
 
 /**
  * Role-based access control (demo-grade, front-end enforced).
@@ -94,19 +94,55 @@ export function canAccessPath(
 interface RoleContextValue {
   role: RoleOption
   setRole: (r: RoleOption) => void
+  /** Whether an officer has signed in during this browser session. */
+  authed: boolean
+  /** The signed-in officer profile (matches the active role), or null when unknown. */
+  officer: OfficerProfile | null
+  /** Sign in as a role: sets the active role and marks the session authenticated. */
+  signIn: (r: RoleOption) => void
+  /** Sign out: clears the authenticated session (last role is retained for convenience). */
+  signOut: () => void
 }
 
-const RoleContext = createContext<RoleContextValue>({ role: DEFAULT_ROLE, setRole: () => {} })
+const RoleContext = createContext<RoleContextValue>({
+  role: DEFAULT_ROLE,
+  setRole: () => {},
+  authed: false,
+  officer: null,
+  signIn: () => {},
+  signOut: () => {},
+})
 
 export function RoleProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<RoleOption>(() => {
     const saved = localStorage.getItem(STORAGE_KEY)
     return (ROLES as readonly string[]).includes(saved ?? '') ? (saved as RoleOption) : DEFAULT_ROLE
   })
+  // Auth is in-memory only: every fresh load / refresh starts signed-out, so running the
+  // app always opens the login page and each sign-in re-selects the officer (and their role).
+  const [authed, setAuthed] = useState<boolean>(false)
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, role)
   }, [role])
-  return <RoleContext.Provider value={{ role, setRole }}>{children}</RoleContext.Provider>
+
+  const signIn = (r: RoleOption) => {
+    setRole(r)
+    setAuthed(true)
+  }
+  const signOut = () => {
+    setAuthed(false)
+  }
+
+  // The active officer identity is derived from the role (profiles are 1:1 with roles),
+  // so it stays consistent whether the role changes via sign-in or the Settings switcher.
+  const officer = OFFICER_PROFILES.find((p) => p.designation === role) ?? null
+
+  return (
+    <RoleContext.Provider value={{ role, setRole, authed, officer, signIn, signOut }}>
+      {children}
+    </RoleContext.Provider>
+  )
 }
 
 export function useRole() {

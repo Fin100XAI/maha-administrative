@@ -97,7 +97,7 @@ const structure: SlideDef[] = [
 export function PPTGeneration() {
   const [topic, setTopic] = useState('MAII AI Workspace — State-wide Roll-out Plan')
   const [audience, setAudience] = useState('Chief Secretary')
-  const [slides, setSlides] = useState(10)
+  const [slides, setSlides] = useState(structure.length)
   const [lang, setLang] = useState<typeof LANGUAGES[number]>('English')
 
   const [generating, setGenerating] = useState(false)
@@ -181,8 +181,8 @@ export function PPTGeneration() {
               </select>
             </div>
             <div className="sm:col-span-2">
-              <label className="label">Slide count: {slides}</label>
-              <input type="range" min={5} max={30} value={slides} onChange={(e) => setSlides(Number(e.target.value))} className="mt-1 w-full accent-brand-500" />
+              <label className="label">Slide count: {shown.length}</label>
+              <input type="range" min={4} max={structure.length} value={slides} onChange={(e) => setSlides(Number(e.target.value))} className="mt-1 w-full accent-brand-500" />
             </div>
           </div>
           <div className="mt-4 flex flex-wrap gap-2">

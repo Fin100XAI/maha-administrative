@@ -1,7 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import { AppLayout } from '@/components/layout/AppLayout'
 import { Dashboard } from '@/pages/Dashboard'
 import { Login } from '@/pages/Login'
+import { useRole } from '@/lib/rbac'
 
 // Administrative AI
 import { AIWorkspace } from '@/pages/admin/AIWorkspace'
@@ -102,11 +103,18 @@ import { OnPrem } from '@/pages/platform/OnPrem'
 import { SystemHealth } from '@/pages/platform/SystemHealth'
 import { SettingsPage } from '@/pages/platform/SettingsPage'
 
+/** Gate: only signed-in officers reach the app; everyone else is sent to /login. */
+function RequireAuth() {
+  const { authed } = useRole()
+  return authed ? <Outlet /> : <Navigate to="/login" replace />
+}
+
 export default function App() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-      <Route element={<AppLayout />}>
+      <Route element={<RequireAuth />}>
+        <Route element={<AppLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="/workspace" element={<AIWorkspace />} />
         <Route path="/letter-drafting" element={<LetterDrafting />} />
@@ -200,6 +208,7 @@ export default function App() {
         <Route path="/settings" element={<SettingsPage />} />
 
         <Route path="*" element={<Navigate to="/" replace />} />
+        </Route>
       </Route>
     </Routes>
   )

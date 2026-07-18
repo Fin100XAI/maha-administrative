@@ -134,6 +134,11 @@ export function DMSPage() {
     if (!activeRepo) return []
     const list = DOCS[activeRepo.key] ?? []
     if (!q) return list
+    // If the query matched the repository itself (its name/Marathi label), show
+    // all of its documents rather than hiding contents that don't repeat the name.
+    const repoMatches =
+      activeRepo.name.toLowerCase().includes(q) || activeRepo.marathi.includes(q)
+    if (repoMatches) return list
     return list.filter((d) => d.name.toLowerCase().includes(q) || d.dept.toLowerCase().includes(q))
   }, [activeRepo, q])
 
