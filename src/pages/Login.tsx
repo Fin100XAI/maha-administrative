@@ -12,7 +12,6 @@ import {
   Building2,
   BadgeCheck,
   Cpu,
-  Radio,
   AlertTriangle,
   UserRound,
 } from 'lucide-react'
@@ -24,7 +23,6 @@ export function Login() {
   const nav = useNavigate()
   const [profileId, setProfileId] = useState('off-ps')
   const [password, setPassword] = useState('')
-  const [otp, setOtp] = useState('')
   const [error, setError] = useState('')
   const { signIn } = useRole()
 
@@ -34,139 +32,19 @@ export function Login() {
   const accessScope = access === 'all' ? 'Full platform access' : `${access.length} module groups`
 
   return (
-    <div className="min-h-screen bg-mesh">
+    <div className="min-h-screen bg-ink-50">
       <div className="mx-auto grid min-h-screen max-w-7xl grid-cols-1 lg:grid-cols-[1.15fr_1fr]">
         {/* Left — brand pane */}
         <motion.div
           initial={{ opacity: 0, x: -12 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.45 }}
-          className="relative hidden overflow-hidden bg-brand-gradient p-10 text-white lg:flex lg:flex-col"
+          className="relative hidden overflow-hidden p-10 text-white lg:flex lg:flex-col lg:justify-center"
+          style={{ backgroundColor: 'rgb(23 99 224 / 98%)' }}
         >
-          {/* Animated radial mesh */}
-          <motion.div
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(60% 40% at 20% 20%, rgba(255,255,255,0.18) 0%, transparent 60%), radial-gradient(50% 40% at 80% 30%, rgba(66,133,244,0.22) 0%, transparent 60%), radial-gradient(60% 50% at 60% 90%, rgba(11,87,208,0.22) 0%, transparent 60%)',
-            }}
-            animate={{ opacity: [0.65, 0.9, 0.65] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          />
-
-          {/* Dotted grid overlay */}
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[0.18]"
-            style={{
-              backgroundImage:
-                'radial-gradient(rgba(255,255,255,0.55) 1px, transparent 1px)',
-              backgroundSize: '22px 22px',
-              maskImage:
-                'linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)',
-              WebkitMaskImage:
-                'linear-gradient(180deg, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)',
-            }}
-          />
-
-          {/* Decorative network SVG */}
-          <svg
-            className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.22]"
-            viewBox="0 0 600 800"
-            preserveAspectRatio="xMidYMid slice"
-            aria-hidden
-          >
-            <defs>
-              <linearGradient id="netLine" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#fff" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#fff" stopOpacity="0.05" />
-              </linearGradient>
-              <radialGradient id="netNode" cx="50%" cy="50%" r="50%">
-                <stop offset="0%" stopColor="#fff" stopOpacity="0.95" />
-                <stop offset="100%" stopColor="#fff" stopOpacity="0" />
-              </radialGradient>
-            </defs>
-            {[
-              [80, 120, 260, 220],
-              [260, 220, 480, 140],
-              [260, 220, 220, 430],
-              [220, 430, 420, 500],
-              [420, 500, 520, 340],
-              [420, 500, 300, 700],
-              [300, 700, 100, 640],
-              [100, 640, 80, 120],
-              [480, 140, 520, 340],
-            ].map(([x1, y1, x2, y2], i) => (
-              <line
-                key={i}
-                x1={x1}
-                y1={y1}
-                x2={x2}
-                y2={y2}
-                stroke="url(#netLine)"
-                strokeWidth="1"
-              />
-            ))}
-            {[
-              [80, 120],
-              [260, 220],
-              [480, 140],
-              [220, 430],
-              [420, 500],
-              [520, 340],
-              [300, 700],
-              [100, 640],
-            ].map(([cx, cy], i) => (
-              <g key={i}>
-                <circle cx={cx} cy={cy} r="14" fill="url(#netNode)" />
-                <circle cx={cx} cy={cy} r="3" fill="#fff" opacity="0.9" />
-              </g>
-            ))}
-          </svg>
-
-          {/* Floating orbs */}
-          <motion.div
-            className="pointer-events-none absolute -right-16 -top-16 h-80 w-80 rounded-full bg-white/20 blur-3xl"
-            animate={{ y: [0, 16, 0], x: [0, -10, 0] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="pointer-events-none absolute -bottom-24 -left-8 h-80 w-80 rounded-full bg-google-blue-500/25 blur-3xl"
-            animate={{ y: [0, -18, 0], x: [0, 12, 0] }}
-            transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-          />
-          <motion.div
-            className="pointer-events-none absolute right-24 top-1/3 h-40 w-40 rounded-full bg-brand-200/30 blur-2xl"
-            animate={{ y: [0, 22, 0] }}
-            transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
-          />
-
-          {/* Header brand */}
-          <div className="relative flex items-center gap-3">
-            <div className="relative grid h-14 w-14 place-items-center rounded-2xl bg-white/15 backdrop-blur ring-1 ring-white/25 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.45)]">
-              <span className="text-xl font-bold tracking-tight">M</span>
-              <span className="absolute -right-1 -top-1 grid h-4 w-4 place-items-center rounded-full bg-emerald-400 ring-2 ring-white/40">
-                <span className="h-1.5 w-1.5 rounded-full bg-white" />
-              </span>
-            </div>
-            <div>
-              <div className="text-[11px] uppercase tracking-[0.25em] text-white/80">
-                Government of Maharashtra
-              </div>
-              <div className="text-lg font-semibold leading-tight">
-                MAII · Sovereign AI Infrastructure
-              </div>
-              <div className="mt-1 inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-widest text-white/90 backdrop-blur">
-                <BadgeCheck className="h-3 w-3" /> v0.1 · Sovereign Build
-              </div>
-            </div>
-          </div>
-
           {/* Center content */}
-          <div className="relative mt-auto space-y-7">
+          <div className="relative space-y-7">
             <div>
-              <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-[11px] uppercase tracking-[0.2em] text-white/90 backdrop-blur">
-                <Radio className="h-3 w-3" /> Live · Officer Command Layer
-              </div>
               <h1 className="text-5xl font-semibold leading-[1.05] tracking-tight">
                 India's Sovereign AI
                 <br />
@@ -177,18 +55,18 @@ export function Login() {
             </div>
             <p className="max-w-md text-sm leading-relaxed text-white/85">
               A secure administrative operating layer for officers, departments and districts.
-              Built for on-prem deployment, DPDP compliance, and Zero Trust security —
-              boardroom-ready for the Government of Maharashtra.
+              Built for on-prem deployment, DPDP compliance, and Zero Trust security.
+              Boardroom-ready by design.
             </p>
 
             <div className="grid max-w-md grid-cols-2 gap-2.5 text-xs">
               {[
-                { icon: ShieldCheck, label: 'Zero Trust · MFA' },
-                { icon: Lock, label: 'AES-256 · HSM ready' },
-                { icon: Server, label: 'On-Prem · Air-gapped' },
+                { icon: ShieldCheck, label: 'Zero Trust MFA' },
+                { icon: Lock, label: 'AES-256 HSM ready' },
+                { icon: Server, label: 'On-Prem Air-gapped' },
                 { icon: ClipboardList, label: 'Immutable Audit Logs' },
-                { icon: Fingerprint, label: 'RBAC · Least Privilege' },
-                { icon: Building2, label: 'MeghRaj / SDC ready' },
+                { icon: Fingerprint, label: 'RBAC Least Privilege' },
+                { icon: Building2, label: 'MeghRaj SDC ready' },
               ].map(({ icon: I, label }, i) => (
                 <motion.div
                   key={label}
@@ -203,6 +81,22 @@ export function Login() {
                   <span className="font-medium text-white/95">{label}</span>
                 </motion.div>
               ))}
+            </div>
+
+            {/* Signing in as — position only */}
+            <div className="max-w-md rounded-2xl border border-white/25 bg-white/10 p-4 backdrop-blur">
+              <div className="mb-3 inline-flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.25em] text-white/70">
+                <UserRound className="h-3 w-3" /> Signing in as
+              </div>
+              <div className="flex items-center gap-3">
+                <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white/15 text-white ring-1 ring-white/25">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-semibold text-white">{profile.designation}</div>
+                  <div className="truncate text-[11px] text-white/70">{tierOf(profile.designation)}</div>
+                </div>
+              </div>
             </div>
 
             {/* Trust badge row */}
@@ -233,25 +127,14 @@ export function Login() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between border-t border-white/15 pt-4 text-[10.5px] uppercase tracking-[0.25em] text-white/70">
-              <span>Directorate of Information Technology</span>
-              <span className="text-white/60">GoM · MAII</span>
+            <div className="border-t border-white/15 pt-4 text-[10.5px] uppercase tracking-[0.25em] text-white/70">
+              Directorate of Information Technology
             </div>
           </div>
         </motion.div>
 
         {/* Right — form */}
-        <div className="relative flex items-center justify-center p-4 py-8 sm:p-8">
-          {/* Soft ambient glow behind card */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(50% 40% at 50% 30%, rgba(11,87,208,0.08) 0%, transparent 70%), radial-gradient(40% 40% at 60% 90%, rgba(6,40,104,0.08) 0%, transparent 70%)',
-            }}
-          />
-
+        <div className="flex items-center justify-center p-4 py-8 sm:p-8">
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -273,7 +156,7 @@ export function Login() {
                 System status: All systems operational
               </div>
               <div className="text-[10.5px] uppercase tracking-widest text-ink-400">
-                Secure · TLS 1.3
+                Secure TLS 1.3
               </div>
             </div>
 
@@ -297,14 +180,14 @@ export function Login() {
               onSubmit={(e) => {
                 e.preventDefault()
                 if (password !== DEMO_PASSWORD) {
-                  setError('Incorrect password. Use the demo credential shown below.')
+                  setError('Incorrect password. Please try again.')
                   return
                 }
                 setError('')
                 signIn(profile.designation)
                 nav('/')
               }}
-              className="card space-y-4 bg-white/85 p-6 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(6,40,104,0.25)]"
+              className="card space-y-4 p-6"
             >
               <div>
                 <label className="label">Officer profile</label>
@@ -323,7 +206,7 @@ export function Login() {
                         <optgroup key={t.tier} label={t.tier}>
                           {inTier.map((p) => (
                             <option key={p.id} value={p.id}>
-                              {p.name} — {p.designation}
+                              {p.designation}
                             </option>
                           ))}
                         </optgroup>
@@ -332,14 +215,14 @@ export function Login() {
                   </select>
                 </div>
 
-                {/* Selected profile preview */}
+                {/* Selected profile preview — position only */}
                 <div className="mt-2 flex items-center gap-3 rounded-xl border border-ink-100 bg-gradient-to-br from-brand-50/60 to-white p-3">
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-gradient text-sm font-semibold text-white shadow-glow">
-                    {profile.initials}
+                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand-gradient text-white shadow-glow">
+                    <UserRound className="h-5 w-5" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold text-ink-900">{profile.name}</div>
-                    <div className="truncate text-[11px] text-ink-500">{profile.designation} · {profile.posting}</div>
+                    <div className="truncate text-sm font-semibold text-ink-900">{profile.designation}</div>
+                    <div className="truncate text-[11px] text-ink-500">{profile.posting.replace(/\s*—\s*/g, ' ')}</div>
                   </div>
                   <div className="shrink-0 text-right">
                     <div className="rounded-full bg-brand-soft px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-brand-700">
@@ -359,31 +242,12 @@ export function Login() {
                   placeholder="Enter password"
                   autoComplete="off"
                 />
-                {error ? (
+                {error && (
                   <div className="mt-1.5 flex items-center gap-1.5 text-[11px] font-medium text-red-600">
                     <AlertTriangle className="h-3.5 w-3.5" /> {error}
                   </div>
-                ) : (
-                  <div className="mt-1.5 text-[11px] text-ink-500">
-                    Demo credential — password for all profiles:{' '}
-                    <span className="font-semibold text-ink-700">MahaDev@2026</span>
-                  </div>
                 )}
               </div>
-              <div>
-                <label className="label">MFA Code</label>
-                <input
-                  className="input mt-1 tracking-[0.35em]"
-                  maxLength={6}
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                  placeholder="6-digit code"
-                />
-                <div className="mt-1 text-[11px] text-ink-500">
-                  Sent to your registered device via NIC MFA.
-                </div>
-              </div>
-
               <div className="rounded-xl border border-emerald-200 bg-gradient-to-br from-emerald-50 to-emerald-50/40 p-3 text-[11px] text-emerald-800">
                 <div className="flex items-center gap-2 font-semibold">
                   <ShieldCheck className="h-3.5 w-3.5" /> This session will run under Zero Trust policy.
