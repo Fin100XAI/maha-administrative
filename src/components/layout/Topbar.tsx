@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useState, type FormEvent } from 'react'
 import { LanguageSwitcher } from '@/i18n/LanguageSwitcher'
+import { postInitials } from '@/data/departments'
 import { useRole } from '@/lib/rbac'
 
 export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
@@ -101,17 +102,19 @@ export function Topbar({ onToggleSidebar }: { onToggleSidebar: () => void }) {
         {/* User chip with verified checkmark */}
         <div className="ml-1 flex items-center gap-2 rounded-full border border-ink-100 bg-white px-2 py-1 shadow-sm transition-shadow hover:shadow-[0_4px_16px_-6px_rgba(11,87,208,0.25)]">
           <div className="grid h-7 w-7 place-items-center rounded-full bg-brand-gradient text-xs font-semibold text-white ring-1 ring-white/40">
-            {officer?.initials ?? 'GoM'}
+            {postInitials(officer?.designation ?? role)}
           </div>
           <div className="hidden text-left md:block">
             <div className="flex items-center gap-1">
-              <div className="text-xs font-semibold leading-none text-ink-800">{officer?.name ?? 'Officer'}</div>
+              <div className="text-xs font-semibold leading-none text-ink-800">{officer?.designation ?? role}</div>
               <BadgeCheck
                 className="h-3.5 w-3.5 text-brand-500"
                 aria-label="Verified officer"
               />
             </div>
-            <div className="mt-0.5 text-[10px] text-ink-500">{officer?.designation ?? role} · GoM</div>
+            <div className="mt-0.5 text-[10px] text-ink-500">
+              {officer?.posting ? `${officer.posting} · GoM` : 'GoM'}
+            </div>
           </div>
           <ChevronDown className="h-4 w-4 text-ink-400" />
         </div>

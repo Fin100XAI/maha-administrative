@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MAII">
+  <path d="M18 44V18l14 16 14-16v26"
+        fill="none" stroke="#000000" stroke-width="7"
+        stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="18" y="50" width="28" height="5" rx="2.5" fill="#000000"/>
+</svg>

@@ -5,7 +5,7 @@ import { Login } from '@/pages/Login'
 import { useRole } from '@/lib/rbac'
 
 // Administrative AI
-import { AIWorkspace } from '@/pages/admin/AIWorkspace'
+import { MahaCopilot } from '@/pages/admin/MahaCopilot'
 import { LetterDrafting } from '@/pages/admin/LetterDrafting'
 import { NoteDrafting } from '@/pages/admin/NoteDrafting'
 import { GRAnalysis } from '@/pages/admin/GRAnalysis'
@@ -116,7 +116,7 @@ export default function App() {
       <Route element={<RequireAuth />}>
         <Route element={<AppLayout />}>
         <Route index element={<Dashboard />} />
-        <Route path="/workspace" element={<AIWorkspace />} />
+        <Route path="/workspace" element={<MahaCopilot />} />
         <Route path="/letter-drafting" element={<LetterDrafting />} />
         <Route path="/note-drafting" element={<NoteDrafting />} />
         <Route path="/gr-analysis" element={<GRAnalysis />} />

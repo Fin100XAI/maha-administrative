@@ -65,6 +65,21 @@ export const ROLES = [
 
 export type RoleOption = typeof ROLES[number]
 
+/**
+ * Avatar initials for a designation — officers are identified by post, never by
+ * name, so the monogram is derived from the post too. Existing acronyms in the
+ * title win ("CEO, Zilla Parishad" → CEO, "IT Admin" → IT); otherwise the
+ * initial of each word is used ("Principal Secretary" → PS).
+ */
+export function postInitials(designation: string): string {
+  const words = designation.replace(/[,.]/g, ' ').split(/\s+/).filter(Boolean)
+  if (words.length === 0) return 'GoM'
+  const acronym = words.find((w) => w.length > 1 && w === w.toUpperCase())
+  if (acronym) return acronym.slice(0, 3)
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase()
+  return words.map((w) => w[0]).join('').toUpperCase().slice(0, 3)
+}
+
 /** Roles grouped by administrative tier — drives the grouped designation picker. */
 export const ROLE_TIERS: { tier: string; roles: RoleOption[] }[] = [
   { tier: 'Apex Leadership', roles: ['Chief Secretary', 'Additional Chief Secretary'] },

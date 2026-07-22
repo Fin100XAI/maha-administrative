@@ -44,7 +44,7 @@ import { Card, CardHeader } from '@/components/ui/Card'
 import { cn } from '@/lib/utils'
 import { useRole, GROUP_ACCESS } from '@/lib/rbac'
 import { useLanguage, LANGS } from '@/i18n/LanguageContext'
-import { ROLES, ROLE_TIERS, tierOf, DEPARTMENTS, SECURITY_CLASSES, SecurityClass, RoleOption } from '@/data/departments'
+import { ROLES, ROLE_TIERS, tierOf, DEPARTMENTS, SECURITY_CLASSES, SecurityClass, RoleOption, postInitials } from '@/data/departments'
 import { MODELS } from '@/data/models'
 
 /* ------------------------------------------------------------------ */
@@ -72,7 +72,6 @@ interface OutOfOffice {
 }
 
 interface SettingsState {
-  name: string
   phone: string
   department: string
   signature: string
@@ -100,10 +99,9 @@ interface SettingsState {
 }
 
 const DEFAULT_SETTINGS: SettingsState = {
-  name: 'Rajesh Mahajan',
   phone: '+91 98200 12345',
   department: 'GAD',
-  signature: 'Rajesh Mahajan\nPrincipal Secretary\nDirectorate of Information Technology\nGovernment of Maharashtra',
+  signature: 'Principal Secretary\nDirectorate of Information Technology\nGovernment of Maharashtra',
   density: 'comfortable',
   textSize: 'normal',
   reduceMotion: false,
@@ -332,18 +330,6 @@ const INITIAL_SESSIONS: Session[] = [
 
 const RESPONSE_LANGUAGES = ['English', 'मराठी (Marathi)', 'हिंदी (Hindi)', 'Bilingual — English + मराठी']
 
-function initialsOf(name: string): string {
-  return (
-    name
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((w) => w[0]?.toUpperCase() ?? '')
-      .join('') || 'RM'
-  )
-}
-
 /* ------------------------------------------------------------------ */
 /* Page                                                                */
 /* ------------------------------------------------------------------ */
@@ -452,7 +438,7 @@ export function SettingsPage() {
 
   const downloadBackupCodes = () => {
     if (!backupCodes) return
-    const body = `MAII — MFA backup codes\nGenerated: ${new Date().toLocaleString()}\nOfficer: ${settings.name} (${role})\n\n${backupCodes.join('\n')}\n\nEach code can be used once. Store securely.`
+    const body = `MAII — MFA backup codes\nGenerated: ${new Date().toLocaleString()}\nOfficer: ${role}\n\n${backupCodes.join('\n')}\n\nEach code can be used once. Store securely.`
     const blob = new Blob([body], { type: 'text/plain' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
@@ -499,25 +485,16 @@ export function SettingsPage() {
           <Card>
             <CardHeader
               title="Profile"
-              subtitle="Officer identity shown across dashboards, drafts and audit logs."
+              subtitle="Officer identity shown across dashboards, drafts and audit logs — by post, not by name."
             />
             <div className="flex flex-col gap-6 sm:flex-row">
               <div className="flex shrink-0 flex-col items-center gap-2">
                 <div className="grid h-20 w-20 place-items-center rounded-2xl bg-brand-gradient text-2xl font-semibold text-white shadow-md">
-                  {initialsOf(settings.name)}
+                  {postInitials(role)}
                 </div>
-                <span className="text-[11px] text-ink-500">Auto from name</span>
+                <span className="text-[11px] text-ink-500">Auto from post</span>
               </div>
               <div className="grid min-w-0 flex-1 grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label className="label" htmlFor="set-name">Full name</label>
-                  <input
-                    id="set-name"
-                    className="input mt-1 w-full"
-                    value={settings.name}
-                    onChange={(e) => update({ name: e.target.value })}
-                  />
-                </div>
                 <div>
                   <label className="label" htmlFor="set-designation">Designation</label>
                   <select
