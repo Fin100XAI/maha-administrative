@@ -1,0 +1,17 @@
+# One command to build + run the Maha Copilot backend on any Docker host:
+#   docker compose up -d --build
+#
+# It serves the API + its own dashboard on http://<server>:8000.
+# Secrets are read from .env at runtime (never baked into the image); ingested data is
+# persisted in the ./storage volume so it survives restarts.
+services:
+  maha-copilot:
+    build: .
+    image: maha-copilot
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./storage:/app/storage
+    restart: unless-stopped

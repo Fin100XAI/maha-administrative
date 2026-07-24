@@ -1,0 +1,9 @@
+# Keep the image small and free of secrets / local cruft.
+.venv/
+.venv-windows-bak/
+**/__pycache__/
+*.pyc
+.env
+.env.*
+storage/
+package-lock.json

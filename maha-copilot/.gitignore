@@ -1,0 +1,10 @@
+.venv/
+.venv-windows-bak/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+storage/qdrant/
+storage/*/
+*.log

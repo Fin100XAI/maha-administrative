@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maha Copilot — Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css?v=4" />
+  <style>
+    .admin-wrap { max-width: 920px; margin: 0 auto; padding: 30px 24px 80px; }
+    .stat-row { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0 28px; }
+    .stat { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); }
+    .stat .num { font-family:"Source Serif 4",serif; font-size:28px; color:var(--ink); }
+    .stat .lbl { font-size:12px; color:var(--muted); margin-top:2px; }
+    .dept-table { width:100%; border-collapse:collapse; font-size:13.5px; }
+    .dept-table td { padding:7px 10px; border-bottom:1px solid var(--line); }
+    .dept-table td:last-child { text-align:right; color:var(--saffron); font-family:"IBM Plex Mono"; }
+    .back { color:var(--saffron); text-decoration:none; font-size:13.5px; font-weight:600; }
+    h1 { font-family:"Source Serif 4",serif; font-weight:600; }
+  </style>
+</head>
+<body>
+<div class="admin-wrap">
+  <a class="back" href="/">← Back to dashboard</a>
+  <h1 style="margin:12px 0 2px">Admin · Corpus Ingestion</h1>
+  <div class="hint">Upload paired <span class="mono">&lt;name&gt;.mr.txt</span> + <span class="mono">&lt;name&gt;.en.txt</span> files. The platform pairs, chunks, embeds, and indexes them automatically.</div>
+
+  <div class="stat-row" id="stats">
+    <div class="stat"><div class="num" id="s-grs">—</div><div class="lbl">GRs ingested</div></div>
+    <div class="stat"><div class="num" id="s-chunks">—</div><div class="lbl">Chunks indexed</div></div>
+    <div class="stat"><div class="num" id="s-depts">—</div><div class="lbl">Departments with data</div></div>
+    <div class="stat"><div class="num" id="s-mode">—</div><div class="lbl">Generation mode</div></div>
+  </div>
+
+  <div class="card">
+    <div class="grid-2">
+      <div class="field"><label>Admin token</label><input type="text" id="a-token" placeholder="from your .env ADMIN_TOKEN" /></div>
+      <div class="field"><label>Document type</label><select id="a-type"><option value="gr">GR</option><option value="circular">Circular</option></select></div>
+    </div>
+    <div class="field"><label>Department</label><select id="a-dept"></select></div>
+    <div class="field"><label>Files (.mr.txt / .en.txt pairs)</label><input type="file" id="a-files" accept=".txt" multiple /></div>
+    <div style="display:flex; gap:10px; align-items:center">
+      <button class="btn saffron" id="a-ingest">Ingest files</button>
+      <button class="btn ghost" id="a-reset">Reset corpus</button>
+    </div>
+    <div id="a-out" style="margin-top:16px"></div>
+  </div>
+
+  <div class="section-label">Per-department GR counts</div>
+  <div class="card" style="padding:6px 8px"><table class="dept-table"><tbody id="deptRows"></tbody></table></div>
+</div>
+<div class="toast" id="toast"></div>
+<script src="/static/admin.js"></script>
+</body>
+</html>

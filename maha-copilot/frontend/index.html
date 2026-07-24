@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maha Copilot — GR Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=Noto+Serif+Devanagari:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css?v=4" />
+</head>
+<body>
+<div class="app">
+  <!-- ============ SIDEBAR ============ -->
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-mark" role="img" aria-label="Maha Copilot">
+        <svg viewBox="0 0 40 40" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="mcBubble" x1="7" y1="8" x2="33" y2="30" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#1763e0"/>
+              <stop offset="1" stop-color="#0a3f96"/>
+            </linearGradient>
+          </defs>
+          <!-- speech tail (drawn first so the bubble overlaps it cleanly) -->
+          <path d="M14 24 L14 32.5 L22 24 Z" fill="url(#mcBubble)"/>
+          <!-- bubble: the copilot listening -->
+          <rect x="7" y="8" width="26" height="19" rx="6.5" fill="url(#mcBubble)"/>
+          <!-- intelligence spark -->
+          <path d="M20 11 L21.7 15.8 L26.5 17.5 L21.7 19.2 L20 24 L18.3 19.2 L13.5 17.5 L18.3 15.8 Z" fill="#ffffff"/>
+          <circle cx="27.4" cy="12.6" r="1.15" fill="#ffffff" fill-opacity="0.9"/>
+        </svg>
+      </div>
+      <div>
+        <div class="brand-name">Maha Copilot</div>
+        <div class="brand-sub">GR Intelligence · महाराष्ट्र</div>
+      </div>
+    </div>
+
+    <div class="nav-label">Assist</div>
+    <button class="nav-item active" data-view="copilot">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Maha Copilot
+    </button>
+    <button class="nav-item" data-view="letter">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+      Letter Drafting
+    </button>
+
+    <div class="nav-label">Analyse</div>
+    <button class="nav-item" data-view="gr">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6"/></svg>
+      GR Analysis
+    </button>
+    <button class="nav-item" data-view="circular">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></svg>
+      Circular Analysis
+    </button>
+    <button class="nav-item" data-view="summarize">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+      File Summarization
+    </button>
+    <button class="nav-item" data-view="translate">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m5 8 6 6M4 14l6-6 2-3M2 5h12M7 2h1M22 22l-5-10-5 10M14 18h6"/></svg>
+      Translation
+    </button>
+    <button class="nav-item" data-view="ocr">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2M7 8h10M7 12h10M7 16h6"/></svg>
+      OCR Intelligence
+    </button>
+    <button class="nav-item" data-view="pdf">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><circle cx="11.5" cy="14.5" r="2.5"/><path d="m13.3 16.3 1.7 1.7"/></svg>
+      PDF Intelligence
+    </button>
+    <button class="nav-item" data-view="image">
+      <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.5-3.5L9 20"/></svg>
+      Image Understanding
+    </button>
+
+    <div class="side-foot">
+      <a class="nav-item" href="/admin" style="text-decoration:none">
+        <svg class="nav-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Admin · Ingestion
+      </a>
+      <div class="status-chip" id="statusChip" style="margin-top:8px">
+        <span class="dot mock" id="statusDot"></span>
+        <span id="statusText">Checking…</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ============ MAIN ============ -->
+  <main class="main">
+    <div class="topbar">
+      <div>
+        <div class="view-title" id="viewTitle">Maha Copilot</div>
+        <div class="view-sub" id="viewSub">Ask across the GR corpus — grounded, cited, bilingual.</div>
+      </div>
+      <div id="topRight"></div>
+    </div>
+
+    <!-- ---- COPILOT ---- -->
+    <section class="content" id="view-copilot">
+      <div style="display:grid; grid-template-columns:260px 1fr; gap:22px; align-items:start;">
+        <!-- department filter -->
+        <div>
+          <div class="section-label" style="margin-top:0">Departments</div>
+          <div class="dept-panel" id="deptPanel"></div>
+          <label class="toggle" style="margin-top:14px">
+            <input type="checkbox" id="quickMode" /> Quick mode (skip supersession check)
+          </label>
+          <div class="section-label" style="margin-top:22px">Recent queries</div>
+          <div id="historyPanel" class="hint">No queries yet this session.</div>
+        </div>
+        <!-- query + answer -->
+        <div>
+          <div class="querybar">
+            <input type="text" id="copilotQuery" placeholder="विचारा / Ask a question…" autocomplete="off" />
+            <button class="btn saffron" id="copilotBtn">Ask</button>
+          </div>
+          <div id="copilotResult" style="margin-top:22px">
+            <div class="empty">
+              <span class="serif">Ask anything about the GR corpus.</span>
+              Type in Marathi or English. Every answer is grounded in cited GRs.
+              <div class="chips" style="justify-content:center; margin-top:16px">
+                <span class="chip">Documents for a caste certificate?</span>
+                <span class="chip">उत्पन्न प्रमाणपत्रासाठी कागदपत्रे कोणती?</span>
+                <span class="chip">RTS timeline for income certificate</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ---- LETTER ---- -->
+    <section class="content hidden" id="view-letter">
+      <div class="grid-2">
+        <div class="field"><label>Letter type</label>
+          <select id="lt-type">
+            <option>Office Order</option><option>Official Reply</option>
+            <option>Notice</option><option>Memorandum</option>
+            <option>Show-cause Notice</option><option>Covering Letter</option>
+          </select>
+        </div>
+        <div class="field"><label>Language</label>
+          <select id="lt-lang"><option value="en">English</option><option value="mr">मराठी</option></select>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label>Department</label><select id="lt-dept"></select></div>
+        <div class="field"><label>Recipient</label><input type="text" id="lt-recipient" placeholder="e.g. The Tahsildar, Bhor" /></div>
+      </div>
+      <div class="field"><label>Subject</label><input type="text" id="lt-subject" placeholder="Subject line" /></div>
+      <div class="field"><label>Key points to convey</label>
+        <textarea id="lt-points" placeholder="One point per line — the draft will structure and phrase these."></textarea></div>
+      <label class="toggle" style="margin-bottom:16px"><input type="checkbox" id="lt-precedent" checked /> Pull precedent GRs for phrasing & references</label>
+      <div><button class="btn" id="lt-btn">Draft letter</button></div>
+      <div id="lt-result" style="margin-top:22px"></div>
+    </section>
+
+    <!-- ---- GR / CIRCULAR ANALYSIS (shared markup, doc_type toggled) ---- -->
+    <section class="content hidden" id="view-gr">
+      <div class="an-body" data-doctype="gr"></div>
+    </section>
+    <section class="content hidden" id="view-circular">
+      <div class="an-body" data-doctype="circular"></div>
+    </section>
+
+    <!-- ---- SUMMARIZE ---- -->
+    <section class="content hidden" id="view-summarize">
+      <div class="card" style="max-width:640px">
+        <div class="field"><label>Upload a PDF or Word (.docx) file</label>
+          <input type="file" id="sm-file" accept=".pdf,.docx,.txt" />
+        </div>
+        <div class="field"><label>Summary language</label>
+          <select id="sm-lang"><option value="en">English</option><option value="mr">मराठी</option></select>
+        </div>
+        <button class="btn" id="sm-btn">Summarize</button>
+        <div class="hint" style="margin-top:10px">Long files are summarized section-by-section, then combined into one brief.</div>
+      </div>
+      <div id="sm-result" style="margin-top:22px"></div>
+    </section>
+
+    <!-- ---- TRANSLATION ---- -->
+    <section class="content hidden" id="view-translate">
+      <div class="grid-2" style="align-items:start">
+        <div class="card">
+          <div class="field"><label>Text to translate</label>
+            <textarea id="tr-text" style="min-height:180px" placeholder="Paste Marathi or English text…"></textarea></div>
+          <div class="field"><label>Translate into</label>
+            <select id="tr-target"><option value="en">English</option><option value="mr">मराठी</option></select></div>
+          <button class="btn" id="tr-btn">Translate text</button>
+        </div>
+        <div class="card">
+          <div class="field"><label>…or translate a whole file (PDF / Word)</label>
+            <input type="file" id="tr-file" accept=".pdf,.docx,.txt" /></div>
+          <div class="field"><label>Translate into</label>
+            <select id="tr-file-target"><option value="en">English</option><option value="mr">मराठी</option></select></div>
+          <button class="btn ghost" id="tr-file-btn">Translate file</button>
+          <div class="hint" style="margin-top:10px">GR numbers, dates and figures are preserved exactly.</div>
+        </div>
+      </div>
+      <div id="tr-result" style="margin-top:22px"></div>
+    </section>
+
+    <!-- ---- OCR INTELLIGENCE ---- -->
+    <section class="content hidden" id="view-ocr">
+      <div class="card" style="max-width:640px">
+        <div class="field"><label>Upload a scanned GR — image (PNG/JPG) or PDF</label>
+          <input type="file" id="ocr-file" accept=".pdf,.png,.jpg,.jpeg,.webp" /></div>
+        <button class="btn" id="ocr-btn">Extract text</button>
+        <div class="hint" style="margin-top:10px">Reads Marathi (Devanagari) and English. Scanned PDFs are processed page by page (up to 10 pages).</div>
+      </div>
+      <div id="ocr-result" style="margin-top:22px"></div>
+    </section>
+
+    <!-- ---- PDF INTELLIGENCE ---- -->
+    <section class="content hidden" id="view-pdf">
+      <div class="card" style="max-width:640px">
+        <div class="field"><label>Upload a PDF or Word document</label>
+          <input type="file" id="pi-file" accept=".pdf,.docx,.txt" /></div>
+        <div class="field"><label>Ask a question about it</label>
+          <input type="text" id="pi-q" placeholder="e.g. What is the sanctioned budget and effective date?" /></div>
+        <button class="btn" id="pi-btn">Ask the document</button>
+        <div class="hint" style="margin-top:10px">Answers are grounded strictly in the document. For scanned PDFs, run OCR Intelligence first.</div>
+      </div>
+      <div id="pi-result" style="margin-top:22px"></div>
+    </section>
+
+    <!-- ---- IMAGE UNDERSTANDING ---- -->
+    <section class="content hidden" id="view-image">
+      <div class="card" style="max-width:640px">
+        <div class="field"><label>Upload a document image (PNG/JPG/WEBP)</label>
+          <input type="file" id="im-file" accept=".png,.jpg,.jpeg,.webp" /></div>
+        <div class="field"><label>Optional question</label>
+          <input type="text" id="im-q" placeholder="Leave blank for a full description, or ask e.g. 'Whose signature is this?'" /></div>
+        <button class="btn" id="im-btn">Analyze image</button>
+        <div class="hint" style="margin-top:10px">Reads tables, stamps, seals and signatures — not just text.</div>
+      </div>
+      <div id="im-result" style="margin-top:22px"></div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+<script src="/static/app.js"></script>
+</body>
+</html>
